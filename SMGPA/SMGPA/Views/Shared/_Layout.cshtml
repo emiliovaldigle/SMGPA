@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/public/bundles/css")
+    @Styles.Render("~/public/bundles/scss")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body style="padding-top:0px !important;">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 col-lg-2">
+            <nav class="navbar navbar-inverse navbar-fixed-side" style="padding-left:10px !important;">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                           
+                        </button>
+                        @*@if (Session["UserID"] != null)
+                        {
+                            <ul style="margin-top: 8px;" class="nav navbar-right navbar-nav">
+                                <li>
+                                    <h5> Bienvenido,  <b> @Session["Username"]&nbsp;</b></h5>
+                                </li>
+
+
+                            </ul>
+
+                        }*@
+                        @Html.ActionLink("SGMPA", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style="color:white !important;"})
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                              <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                              <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
+                              <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
+                              <li>@Html.ActionLink("Cerrar sesión", "LogOut", "Account")</li>
+                              <li>@Html.ActionLink("Gestionar Procesos", "Index", "Processes")</li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
