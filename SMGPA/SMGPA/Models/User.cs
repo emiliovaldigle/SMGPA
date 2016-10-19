@@ -3,12 +3,17 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace SGMPA
+namespace SMGPA.Models
 {
     public class User
     {
+        public User()
+        {
+            Activo = true;
+        }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid UserId { get; set; }
+        [Key]
+        public Guid idUser { get; set; }
         [Required(ErrorMessage = "Rut es Requerido.")]
         public string Rut { get; set; }
         [Required(ErrorMessage = "Nombre es Requerido.")]
@@ -21,5 +26,6 @@ namespace SGMPA
         [Required(ErrorMessage = "Contraseña es Requerida.")]
         [DataType(DataType.Password)]
         public string Contrasena { get; set; }
+        public bool Activo { get; set; }
     }
 }

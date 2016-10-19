@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using SGMPA.Models;
 using System.Data.SqlClient;
+using SMGPA.Models;
 
-namespace SGMPA.Controllers
+namespace SMGPA.Controllers
 {
     public class AccountController : Controller
     {
         // GET: Account
         public ActionResult Index()
         {
-            using(SGMPAContext db = new SGMPAContext())
+            using(SMGPAContext db = new SMGPAContext())
             {
-                return View(db.Users.ToList());
+                return View(db.User.ToList());
             }
         }
         public ActionResult Register()
@@ -27,7 +25,7 @@ namespace SGMPA.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (SGMPAContext db = new SGMPAContext())
+                using (SMGPAContext db = new SMGPAContext())
                 {
                     db.Functionary.Add(account);
                     db.SaveChanges();
@@ -37,21 +35,21 @@ namespace SGMPA.Controllers
             }
             return View();
         }
-        [HttpPost]
-        public ActionResult AdminCreate(Administrator account)
-        {
-            if (ModelState.IsValid)
-            {
-                using (SGMPAContext db = new SGMPAContext())
-                {
-                    db.Administrator.Add(account);
-                    db.SaveChanges();
-                }
-                ModelState.Clear();
-                ViewBag.Message = account.Nombre + " " + account.Apellido + " se ha registrado exitosamente";
-            }
-            return View();
-        }
+        //[HttpPost]
+        //public ActionResult AdminCreate(Administrator account)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        using (SMGPAContext db = new SMGPAContext())
+        //        {
+        //            db.Administrator.Add(account);
+        //            db.SaveChanges();
+        //        }
+        //        ModelState.Clear();
+        //        ViewBag.Message = account.Nombre + " " + account.Apellido + " se ha registrado exitosamente";
+        //    }
+        //    return View();
+        //}
        
         public ActionResult Login()
         {
@@ -64,18 +62,20 @@ namespace SGMPA.Controllers
         [HttpPost]
         public ActionResult Login(User user)
         {  
-            using (SGMPAContext db = new SGMPAContext())
+            using (SMGPAContext db = new SMGPAContext())
             {
                 try
                 {
-                    ICollection<User> Users = db.Users.ToList();
-                    foreach(User us in Users)
+                    ICollection<Administrator> Administrator = db.Administrator.ToList();
+                    ICollection<Functionary> Functionary = db.Functionary.ToList();
+                   
+                    foreach(Administrator a in Administrator)
                     {
-                        if(us.MailInstitucional.Equals(user.MailInstitucional) && us.Contrasena.Equals(user.Contrasena))
+                        if(a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(user.Contrasena))
                         {
-                            Session["UserID"] = us.UserId;
-                            Session["Username"] = us.Nombre + " " + us.Apellido;
-                            break;  
+                            Session["UserID"] = a.idUser;
+                            Session["Username"] = a.Nombre + " " + a.Apellido;
+                            return View("LoggedInAdmin");
                         }
                         else
                         {
@@ -83,23 +83,45 @@ namespace SGMPA.Controllers
                             ViewBag.validation = "Usuario o Contraseña incorrecta";
                         }
                     }
-                   
+                    foreach (Functionary f in Functionary)
+                    {
+                        if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(user.Contrasena))
+                        {
+                            Session["UserID"] = f.idUser;
+                            Session["Username"] = f.Nombre + " " + f.Apellido;
+                            return View("LoggedInFunctionary");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Usuario o contraseña erróneos");
+                            ViewBag.validation = "Usuario o Contraseña incorrecta";
+                        }
+                    }
+
                 }
                 catch(SqlException ex) when (ex.Errors.Count > 0) { 
 
                 }
              
           }
-            if(Session["UserID"]!=null)
-            return View("LoggedIn");
-
             return View();
 
         }
        
-       public ActionResult LoggedIn()
+       public ActionResult LoggedInFunctionary()
         {
             if(Session["UserID"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
+        public ActionResult LoggedInAdmin()
+        {
+            if (Session["UserID"] != null)
             {
                 return View();
             }

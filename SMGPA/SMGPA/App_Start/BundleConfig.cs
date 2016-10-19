@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace SGMPA
+namespace SMGPA
 {
     public class BundleConfig
     {

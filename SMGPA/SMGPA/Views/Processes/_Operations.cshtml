@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SGMPA.Models.Operation>
+﻿@model IEnumerable<SMGPA.Models.Operation>
 @{
     Layout = null;
 }
@@ -16,10 +16,10 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Descripcion)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Type)
@@ -32,18 +32,18 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.Nombre)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Description)
+                        @Html.DisplayFor(modelItem => item.Descripcion)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Type)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.OperationId }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.OperationId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.OperationId })
+                        @Html.ActionLink("Edit", "Edit", new { id = item.idOperation }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.idOperation }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.idOperation })
                     </td>
                 </tr>
             }

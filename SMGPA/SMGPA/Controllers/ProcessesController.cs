@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using SGMPA.Models;
+using SMGPA.Models;
 using System.Threading.Tasks;
 
-namespace SGMPA.Controllers
+namespace SMGPA.Controllers
 {
     public class ProcessesController : AsyncController
     {
-        private SGMPAContext db = new SGMPAContext();
+        private SMGPAContext db = new SMGPAContext();
 
         // GET: Processes
         public ActionResult Index()
@@ -47,7 +44,7 @@ namespace SGMPA.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProcessId,Name,Description")] Process process)
+        public ActionResult Create([Bind(Include = "idProcess,Criterio,Descripcion")] Process process)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +76,7 @@ namespace SGMPA.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProcessId,Name,Description")] Process process)
+        public ActionResult Edit([Bind(Include = "idProcess,Criterio,Descripcion")] Process process)
         {
             if (ModelState.IsValid)
             {
@@ -132,10 +129,10 @@ namespace SGMPA.Controllers
             }
             Process process = await db.Process.FindAsync(id);
             TempData["Process"] = process;
-            ViewBag.Process = process.Name;
+            ViewBag.Process = process.Criterio;
             if (process.Operations == null)
             {
-                return View();
+                return PartialView();
             }
             return PartialView("_Operations",process.Operations.ToList());
         }
@@ -145,12 +142,12 @@ namespace SGMPA.Controllers
         }
        [HttpPost]
        [ValidateAntiForgeryToken]
-       public async Task<ActionResult> CreateOperation([Bind(Include = "OperationId,Name,Description,ActiveObserver,Type")] Operation operation) 
+       public async Task<ActionResult> CreateOperation([Bind(Include = "idOperation,Name,Descripcion,Type")] Operation operation) 
         {
             if (ModelState.IsValid)
             {
                 Process proc =(Process) TempData["Process"];
-                Process process = db.Process.Find(proc.ProcessId);
+                Process process = db.Process.Find(proc.idProcess);
                 process.Operations.Add(operation);
                 await db.SaveChangesAsync();
                 return Json(new { success = true });

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SGMPA.Models.Process>
+﻿@model IEnumerable<SMGPA.Models.Process>
 
 @{
     ViewBag.Title = "Index";
@@ -12,19 +12,18 @@
         </div>
     </div>
 </div>
-
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Nuevo Proceso", "Create", "Processes", new { area = "" }, new { @class = "btn btn-default"})
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Criterio)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Descripcion)
         </th>
         <th></th>
     </tr>
@@ -32,16 +31,16 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(modelItem => item.Criterio)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
+            @Html.DisplayFor(modelItem => item.Descripcion)
         </td>
         <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.ProcessId}) |
-        @Html.ActionLink("Details", "Details", new { id = item.ProcessId }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.ProcessId })|
-        @Html.ActionLink("Operations", "Operations", new { id = item.ProcessId}, new { data_modal=""})
+            @Html.ActionLink("Edit", "Edit", new { id=item.idProcess }) |
+            @Html.ActionLink("Details", "Details", new { id=item.idProcess }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.idProcess })|
+            @Html.ActionLink("Operations", "Operations", new { id = item.idProcess }, new { data_modal = "" })
         </td>
     </tr>
 }

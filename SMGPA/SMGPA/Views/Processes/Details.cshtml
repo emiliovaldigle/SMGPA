@@ -1,4 +1,4 @@
-﻿@model SGMPA.Models.Process
+﻿@model SMGPA.Models.Process
 
 @{
     ViewBag.Title = "Details";
@@ -12,24 +12,24 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Criterio)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Criterio)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Descripcion)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProcessId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idProcess }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
