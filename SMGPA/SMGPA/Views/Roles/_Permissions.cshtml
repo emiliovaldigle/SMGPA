@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SMGPA.Models.Permission>
+@{
+    Layout = null;
+}
+<div class="modal-header">
+    <div class="alert alert-danger" role="alert" hidden="hidden">Permiso Eliminado</div>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Permisos de @ViewBag.Role</h4>
+    <div>
+        <fieldset>
+            Permiso
+            @Html.DropDownList("selectedidPermission", new SelectList(ViewBag.Permission, "idPermission", "TextLink"))
+            <a></a>
+        </fieldset>
+    </div>
+
+</div>
+
+<div class="modal-body">
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TextLink)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Controller)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActionResult)
+            </th>
+            <th></th>
+        </tr>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr id="myTableRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TextLink)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Controller)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ActionResult)
+                    </td>
+                     <td>
+                       <a class="btn-danger btn-sm"  onclick="deletePermission('@Url.Action("DeletePermission","Roles", new {id = item.idPermission})')" id="deletePermission">
+                           <span  class="glyphicon glyphicon-remove" aria-hidden="true" ></span> 
+                       </a>
+                    </td> 
+                    
+                </tr>
+            }
+        }
+    </table>
+
+</div>
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Cancel</button>
+    <input class="btn btn-primary" type="submit" value="Save" />
+</div>
+

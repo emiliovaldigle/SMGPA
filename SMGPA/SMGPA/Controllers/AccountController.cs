@@ -35,22 +35,7 @@ namespace SMGPA.Controllers
             }
             return View();
         }
-        //[HttpPost]
-        //public ActionResult AdminCreate(Administrator account)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        using (SMGPAContext db = new SMGPAContext())
-        //        {
-        //            db.Administrator.Add(account);
-        //            db.SaveChanges();
-        //        }
-        //        ModelState.Clear();
-        //        ViewBag.Message = account.Nombre + " " + account.Apellido + " se ha registrado exitosamente";
-        //    }
-        //    return View();
-        //}
-       
+        
         public ActionResult Login()
         {
             if (Session["UserID"] == null)
@@ -73,6 +58,7 @@ namespace SMGPA.Controllers
                     {
                         if(a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(user.Contrasena))
                         {
+                            Session["Admin"] = a;
                             Session["UserID"] = a.idUser;
                             Session["Username"] = a.Nombre + " " + a.Apellido;
                             return View("LoggedInAdmin");
@@ -107,6 +93,25 @@ namespace SMGPA.Controllers
             return View();
 
         }
+        public PartialViewResult BuildMenu()
+        {
+            if (Session["Admin"] != null)
+            {
+                using (SMGPAContext db = new SMGPAContext())
+                {
+                    Administrator administrator = (Administrator)Session["Admin"];
+                    List<Permission> permission = new List<Permission>();
+                    Role rol = db.Role.Find(administrator.idRole);
+                    foreach (Permission p in rol.Permisos)
+                    {
+                        if (p.ActiveMenu)
+                            permission.Add(p);
+                    }
+                    return PartialView(permission);
+                }
+            }
+            return PartialView();
+        }
        
        public ActionResult LoggedInFunctionary()
         {
@@ -134,6 +139,7 @@ namespace SMGPA.Controllers
         {
             if (Session["UserID"] != null)
             {
+                Session["Admin"] = null;
                 Session["UserID"] = null;
                 Session["Username"] = null;
             }
@@ -143,6 +149,7 @@ namespace SMGPA.Controllers
             }
             return RedirectToAction("Login");
         }
+
      
     }
 }

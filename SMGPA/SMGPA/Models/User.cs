@@ -10,6 +10,7 @@ namespace SMGPA.Models
         public User()
         {
             Activo = true;
+            Nombre_Apellido = Nombre + " " + Apellido;
         }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -20,6 +21,7 @@ namespace SMGPA.Models
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Apellido es Requerido.")]
         public string Apellido { get; set; }
+        public string Nombre_Apellido { get; set; }
         [Required(ErrorMessage = "Correo Institucional es Requerido.")]
         [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3]\.)|(([\w-]+\.)+))([a-zA-Z{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Correo institucional inválido.")]
         public string MailInstitucional { get; set; }

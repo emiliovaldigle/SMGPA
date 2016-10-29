@@ -20,8 +20,6 @@ namespace SMGPA.Models
         public string Nombre { get; set; }
         [Required(ErrorMessage = "El campo Descripción es Obligatorio")]
         public string Descripcion { get; set; }
-        public Guid idPermission { get; set; }
-        [ForeignKey("idPermission")]
         public virtual ICollection<Permission> Permisos { get; set; }
     }
 }

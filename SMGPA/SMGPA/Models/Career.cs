@@ -14,5 +14,7 @@ namespace SMGPA.Models
         public Guid idCarrera { get; set; }
         [Required(ErrorMessage = "Debe especificar el nombre de carrera")]
         public string Nombre { get; set; }
+        [Required(ErrorMessage = "Debe especificar una descripción para la carrera")]
+        public string Descripción { get; set; }
     }
 }

@@ -17,9 +17,12 @@ namespace SMGPA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid idTask { get; set; }
-        public DateTime fechaInicio { get; set; }
-        public DateTime fechaFin { get; set; }
-        public string DocumentRout { get; set; }
+        public DateTime? fechaInicio { get; set; }
+        public DateTime? fechaFin { get; set; }
+        public double TiempoInactividad { get; set; }
+        public double Desplazamiento { get; set; }
+
+        public string Documento { get; set; }
         public StatusEnum Estado { get; set; }
         public Guid idFunctionary { get; set; }
         public Guid idEntities { get; set; }

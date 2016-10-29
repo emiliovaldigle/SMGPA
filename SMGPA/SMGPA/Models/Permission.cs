@@ -25,8 +25,6 @@ namespace SMGPA.Models
         public string ActionResult { get; set; }
         [Required(ErrorMessage = "El campo Menu Activo es Obligatorio")]
         public bool ActiveMenu { get; set; }
-        public Guid idRole { get; set; }
-        [ForeignKey("idRole")]
         public virtual ICollection<Role> Roles { get; set; }
 
     }

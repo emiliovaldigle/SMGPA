@@ -138,6 +138,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0.4\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -157,27 +161,57 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CareersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProcessesController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610182155108_InitialModel.cs" />
-    <Compile Include="Migrations\201610182155108_InitialModel.Designer.cs">
-      <DependentUpon>201610182155108_InitialModel.cs</DependentUpon>
+    <Compile Include="Migrations\201610272148317_initial.cs" />
+    <Compile Include="Migrations\201610272148317_initial.Designer.cs">
+      <DependentUpon>201610272148317_initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610190354051_UpdateUser.cs" />
-    <Compile Include="Migrations\201610190354051_UpdateUser.Designer.cs">
-      <DependentUpon>201610190354051_UpdateUser.cs</DependentUpon>
+    <Compile Include="Migrations\201610272152138_initial1.cs" />
+    <Compile Include="Migrations\201610272152138_initial1.Designer.cs">
+      <DependentUpon>201610272152138_initial1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610190710003_Headers.cs" />
-    <Compile Include="Migrations\201610190710003_Headers.Designer.cs">
-      <DependentUpon>201610190710003_Headers.cs</DependentUpon>
+    <Compile Include="Migrations\201610272154349_users.cs" />
+    <Compile Include="Migrations\201610272154349_users.Designer.cs">
+      <DependentUpon>201610272154349_users.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610190713470_Headers1.cs" />
-    <Compile Include="Migrations\201610190713470_Headers1.Designer.cs">
-      <DependentUpon>201610190713470_Headers1.cs</DependentUpon>
+    <Compile Include="Migrations\201610272250168_users2.cs" />
+    <Compile Include="Migrations\201610272250168_users2.Designer.cs">
+      <DependentUpon>201610272250168_users2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610272251481_users21.cs" />
+    <Compile Include="Migrations\201610272251481_users21.Designer.cs">
+      <DependentUpon>201610272251481_users21.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610280417581_update.cs" />
+    <Compile Include="Migrations\201610280417581_update.Designer.cs">
+      <DependentUpon>201610280417581_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610280622418_update1.cs" />
+    <Compile Include="Migrations\201610280622418_update1.Designer.cs">
+      <DependentUpon>201610280622418_update1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610280721095_update2.cs" />
+    <Compile Include="Migrations\201610280721095_update2.Designer.cs">
+      <DependentUpon>201610280721095_update2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610281556502_initial2.cs" />
+    <Compile Include="Migrations\201610281556502_initial2.Designer.cs">
+      <DependentUpon>201610281556502_initial2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610282144157_initial3.cs" />
+    <Compile Include="Migrations\201610282144157_initial3.Designer.cs">
+      <DependentUpon>201610282144157_initial3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610282249536_user.cs" />
+    <Compile Include="Migrations\201610282249536_user.Designer.cs">
+      <DependentUpon>201610282249536_user.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Activity.cs" />
@@ -190,12 +224,15 @@
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\Process.cs" />
     <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\RolPermissionViewModel.cs" />
     <Compile Include="Models\Tasks.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMGPAContext.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\login.css" />
@@ -206,14 +243,23 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\navbar-fixed-side.scss" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\dynamics.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -258,14 +304,25 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Account\BuildMenu.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
+    <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\_Permissions.cshtml" />
+    <Content Include="Views\Careers\Create.cshtml" />
+    <Content Include="Views\Careers\Delete.cshtml" />
+    <Content Include="Views\Careers\Details.cshtml" />
+    <Content Include="Views\Careers\Edit.cshtml" />
+    <Content Include="Views\Careers\Index.cshtml" />
+    <Content Include="Views\Roles\AddPermission.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -273,17 +330,38 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610182155108_InitialModel.resx">
-      <DependentUpon>201610182155108_InitialModel.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610272148317_initial.resx">
+      <DependentUpon>201610272148317_initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610190354051_UpdateUser.resx">
-      <DependentUpon>201610190354051_UpdateUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610272152138_initial1.resx">
+      <DependentUpon>201610272152138_initial1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610190710003_Headers.resx">
-      <DependentUpon>201610190710003_Headers.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610272154349_users.resx">
+      <DependentUpon>201610272154349_users.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610190713470_Headers1.resx">
-      <DependentUpon>201610190713470_Headers1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610272250168_users2.resx">
+      <DependentUpon>201610272250168_users2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610272251481_users21.resx">
+      <DependentUpon>201610272251481_users21.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610280417581_update.resx">
+      <DependentUpon>201610280417581_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610280622418_update1.resx">
+      <DependentUpon>201610280622418_update1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610280721095_update2.resx">
+      <DependentUpon>201610280721095_update2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610281556502_initial2.resx">
+      <DependentUpon>201610281556502_initial2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610282144157_initial3.resx">
+      <DependentUpon>201610282144157_initial3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610282249536_user.resx">
+      <DependentUpon>201610282249536_user.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

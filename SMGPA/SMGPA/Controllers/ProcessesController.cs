@@ -142,7 +142,7 @@ namespace SMGPA.Controllers
         }
        [HttpPost]
        [ValidateAntiForgeryToken]
-       public async Task<ActionResult> CreateOperation([Bind(Include = "idOperation,Name,Descripcion,Type")] Operation operation) 
+       public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Name,Descripcion,Type")] Operation operation) 
         {
             if (ModelState.IsValid)
             {
