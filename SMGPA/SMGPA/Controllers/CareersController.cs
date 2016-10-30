@@ -46,11 +46,11 @@ namespace SMGPA.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idCarrera,Nombre,Descripción")] Career career)
+        public ActionResult Create([Bind(Include = "idCareer,Nombre,Descripción")] Career career)
         {
             if (ModelState.IsValid)
             {
-                career.idCarrera = Guid.NewGuid();
+                career.idCareer = Guid.NewGuid();
                 db.Career.Add(career);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -79,7 +79,7 @@ namespace SMGPA.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idCarrera,Nombre,Descripción")] Career career)
+        public ActionResult Edit([Bind(Include = "idCareer,Nombre,Descripción")] Career career)
         {
             if (ModelState.IsValid)
             {

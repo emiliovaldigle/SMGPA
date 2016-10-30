@@ -162,6 +162,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CareersController.cs" />
+    <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProcessesController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
@@ -212,6 +213,38 @@
     <Compile Include="Migrations\201610282249536_user.cs" />
     <Compile Include="Migrations\201610282249536_user.Designer.cs">
       <DependentUpon>201610282249536_user.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610300531156_updateCareer.cs" />
+    <Compile Include="Migrations\201610300531156_updateCareer.Designer.cs">
+      <DependentUpon>201610300531156_updateCareer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610300546128_updateFunctionary.cs" />
+    <Compile Include="Migrations\201610300546128_updateFunctionary.Designer.cs">
+      <DependentUpon>201610300546128_updateFunctionary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610300558340_updateOperation.cs" />
+    <Compile Include="Migrations\201610300558340_updateOperation.Designer.cs">
+      <DependentUpon>201610300558340_updateOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610300604067_updateOperation1.cs" />
+    <Compile Include="Migrations\201610300604067_updateOperation1.Designer.cs">
+      <DependentUpon>201610300604067_updateOperation1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610301534116_functionaryUpdate.cs" />
+    <Compile Include="Migrations\201610301534116_functionaryUpdate.Designer.cs">
+      <DependentUpon>201610301534116_functionaryUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610301630364_entitiesUpdate.cs" />
+    <Compile Include="Migrations\201610301630364_entitiesUpdate.Designer.cs">
+      <DependentUpon>201610301630364_entitiesUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610301730403_functionaryUpdate1.cs" />
+    <Compile Include="Migrations\201610301730403_functionaryUpdate1.Designer.cs">
+      <DependentUpon>201610301730403_functionaryUpdate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610301738149_userUpdate.cs" />
+    <Compile Include="Migrations\201610301738149_userUpdate.Designer.cs">
+      <DependentUpon>201610301738149_userUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Activity.cs" />
@@ -294,11 +327,9 @@
     <Content Include="Views\Processes\Create.cshtml" />
     <Content Include="Views\Processes\Edit.cshtml" />
     <Content Include="Views\Processes\Delete.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Processes\_CreateOperation.cshtml" />
     <Content Include="Views\Processes\Index.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
@@ -315,6 +346,13 @@
     <Content Include="Views\Careers\Details.cshtml" />
     <Content Include="Views\Careers\Edit.cshtml" />
     <Content Include="Views\Careers\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Entities\Create.cshtml" />
+    <Content Include="Views\Entities\Delete.cshtml" />
+    <Content Include="Views\Entities\Details.cshtml" />
+    <Content Include="Views\Entities\Edit.cshtml" />
+    <Content Include="Views\Entities\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -360,6 +398,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610282249536_user.resx">
       <DependentUpon>201610282249536_user.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610300531156_updateCareer.resx">
+      <DependentUpon>201610300531156_updateCareer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610300546128_updateFunctionary.resx">
+      <DependentUpon>201610300546128_updateFunctionary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610300558340_updateOperation.resx">
+      <DependentUpon>201610300558340_updateOperation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610300604067_updateOperation1.resx">
+      <DependentUpon>201610300604067_updateOperation1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610301534116_functionaryUpdate.resx">
+      <DependentUpon>201610301534116_functionaryUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610301630364_entitiesUpdate.resx">
+      <DependentUpon>201610301630364_entitiesUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610301730403_functionaryUpdate1.resx">
+      <DependentUpon>201610301730403_functionaryUpdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610301738149_userUpdate.resx">
+      <DependentUpon>201610301738149_userUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

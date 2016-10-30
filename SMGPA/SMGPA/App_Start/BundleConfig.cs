@@ -28,7 +28,7 @@ namespace SMGPA
 
             bundles.Add(new StyleBundle("~/public/bundles/scss").Include("~/Content/navbar-fixed-side.css", "~/Content/navbar-fixed-side.scss"));
 
-
+            bundles.Add(new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.css"));
 
         }
     }

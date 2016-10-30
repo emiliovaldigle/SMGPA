@@ -38,6 +38,7 @@ namespace SMGPA.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            ViewBag.idRole = new SelectList(db.Role, "idRole", "Nombre");
             return View();
         }
 
@@ -46,17 +47,18 @@ namespace SMGPA.Controllers
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idUser,Rut,Nombre,Apellido,MailInstitucional,Contrasena,Activo")] User user)
+        public ActionResult Create([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,idRole")] Administrator administrator)
         {
             if (ModelState.IsValid)
             {
-                user.idUser = Guid.NewGuid();
-                db.User.Add(user);
+                administrator.idUser = Guid.NewGuid();
+                db.Administrator.Add(administrator);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(user);
+            ViewBag.idRole = new SelectList(db.Role, "idRole", "Nombre", administrator.idRole);
+            return View(administrator);
         }
 
         // GET: Users/Edit/5

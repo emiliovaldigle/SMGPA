@@ -11,8 +11,7 @@
        @using (Html.BeginForm())
        {
        <fieldset>
-          <p>Permiso</p>
-         @Html.DropDownList("Permisos", ViewData["Permisos"] as SelectList, "--Seleccionar Permiso ", new { @class = "traceable", url = "/Roles/AddPermission/" })
+         @Html.DropDownList("Permisos", ViewData["Permisos"] as SelectList, "--Seleccionar Permiso ", new { @class = "traceable form-control", url = "/Roles/AddPermission/" })
         <a class="btn btn-default" id="sendPermission">Agregar</a>
        </fieldset>
        }

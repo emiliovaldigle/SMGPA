@@ -30,6 +30,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.idRole, @class ="btn btn-danger" }) |
+    <a class="btn btn-default" href="@Url.Action("Edit", new { id = Model.idRole })">Editar</a>
     <a class="btn btn-default" href="@Url.Action("Index")">Volver</a>
 </p>

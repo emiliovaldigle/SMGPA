@@ -3,11 +3,13 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Data.SqlClient;
 using SMGPA.Models;
+using System;
 
 namespace SMGPA.Controllers
 {
     public class AccountController : Controller
     {
+        private SMGPAContext db = new SMGPAContext();
         // GET: Account
         public ActionResult Index()
         {
@@ -18,24 +20,27 @@ namespace SMGPA.Controllers
         }
         public ActionResult Register()
         {
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View();
+
         }
         [HttpPost]
-        public ActionResult Register(Functionary account)
+        [ValidateAntiForgeryToken]
+        public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
         {
             if (ModelState.IsValid)
             {
-                using (SMGPAContext db = new SMGPAContext())
-                {
-                    db.Functionary.Add(account);
-                    db.SaveChanges();
-                }
-                ModelState.Clear();
-                ViewBag.Message = account.Nombre + " " + account.Apellido + " se ha registrado exitosamente";
+                functionary.Activo = true; ;
+                functionary.idUser = Guid.NewGuid();
+                db.Functionary.Add(functionary);
+                db.SaveChanges();
+                return RedirectToAction("Login");
             }
-            return View();
+
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
+            return View(functionary);
         }
-        
+
         public ActionResult Login()
         {
             if (Session["UserID"] == null)

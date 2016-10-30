@@ -11,7 +11,7 @@ namespace SMGPA.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public Guid idCarrera { get; set; }
+        public Guid idCareer { get; set; }
         [Required(ErrorMessage = "Debe especificar el nombre de carrera")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Debe especificar una descripción para la carrera")]

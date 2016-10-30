@@ -13,6 +13,7 @@ namespace SMGPA.Models
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Descripción es Requerida.")]
         public string Descripcion { get; set; }
+        [Required(ErrorMessage = "Tipo de operación es Requerida.")]
         public OperationType Type { get; set; }
         public Guid idProcess { get; set; }
         [ForeignKey("idProcess")]

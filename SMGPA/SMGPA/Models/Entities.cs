@@ -20,9 +20,9 @@ namespace SMGPA.Models
         public Guid idEntities { get; set; }
         [Required(ErrorMessage = "Nombre es Requerido.")]
         public string Nombre { get; set; }
+        [Required(ErrorMessage = "Descripcion es Requerido.")]
+        public string Descripcion { get; set; }
         public bool Activo { get; set; }
-        public Guid idFunctionary { get; set; }
-        [ForeignKey("idFunctionary")]
         public virtual ICollection<Functionary> Involucrados { get; set; }
         
     }
