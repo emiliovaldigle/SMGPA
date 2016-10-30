@@ -3,22 +3,26 @@
     Layout = null;
 }
 <div class="modal-header">
-    <div class="alert alert-danger" role="alert" hidden="hidden">Permiso Eliminado</div>
+    <div id="alertsucess"class="alert alert-success" role="alert" hidden="hidden">Permiso Agregado</div>
+    <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">Permiso Eliminado</div>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Permisos de @ViewBag.Role</h4>
     <div>
-        <fieldset>
-            Permiso
-            @Html.DropDownList("selectedidPermission", new SelectList(ViewBag.Permission, "idPermission", "TextLink"))
-            <a></a>
-        </fieldset>
+       @using (Html.BeginForm())
+       {
+       <fieldset>
+          <p>Permiso</p>
+         @Html.DropDownList("Permisos", ViewData["Permisos"] as SelectList, "--Seleccionar Permiso ", new { @class = "traceable", url = "/Roles/AddPermission/" })
+        <a class="btn btn-default" id="sendPermission">Agregar</a>
+       </fieldset>
+       }
     </div>
 
 </div>
 
 <div class="modal-body">
 
-    <table class="table">
+    <table id="tablePermission" class="table">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.TextLink)
@@ -35,7 +39,7 @@
         {
             foreach (var item in Model)
             {
-                <tr id="myTableRow">
+                <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.TextLink)
                     </td>
@@ -46,9 +50,9 @@
                         @Html.DisplayFor(modelItem => item.ActionResult)
                     </td>
                      <td>
-                       <a class="btn-danger btn-sm"  onclick="deletePermission('@Url.Action("DeletePermission","Roles", new {id = item.idPermission})')" id="deletePermission">
-                           <span  class="glyphicon glyphicon-remove" aria-hidden="true" ></span> 
-                       </a>
+                        <a id="deletePermission" url="/Roles/DeletePermission/" value="@item.idPermission">
+                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a> 
                     </td> 
                     
                 </tr>
@@ -58,7 +62,6 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn" data-dismiss="modal">Cancel</button>
-    <input class="btn btn-primary" type="submit" value="Save" />
+    <button class="btn" data-dismiss="modal">Cerrar</button>
 </div>
 

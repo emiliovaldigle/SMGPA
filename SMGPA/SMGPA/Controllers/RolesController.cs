@@ -121,7 +121,6 @@ namespace SMGPA.Controllers
         [HttpGet]
         public async Task<ActionResult> Permissions(Guid? id)
         {
-            bool isIn = false;
             List<Permission> permisos = new List<Permission>();
             if (id == null)
             {
@@ -129,52 +128,48 @@ namespace SMGPA.Controllers
             }
             Role role = await db.Role.FindAsync(id);
             TempData["Role"] = role;
-            foreach (Permission p in db.Permission.ToList())
+            ViewBag.Role = role.Nombre;
+            if (role.Permisos == null)
             {
-                foreach(Permission pe in role.Permisos)
+                return PartialView();
+            }
+            await LoadPermission(role.idRole);
+            return PartialView("_Permissions", role.Permisos.ToList());
+        }
+        public async Task<ActionResult> LoadPermission(Guid? idRole)
+        {
+            bool isIn = false;
+            List<SelectListItem> Permisos = new List<SelectListItem>();
+            Role rol = await db.Role.FindAsync(idRole);
+            foreach(Permission p in db.Permission.ToList())
+            {
+                foreach(Permission pe in rol.Permisos)
                 {
-                    if (p == pe)
+                    if(p == pe)
                     {
                         isIn = true;
                     }
                 }
                 if (!isIn)
                 {
-                    permisos.Add(p);
-      
+                    SelectListItem sl = new SelectListItem { Value = p.idPermission.ToString(), Text = p.TextLink };
+                    Permisos.Add(sl);
                 }
                 isIn = false;
             }
-            ViewBag.Role = role.Nombre;
-            ViewBag.Permission = permisos;
-            if (role.Permisos == null)
-            {
-                return PartialView();
-            }
-            return PartialView("_Permissions", role.Permisos.ToList());
+            ViewData["Permisos"] = Permisos;
+            return Json(new { sucess=true});
         }
-        //[HttpPost]
-        //public async Task<ActionResult> AddPermission(Guid? selectedidPermission)
-        //{
-        //    Role role = (Role)TempData["Role"];
-        //    Role rol = await db.Role.FindAsync(role.idRole);
-        //    Permission permission = await db.Permission.FindAsync(selectedidPermission);
-        //    rol.Permisos.Add(permission);
-        //    await db.SaveChangesAsync();
-        //    TempData["Role"] = role;
-        //    return Json(new { sucess = true });
-        //}
-        //[Authorize]
         [HttpPost]
-        public ActionResult AddPermission(string selectedidPermission)
+        public async Task<ActionResult> AddPermission(Guid? id)
         {
-            Role role = (Role)TempData["Role"];
-            Role rol =  db.Role.Find(role.idRole);
-            Permission permission =  db.Permission.Find(selectedidPermission);
-            rol.Permisos.Add(permission);
-            db.SaveChanges();
+            Role rol = (Role)TempData["Role"];
+            Role role = await db.Role.FindAsync(rol.idRole);
+            Permission permission = await db.Permission.FindAsync(id);
+            role.Permisos.Add(permission);
+            await db.SaveChangesAsync();
             TempData["Role"] = role;
-            return Json(new { sucess = true });
+            return Json(new {idpermission = permission.idPermission, textlink=permission.TextLink, controller=permission.Controller, actionresult = permission.ActionResult, sucess = true }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> DeletePermission(Guid? id)
@@ -189,7 +184,7 @@ namespace SMGPA.Controllers
             bool result = (rol.Permisos.Remove(permission)) ? true : false;
             await db.SaveChangesAsync();
             TempData["Role"] = role;
-            return Json(new { sucess = result },JsonRequestBehavior.AllowGet);
+            return Json(new { idpermission = permission.idPermission,textlink=permission.TextLink,sucess = result },JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {
