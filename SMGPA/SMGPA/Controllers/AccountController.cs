@@ -4,13 +4,19 @@ using System.Web.Mvc;
 using System.Data.SqlClient;
 using SMGPA.Models;
 using System;
+using SMGPA.Filters;
 
 namespace SMGPA.Controllers
 {
+    [Authorizate(Disabled = true)]
     public class AccountController : Controller
     {
         private SMGPAContext db = new SMGPAContext();
         // GET: Account
+        public ActionResult NotAuthorized()
+        {
+            return View();
+        }
         public ActionResult Index()
         {
             using(SMGPAContext db = new SMGPAContext())
@@ -18,12 +24,15 @@ namespace SMGPA.Controllers
                 return View(db.User.ToList());
             }
         }
+
+        [Authorizate(Disabled = true)]
         public ActionResult Register()
         {
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View();
 
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
@@ -117,8 +126,7 @@ namespace SMGPA.Controllers
             }
             return PartialView();
         }
-       
-       public ActionResult LoggedInFunctionary()
+        public ActionResult LoggedInFunctionary()
         {
             if(Session["UserID"] != null)
             {

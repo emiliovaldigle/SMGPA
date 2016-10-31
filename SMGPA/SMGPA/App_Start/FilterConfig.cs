@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using SMGPA.Filters;
+using System.Web.Mvc;
 
 namespace SMGPA
 {
@@ -7,6 +8,7 @@ namespace SMGPA
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new Authorizate());
         }
     }
 }

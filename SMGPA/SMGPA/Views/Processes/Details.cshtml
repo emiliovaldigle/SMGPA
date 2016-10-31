@@ -30,6 +30,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idProcess }) |
-    @Html.ActionLink("Back to List", "Index")
+    <a class="btn btn-default" href="@Url.Action("Edit", new { id = Model.idProcess })">Editar</a>
+    <a class="btn btn-default" href="@Url.Action("Index")">Volver</a>
 </p>

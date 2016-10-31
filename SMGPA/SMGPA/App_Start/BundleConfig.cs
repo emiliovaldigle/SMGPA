@@ -25,7 +25,7 @@ namespace SMGPA
             bundles.Add(new StyleBundle("~/public/bundles/css").Include("~/Content/site.css", "~/Content/bootstrap.css"));
 
             bundles.Add(new StyleBundle("~/Content/login").Include("~/Content/login.css", "~/Content/bootstrap.css"));
-
+            bundles.Add(new StyleBundle("~/Content/register").Include("~/Content/register.css", "~/Content/bootstrap.css"));
             bundles.Add(new StyleBundle("~/public/bundles/scss").Include("~/Content/navbar-fixed-side.css", "~/Content/navbar-fixed-side.scss"));
 
             bundles.Add(new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.css"));

@@ -149,3 +149,4 @@ C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.entitiesUpdate.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.functionaryUpdate1.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.userUpdate.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.cleanbd.resources
