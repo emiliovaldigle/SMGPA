@@ -142,13 +142,13 @@
       <HintPath>..\packages\WebActivatorEx.2.0.4\lib\net40\WebActivatorEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebGrease">
-      <Private>True</Private>
-      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-    </Reference>
     <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +171,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611021755292_populate2.cs" />
+    <Compile Include="Migrations\201611021755292_populate2.Designer.cs">
+      <DependentUpon>201611021755292_populate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
     <Compile Include="Migrations\201610272148317_initial.Designer.cs">
       <DependentUpon>201610272148317_initial.cs</DependentUpon>
@@ -251,6 +256,10 @@
     <Compile Include="Migrations\201610312133148_cleanbd.Designer.cs">
       <DependentUpon>201610312133148_cleanbd.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611021234458_populate.cs" />
+    <Compile Include="Migrations\201611021234458_populate.Designer.cs">
+      <DependentUpon>201611021234458_populate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Administrator.cs" />
@@ -264,6 +273,7 @@
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Tasks.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Utilities\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMGPAContext.cs" />
   </ItemGroup>
@@ -276,7 +286,9 @@
     <Content Include="Content\navbar-fixed-side.css" />
     <Content Include="Content\register.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
@@ -285,14 +297,23 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\navbar-fixed-side.scss" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.woff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.eot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\SMGPA.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -360,6 +381,8 @@
     <Content Include="Views\Entities\Edit.cshtml" />
     <Content Include="Views\Entities\Index.cshtml" />
     <Content Include="Views\Account\NotAuthorized.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPass.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -431,6 +454,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610312133148_cleanbd.resx">
       <DependentUpon>201610312133148_cleanbd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021234458_populate.resx">
+      <DependentUpon>201611021234458_populate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611021755292_populate2.resx">
+      <DependentUpon>201611021755292_populate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

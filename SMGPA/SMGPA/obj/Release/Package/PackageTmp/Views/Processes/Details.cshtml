@@ -1,0 +1,35 @@
+﻿@model SMGPA.Models.Process
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Process</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Criterio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Criterio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a class="btn btn-default" href="@Url.Action("Edit", new { id = Model.idProcess })">Editar</a>
+    <a class="btn btn-default" href="@Url.Action("Index")">Volver</a>
+</p>

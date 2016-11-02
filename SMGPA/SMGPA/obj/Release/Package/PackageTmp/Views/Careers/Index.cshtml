@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SMGPA.Models.Career>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Carreras Universitarias</h2>
+
+<p>
+    <a class="btn btn-default btn-sm" href="@Url.Action("Create","Careers")">
+        <span>Nueva Carrera</span>
+    </a>
+</p>
+<table class="table table-bordered">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripción)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripción)
+        </td>
+        <td>
+            <a class="btn btn-default btn-sm" href="@Url.Action("Edit","Careers", new {id = item.idCareer})">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default btn-sm" href="@Url.Action("Details","Careers", new {id = item.idCareer})">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default btn-sm" href="@Url.Action("Delete","Careers", new {id = item.idCareer})">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

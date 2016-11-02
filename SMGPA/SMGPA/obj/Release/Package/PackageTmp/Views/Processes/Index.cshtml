@@ -1,0 +1,61 @@
+﻿@model IEnumerable<SMGPA.Models.Process>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+<h2>Procesos académicos</h2>
+
+<p>
+    <a class="btn btn-default btn-sm" href="@Url.Action("Create","Processes")">
+        <span>Nuevo Proceso</span>
+    </a>
+</p>
+<table class="table table-bordered">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Criterio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Criterio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            @Html.ActionLink("Operations", "Operations", new { id = item.idProcess }, new { @class = "btn btn-info btn-sm", data_modal = "" })
+            <a class="btn btn-default btn-sm" href="@Url.Action("Edit","Processes", new {id = item.idProcess})">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default btn-sm" href="@Url.Action("Details","Processes", new {id = item.idProcess})">
+                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+            </a>
+            <a class="btn btn-default btn-sm" href="@Url.Action("Delete","Processes", new {id = item.idProcess})">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </a>
+        </td>
+    </tr>
+}
+
+</table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modalform")
+}

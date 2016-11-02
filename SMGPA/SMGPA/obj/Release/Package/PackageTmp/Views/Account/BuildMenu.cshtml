@@ -1,0 +1,5 @@
+﻿@model IEnumerable<SMGPA.Models.Permission>
+@foreach (var item in Model)
+{
+    <li>@Html.ActionLink(item.TextLink, item.ActionResult, item.Controller)</li>
+}

@@ -5,12 +5,18 @@ using System.Data.SqlClient;
 using SMGPA.Models;
 using System;
 using SMGPA.Filters;
+using System.Security.Cryptography;
+using System.Text;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace SMGPA.Controllers
 {
     [Authorizate(Disabled = true)]
-    public class AccountController : Controller
+    public class AccountController : AsyncController
     {
+        MD5Encoder mdencoder = new MD5Encoder();
         private SMGPAContext db = new SMGPAContext();
         // GET: Account
         public ActionResult NotAuthorized()
@@ -39,6 +45,7 @@ namespace SMGPA.Controllers
         {
             if (ModelState.IsValid)
             {
+                functionary.Contrasena = mdencoder.EncodePasswordMd5(functionary.Contrasena);
                 functionary.Activo = true; ;
                 functionary.idUser = Guid.NewGuid();
                 db.Functionary.Add(functionary);
@@ -70,7 +77,7 @@ namespace SMGPA.Controllers
                    
                     foreach(Administrator a in Administrator)
                     {
-                        if(a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(user.Contrasena))
+                        if(a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
                             Session["Admin"] = a;
                             Session["UserID"] = a.idUser;
@@ -85,7 +92,7 @@ namespace SMGPA.Controllers
                     }
                     foreach (Functionary f in Functionary)
                     {
-                        if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(user.Contrasena))
+                        if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
                             Session["UserID"] = f.idUser;
                             Session["Username"] = f.Nombre + " " + f.Apellido;
@@ -162,7 +169,73 @@ namespace SMGPA.Controllers
             }
             return RedirectToAction("Login");
         }
+        
+        public ActionResult ResetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> ResetPassword(User user)
+        {
+            User usuario = db.User.Where(f => f.MailInstitucional.Equals(user.MailInstitucional)).FirstOrDefault();
+            if(usuario != null)
+            {
+                string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPass", "Account", new { id = usuario.idUser});
+                var body = "<p>Por favor ingresar a la siguiente URL para restablecer contraseña</p>"+
+                    "<p>"+link+"</p>";
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(usuario.MailInstitucional));  // replace with valid value 
+                message.From = new MailAddress("soportesmgpa@gmail.com");  // replace with valid value
+                message.Subject = "Restablecer contraseña SMGPA";
+                message.Body = string.Format(body);
+                message.IsBodyHtml = true;
 
-     
+                using (var smtp = new SmtpClient())
+                {
+                    var credential = new System.Net.NetworkCredential
+                    {
+                        UserName = "soportesmgpa@gmail.com",  // replace with valid value
+                        Password = "123.pass"  // replace with valid value
+                    };
+                    smtp.Credentials = credential;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    await smtp.SendMailAsync(message);
+                }
+                ViewBag.Mensaje = "Hemos enviado un correo para que restablezcas tu contraseña";
+            }
+           return View();
+        }
+        public ActionResult ResetPass(Guid? id)
+        {
+            User user = db.User.Find(id);
+            TempData["account"] = user;
+            if (user != null)
+            {
+                return View(user);
+                
+            }
+            return View(user);
+        }
+        [HttpPost]
+        public async Task<ActionResult> ResetPass(User usuario)
+        {
+            User user = (User)TempData["account"];
+            using( SMGPAContext db = new SMGPAContext())
+            {
+                db.Configuration.ValidateOnSaveEnabled = false;
+                User u =  await db.User.FindAsync(user.idUser);
+                u.Contrasena = mdencoder.EncodePasswordMd5(usuario.Contrasena);
+                db.User.Attach(u);
+                db.Entry(u).Property(x => x.Contrasena).IsModified = true;
+                await db.SaveChangesAsync();
+                ViewBag.MensajeRestablecido = "Contraseña restablecida";
+                return View();
+            }
+
+        }
+        
+
     }
 }

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<SMGPA.Models.Operation>
+@{
+    Layout = null;
+}
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Operaciones de @ViewBag.Process</h4>
+</div>
+
+<div class="modal-body">
+    <p>
+        @Html.ActionLink("Nueva Operación", "CreateOperation", "Processes",  new {data_modal="" })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descripcion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.idOperation }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.idOperation }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.idOperation })
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+</div>

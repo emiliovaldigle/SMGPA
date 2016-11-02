@@ -7,7 +7,8 @@ namespace SMGPA.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-
+    using System.Security.Cryptography;
+    using System.Text;
     internal sealed class Configuration : DbMigrationsConfiguration<SMGPA.Models.SMGPAContext>
     {
         public Configuration()
@@ -62,8 +63,10 @@ namespace SMGPA.Migrations
                 context.Permission.AddOrUpdate(pe => pe.idPermission, p);
             }
             context.Role.AddOrUpdate(r => r.idRole, rol);
+            MD5Encoder md = new MD5Encoder();
+            String pass = md.EncodePasswordMd5("123.pass");
             context.User.AddOrUpdate(u => u.idUser,
-            new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = "123.pass.321", Rol = context.Role.FirstOrDefault()});
+            new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = pass, Rol = context.Role.FirstOrDefault()});
         }
     }
 }

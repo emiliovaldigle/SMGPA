@@ -19,7 +19,7 @@ namespace SMGPA.Controllers
         }
 
         // GET: Processes/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
