@@ -51,11 +51,15 @@ namespace SMGPA.Migrations
             Permission p30 = new Permission { TextLink = "Editar Entidad", Controller = "Entities", ActionResult = "Edit", ActiveMenu = false };
             Permission p31 = new Permission { TextLink = "Eliminar Entidad", Controller = "Entities", ActionResult = "Delete", ActiveMenu = false };
             Permission p32 = new Permission { TextLink = "Detalles Entidad", Controller = "Entities", ActionResult = "Details", ActiveMenu = false };
+            Permission p33 = new Permission { TextLink = "Funcionarios de Entidad", Controller = "Entities", ActionResult = "Functionaries", ActiveMenu = false };
+            Permission p34 = new Permission { TextLink = "Agregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "AddFunctionary", ActiveMenu = false };
+            Permission p35 = new Permission { TextLink = "Desagregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "DeleteFunctionary", ActiveMenu = false };
             List<Permission> permisos = new List<Permission>();
             permisos.Add(p1); permisos.Add(p2); permisos.Add(p3); permisos.Add(p4); permisos.Add(p5); permisos.Add(p6); permisos.Add(p7); permisos.Add(p8);
             permisos.Add(p9); permisos.Add(p10); permisos.Add(p11); permisos.Add(p12); permisos.Add(p13); permisos.Add(p14); permisos.Add(p15); permisos.Add(p16);
             permisos.Add(p17); permisos.Add(p18); permisos.Add(p19); permisos.Add(p20); permisos.Add(p21); permisos.Add(p22); permisos.Add(p23); permisos.Add(p24);
             permisos.Add(p25); permisos.Add(p26); permisos.Add(p27); permisos.Add(p28); permisos.Add(p29); permisos.Add(p30); permisos.Add(p31); permisos.Add(p32);
+            permisos.Add(p33); permisos.Add(p34); permisos.Add(p35);
             foreach (Permission p in permisos)
             {
                 p.Roles.Add(rol);

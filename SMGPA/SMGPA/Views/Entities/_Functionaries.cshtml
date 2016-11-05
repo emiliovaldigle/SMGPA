@@ -1,0 +1,77 @@
+﻿@model IEnumerable<SMGPA.Models.Functionary>
+@{ 
+    Layout = null;
+}
+@Scripts.Render("~/bundles/entities")
+<div class="modal-header">
+    <div id="alertwarning" class="alert alert-warning" role="alert" hidden="hidden">Funcionario no Encontrado o no disponible</div>
+    <div id="alertsucess" class="alert alert-success" role="alert" hidden="hidden">Funcionario Agregado</div>
+    <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">Funcionario Eliminado</div>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Involucrados de @ViewBag.Entidad</h4>
+</div> 
+<br />
+ <div class="modal-body" style="overflow: auto;">
+     <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
+         <label>Ingresar Rut de Funcionario</label>
+         <input type="text" id="rutuser" class="rutfunctionary"/>
+         <a class="btn btn-info btn-xs" id ="checkUser"><span class="glyphicon glyphicon-search"></span></a>
+         <div class="row" style="margin-bottom: 5px !important">
+             <div class="col-md-12">
+                 <label class="col-md-4">Nombre </label>
+                 <label class="col-md-4">Apellido</label>
+                 <label class="col-md-4">Carrera </label>
+             </div>
+             <div class="col-md-12">
+                 <label class="Nombre col-md-4"></label>
+                 <label class="Apellido col-md-4"></label>
+                 <label class="Carrera col-md-4"></label>
+                 <p class="idUser" hidden="hidden"></p>
+             </div>
+         </div>
+         <a class="btn btn-default" id="addFunctionary"><span class="glyphicon glyphicon-plus-sign">Agregar Funcionario</span></a>
+    </div>
+    <table class="table" id="tableFunctionary">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Rut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Carrera.Nombre)
+            </th>
+            <th></th>
+        </tr>
+         @foreach(var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rut)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Carrera.Nombre)
+                </td>
+                <td>
+                    <a id="deleteFunctionary" url="/Entities/DeleteFunctionary/" value="@item.idUser">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a> 
+                </td>
+            </tr>
+        }
+    </table>
+    </div>
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Cerrar</button>
+</div>
+

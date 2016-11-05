@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - SMGPA</title>
+    @Styles.Render("~/Content/themes/base/css")
     @Styles.Render("~/Content/css")
     @Styles.Render("~/public/bundles/scss")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body style="padding-top:0px !important;">
         @if (Session["UserID"] != null)
@@ -47,7 +47,9 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
     @RenderSection("scripts", required: false)
 </body>
 </html>

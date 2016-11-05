@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SMGPA.Models;
+using System.Threading.Tasks;
+using SMGPA.Filters;
 
 namespace SMGPA.Controllers
 {
-    public class EntitiesController : Controller
+    public class EntitiesController : AsyncController
     {
         private SMGPAContext db = new SMGPAContext();
 
@@ -115,7 +115,31 @@ namespace SMGPA.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<ActionResult> Functionaries(Guid? id)
+        {
+            List<Functionary> involucrados = new List<Functionary>();
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Entities entity = await db.Entity.FindAsync(id);
+            TempData["Entity"] = entity;
+            ViewBag.Entidad = entity.Nombre;
+            if (entity.Involucrados == null)
+            {
+                return PartialView();
+            }
+            return PartialView("_Functionaries", entity.Involucrados.ToList());
+        }
+        [Authorizate(Disabled = true)]
+        public JsonResult RutAutoComplete(string term)
+        {
+            List<String> Rut = new List<String>();
+            Rut = db.Functionary.Where(x => x.Rut.StartsWith(term)).Select(y => y.Rut).ToList();
+            return Json(Rut, JsonRequestBehavior.AllowGet);
 
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -124,5 +148,52 @@ namespace SMGPA.Controllers
             }
             base.Dispose(disposing);
         }
+        [Authorizate(Disabled =true)]
+        [HttpGet]
+        public JsonResult CheckUser(string rut)
+        {
+            if (rut == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Functionary functionary =  db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
+            if(functionary == null)
+            {
+                return Json(new { sucess = false });
+            } 
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public async Task<ActionResult> AddFunctionary(string rut)
+        {
+            Entities entidad = (Entities)TempData["Entity"];
+            Entities entity = await db.Entity.FindAsync(entidad.idEntities);
+            Functionary functionary = db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
+            Functionary funcionario = entity.Involucrados.Where(fu => fu.Rut.Equals(rut)).FirstOrDefault();
+            if(functionary == null || funcionario != null)
+            {
+                return Json(new { sucess = false} );
+            }
+            entity.Involucrados.Add(functionary);
+            await db.SaveChangesAsync();
+            TempData["Entity"] = entity;
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteFunctionary(Guid? id)
+        {
+            if (id == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Entities entidad = (Entities)TempData["Entity"];
+            Entities entity = await db.Entity.FindAsync(entidad.idEntities);
+            Functionary functionary = await db.Functionary.FindAsync(id);
+            bool result = (entity.Involucrados.Remove(functionary)) ? true : false;
+            await db.SaveChangesAsync();
+            TempData["Entity"] = entity;
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
+   

@@ -31,31 +31,7 @@ namespace SMGPA.Controllers
             }
         }
 
-        [Authorizate(Disabled = true)]
-        public ActionResult Register()
-        {
-            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
-            return View();
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
-        {
-            if (ModelState.IsValid)
-            {
-                functionary.Contrasena = mdencoder.EncodePasswordMd5(functionary.Contrasena);
-                functionary.Activo = true; ;
-                functionary.idUser = Guid.NewGuid();
-                db.Functionary.Add(functionary);
-                db.SaveChanges();
-                return RedirectToAction("Login");
-            }
-
-            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
-            return View(functionary);
-        }
+       
 
         public ActionResult Login()
         {
@@ -113,6 +89,31 @@ namespace SMGPA.Controllers
           }
             return View();
 
+        }
+        [Authorizate(Disabled = true)]
+        public ActionResult Register()
+        {
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
+            return View();
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
+        {
+            if (ModelState.IsValid)
+            {
+                functionary.Contrasena = mdencoder.EncodePasswordMd5(functionary.Contrasena);
+                functionary.Activo = true; ;
+                functionary.idUser = Guid.NewGuid();
+                db.Functionary.Add(functionary);
+                db.SaveChanges();
+                return RedirectToAction("Login");
+            }
+
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
+            return View(functionary);
         }
         public PartialViewResult BuildMenu()
         {
