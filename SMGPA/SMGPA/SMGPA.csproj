@@ -178,6 +178,27 @@
     <Compile Include="Migrations\201611022148535_populate21.Designer.cs">
       <DependentUpon>201611022148535_populate21.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611061727189_user_update.cs" />
+    <Compile Include="Migrations\201611061727189_user_update.Designer.cs">
+      <DependentUpon>201611061727189_user_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611061728525_user_update1.cs" />
+    <Compile Include="Migrations\201611061728525_user_update1.Designer.cs">
+      <DependentUpon>201611061728525_user_update1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611070537421_update3.cs" />
+    <Compile Include="Migrations\201611070537421_update3.Designer.cs">
+      <DependentUpon>201611070537421_update3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611072136016_smgpamodel05.cs" />
+    <Compile Include="Migrations\201611072136016_smgpamodel05.Designer.cs">
+      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611072307218_updateModel2.cs" />
+    <Compile Include="Migrations\201611072307218_updateModel2.Designer.cs">
+      <DependentUpon>201611072307218_updateModel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Document.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
     <Compile Include="Migrations\201610272148317_initial.Designer.cs">
@@ -507,6 +528,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611022148535_populate21.resx">
       <DependentUpon>201611022148535_populate21.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611061727189_user_update.resx">
+      <DependentUpon>201611061727189_user_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611061728525_user_update1.resx">
+      <DependentUpon>201611061728525_user_update1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070537421_update3.resx">
+      <DependentUpon>201611070537421_update3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611072136016_smgpamodel05.resx">
+      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611072307218_updateModel2.resx">
+      <DependentUpon>201611072307218_updateModel2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -71,6 +71,9 @@ namespace SMGPA.Migrations
             String pass = md.EncodePasswordMd5("123.pass");
             context.User.AddOrUpdate(u => u.idUser,
             new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = pass, Rol = context.Role.FirstOrDefault()});
+           context.Career.AddOrUpdate(u => u.idCareer,
+           new Career() {Nombre = "Ninguna", Descripcion = "Ninguna carrera en particular" });
+
         }
     }
 }

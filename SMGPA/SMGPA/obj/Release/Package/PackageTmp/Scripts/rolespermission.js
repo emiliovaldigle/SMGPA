@@ -4,7 +4,7 @@
     var url = $(this).attr('url');
     var urlf = url + id;
     $.post(".."+urlf, function (result) {
-        if (result) {
+        if (result.sucess) {
             $tr.fadeOut().remove();
             $("#alertdelete").fadeOut().hide();
             $("#alertdelete").fadeIn().show();

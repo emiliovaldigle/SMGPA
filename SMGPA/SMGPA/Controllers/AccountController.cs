@@ -23,15 +23,7 @@ namespace SMGPA.Controllers
         {
             return View();
         }
-        public ActionResult Index()
-        {
-            using(SMGPAContext db = new SMGPAContext())
-            {
-                return View(db.User.ToList());
-            }
-        }
-
-       
+  
 
         public ActionResult Login()
         {

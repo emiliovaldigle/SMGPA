@@ -22,10 +22,13 @@ namespace SMGPA.Models
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<Tasks> Task { get; set; }
         public virtual DbSet<Observation> Observation { get; set; }
+        public virtual DbSet<Document> Documento { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+                
         }
-    }
+     }
 }

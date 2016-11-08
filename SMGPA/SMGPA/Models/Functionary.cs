@@ -9,14 +9,23 @@ namespace SMGPA.Models
 {
     public class Functionary: User
     {
+        public Functionary()
+        {
+            Entidades = new HashSet<Entities>();
+            Observaciones = new HashSet<Observation>();
+        }
         [Required(ErrorMessage = "Número Telefónico es requerido.")]
+        [StringLength(15, ErrorMessage = "Numero muy Largo")]
         public string NumeroTelefono { get; set; }
         [Required(ErrorMessage = "Correo Personal es requerido.")]
+        [StringLength(50, ErrorMessage = "Correo muy Largo")]
+        [RegularExpression(@"^([\w-\.]+)@((\[[0-9]{1,3]\.)|(([\w-]+\.)+))([a-zA-Z{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Correo Personal inválido.")]
         public string CorreoPersonal { get; set; }
         public Guid idCareer { get; set; }
         [ForeignKey("idCareer")]
         public virtual Career Carrera { get; set; }
         public virtual ICollection<Entities> Entidades { get; set; }
+        public virtual ICollection<Observation> Observaciones { get; set; }
 
     }
 }

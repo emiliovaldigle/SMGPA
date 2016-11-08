@@ -18,13 +18,13 @@ namespace SMGPA.Models
         [Key]
         public Guid idObservation { get; set; }
         public DateTime FechaComentario { get; set; }
+        [Required(ErrorMessage ="Se requiere un comentario")]
+        [StringLength(200, ErrorMessage = "Comentario muy extenso")]
         public string Comentario { get; set; }
-        public bool ValidacionEstatus { get; set; }
-        public Guid idUser { get; set; }
-        public Guid idTask { get; set; }
-        [ForeignKey("idUser")]
-        public virtual Functionary Funcionario { get; set; }
-        [ForeignKey("idTask")]
+        [Required(ErrorMessage ="Se requiere especificar el estado de validación")]
+        public Validate ValidacionEstatus { get; set; }
         public virtual Tasks Tarea { get; set; }
+        public virtual Functionary Funcionario { get; set; }
     }
+    public enum Validate { APROBADO, RECHAZADO };
 }
