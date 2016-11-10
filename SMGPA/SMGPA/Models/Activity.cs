@@ -12,6 +12,7 @@ namespace SMGPA.Models
     {
         public Activity(){
             Tareas = new HashSet<Tasks>();
+            state = States.Inactiva;
         }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]

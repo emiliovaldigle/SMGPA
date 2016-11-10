@@ -8,7 +8,7 @@
     $("#checkUser").click(function (e) {
         var Rut = $('.rutfunctionary').val();
         var userid;
-        $.get('../Entities/CheckUser', { rut: Rut }, function (result) {
+        $.get('../Entities/CheckUser/', { rut: Rut }, function (result) {
             if (result.sucess) {
                 $('.Nombre').text(result.nombre);
                 $('.Apellido').text(result.apellido);
@@ -18,7 +18,7 @@
     });
     $("#addFunctionary").unbind('click').click(function (e) {
         var Rut = $('.rutfunctionary').val();
-        $.post('../Entities/AddFunctionary', {rut: Rut}, function (result) {
+        $.post('../Entities/AddFunctionary/', {rut: Rut}, function (result) {
             if (result.sucess) {
                 var row = "<tr><td>" + Rut
                 +"</td><td>" + result.nombre

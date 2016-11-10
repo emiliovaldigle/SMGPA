@@ -172,6 +172,7 @@ namespace SMGPA.Controllers
             Functionary funcionario = entity.Involucrados.Where(fu => fu.Rut.Equals(rut)).FirstOrDefault();
             if(functionary == null || funcionario != null)
             {
+                TempData["Entity"] = entity;
                 return Json(new { sucess = false} );
             }
             entity.Involucrados.Add(functionary);
