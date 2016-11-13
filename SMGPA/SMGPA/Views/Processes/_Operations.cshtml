@@ -2,6 +2,17 @@
 @{
     Layout = null;
 }
+<div class="modal-header">
+    <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">
+        <p>¿Seguro que quieres Eliminar esto?</p>
+       <button id="cancelButton">Cancelar</button>
+       <button id="confirmButton" class="pull-right">Aceptar</button>
+    </div>
+    <div id="alertdeleted" class="alert alert-danger" role="alert" hidden="hidden">
+        Operación ha sido Eliminada
+     </div>
+    <h4 class="modal-title" id="myModalLabel">Operaciones de @ViewBag.Process</h4>
+</div>
 <div class="modal-body">
     <table class="table">
         <tr>

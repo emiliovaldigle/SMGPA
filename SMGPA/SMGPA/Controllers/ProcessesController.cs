@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using SMGPA.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using SMGPA.Filters;
 
 namespace SMGPA.Controllers
 {
@@ -123,7 +124,7 @@ namespace SMGPA.Controllers
             base.Dispose(disposing);
         }
         public async Task<ActionResult> Operations(Guid? id)
-        { 
+        {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -135,9 +136,9 @@ namespace SMGPA.Controllers
             {
                 return PartialView();
             }
-            return PartialView("_Operations",process.Operations.ToList());
+            return PartialView("_Operations", process.Operations.ToList());
         }
-       public async Task<ActionResult> AddOperation(Guid? id)
+        public async Task<ActionResult> AddOperation(Guid? id)
         {
             Process process = await db.Process.FindAsync(id);
             ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
@@ -145,9 +146,9 @@ namespace SMGPA.Controllers
             TempData["Proceso"] = process;
             return PartialView("_AddOperation");
         }
-       [HttpPost]
-       [ValidateAntiForgeryToken]
-       public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation) 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation)
         {
             Process proc = (Process)TempData["Proceso"];
             if (ModelState.IsValid)
@@ -164,21 +165,6 @@ namespace SMGPA.Controllers
             ViewBag.idPredecesora = new SelectList(proc.Operations.ToList(), "idOperation", "Nombre");
             return PartialView("_AddOperation");
         }
-        [HttpPost]
-        public async Task<ActionResult> DeleteOperation(Guid? id)
-        {
-            if (id == null)
-            {
-                return Json(new { sucess = false });
-            }
-            Process proc = (Process)TempData["Process"];
-            Process process = await db.Process.FindAsync(proc.idProcess);
-            Operation operation = process.Operations.Where(o => o.idProcess == process.idProcess && o.idOperation == id).FirstOrDefault();
-            db.Operation.Remove(operation);
-            await db.SaveChangesAsync();
-            TempData["Process"] = proc;
-            return Json(new { sucess = true });
-        }
         [HttpGet]
         public ActionResult EditOperation(Guid? id)
         {
@@ -188,12 +174,16 @@ namespace SMGPA.Controllers
             }
             Process proceso = (Process)TempData["Process"];
             Process process =  db.Process.Find(proceso.idProcess);
-            Operation operation = process.Operations.Where(o => o.idOperation == id).First();
-            List<Operation> operaciones = process.Operations.Where(o => o.idOperation != id).ToList();
-            ViewBag.idPredecesora = new SelectList(operaciones, "idOperation", "Nombre");
-            ViewBag.Proceso = process.Criterio;
-            TempData["ProcesoAux"] = process;
-            return View("EditOperation", operation);
+            Operation operation = db.Operation.Find(id);
+            if (operation != null)
+            {
+                List<Operation> operaciones = process.Operations.Where(o => o.idOperation != id).ToList();
+                ViewBag.idPredecesora = new SelectList(operaciones, "idOperation", "Nombre");
+                ViewBag.Proceso = process.Criterio;
+                TempData["ProcesoAux"] = process;
+                return View("EditOperation", operation);
+            }
+             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);   
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -213,5 +203,37 @@ namespace SMGPA.Controllers
             ViewBag.idPredecesora = new SelectList(db.Operation.ToList(), "idOperation", "Nombre");
             return View("EditOperation", operation);
         }
+        [HttpPost]
+        public async Task<ActionResult> DeleteOperation(Guid? id)
+        {
+            if (id == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Process proc = (Process)TempData["Process"];
+            Process process = await db.Process.FindAsync(proc.idProcess);
+            Operation operation = db.Operation.Find(id);
+            if(operation != null)
+            {
+                TempData["Operation"] = operation;
+                TempData["Process"] = process;
+                return Json(new { sucess = true });
+            }
+            return Json(new { sucess = false });
+        }
+        [Authorizate(Disabled = true)]
+        [HttpPost]
+        public async Task<ActionResult> ConfirmDeleteOperation()
+        {
+            Process proc = (Process)TempData["Process"];
+            Process proceso = await db.Process.FindAsync(proc.idProcess);
+            TempData["Process"] = proceso;
+            Operation operation = (Operation)TempData["Operation"];
+            Operation operacion = await db.Operation.FindAsync(operation.idOperation);
+            db.Operation.Remove(operacion);
+            await db.SaveChangesAsync();
+            return Json(new { sucess = true });
+        }
+
     }
 }

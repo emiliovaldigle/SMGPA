@@ -6,14 +6,24 @@
         var urlf = url + id;
         $.post(".." + urlf, function (result) {
             if (result.sucess) {
-                $tr.fadeOut().remove();
-                $('#alertwarning').fadeOut().hide
-                $("#alertsucess").fadeOut().hide();
                 $("#alertdelete").fadeOut().hide();
+                $("#alertdeleted").fadeOut().hide();
                 $("#alertdelete").fadeIn().show();
+                $("#confirmButton").unbind('click').click(function (e) {
+                    $.post(".." + "/Processes/ConfirmDeleteOperation/", function (result) {
+                        if (result.sucess) {
+                            $("#alertdelete").fadeOut().hide();
+                            $("#alertdeleted").fadeIn().show
+                            $tr.fadeOut().remove();
+                        }
+                    });
+                });
+                $("#cancelButton").unbind('click').click(function (e) {
+                   $("#alertdelete").fadeOut().hide();
+                });
                 return false;
             } else {
-                alert("Problemas Eliminando");
+                $('#myModal').modal('hide');
             }
         });
         return false;

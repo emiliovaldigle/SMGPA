@@ -54,6 +54,7 @@ namespace SMGPA.Migrations
             Permission p33 = new Permission { TextLink = "Funcionarios de Entidad", Controller = "Entities", ActionResult = "Functionaries", ActiveMenu = false };
             Permission p34 = new Permission { TextLink = "Agregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "AddFunctionary", ActiveMenu = false };
             Permission p35 = new Permission { TextLink = "Desagregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "DeleteFunctionary", ActiveMenu = false };
+           
             List<Permission> permisos = new List<Permission>();
             permisos.Add(p1); permisos.Add(p2); permisos.Add(p3); permisos.Add(p4); permisos.Add(p5); permisos.Add(p6); permisos.Add(p7); permisos.Add(p8);
             permisos.Add(p9); permisos.Add(p10); permisos.Add(p11); permisos.Add(p12); permisos.Add(p13); permisos.Add(p14); permisos.Add(p15); permisos.Add(p16);
