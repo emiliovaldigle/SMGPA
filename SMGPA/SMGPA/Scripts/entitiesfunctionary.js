@@ -27,6 +27,7 @@
                 + "</td>+<td>" + "<a id='deleteFunctionary' url='/Entities/DeleteFunctionary/' value='" + result.iduser + "'>"
                 + "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>"
                 + "</td><tr>";
+                $('#deleteFunctionary').addClass("btn btn-xs btn-danger");
                 $('#tableFunctionary> tbody:last').append(row);
                 $('#alertwarning').fadeOut().hide();
                 $("#alertsucess").fadeOut().hide();

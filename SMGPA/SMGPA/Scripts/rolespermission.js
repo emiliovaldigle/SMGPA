@@ -1,4 +1,8 @@
-﻿$(document).on("click", "#deletePermission", function (e) {
+﻿$(function () {
+    $("#tablePermission").freezeHeader();
+});
+
+$(document).on("click", "#deletePermission", function (e) {
     var $tr = $(this).closest('tr');
     var id = $(this).attr('value');
     var url = $(this).attr('url');
@@ -29,7 +33,7 @@ $(document).on("change", ".traceable", function (e) {
                         +"</td><td>" + result.actionresult
                         + "</td>+<td>" + "<a id='deletePermission' url='/Roles/DeletePermission/' value='" + result.idpermission + "'>"
                         + "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>"
-                        +"</td><tr>";
+                        + "</td><tr>";
                     $('#tablePermission> tbody:last').append(row);
                     $("#alertsucess").fadeOut().hide();
                     $("#alertsucess").fadeIn().show();

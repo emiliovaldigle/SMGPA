@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Mvc;
 using SMGPA.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace SMGPA.Controllers
 {
@@ -136,23 +137,81 @@ namespace SMGPA.Controllers
             }
             return PartialView("_Operations",process.Operations.ToList());
         }
-        public ActionResult CreateOperation()
+       public async Task<ActionResult> AddOperation(Guid? id)
         {
-            return PartialView("_CreateOperation");
+            Process process = await db.Process.FindAsync(id);
+            ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
+            ViewBag.Proceso = process.Criterio;
+            TempData["Proceso"] = process;
+            return PartialView("_AddOperation");
         }
        [HttpPost]
        [ValidateAntiForgeryToken]
-       public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Name,Descripcion,Type")] Operation operation) 
+       public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation) 
+        {
+            Process proc = (Process)TempData["Proceso"];
+            if (ModelState.IsValid)
+            {
+                Process process = db.Process.Find(proc.idProcess);
+                process.Operations.Add(operation);
+                ViewBag.Proceso = process.Criterio;
+                await db.SaveChangesAsync();
+                ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
+                return PartialView("_AddOperation");
+            }
+            TempData["Proceso"] = proc;
+            ViewBag.Proceso = proc.Criterio;
+            ViewBag.idPredecesora = new SelectList(proc.Operations.ToList(), "idOperation", "Nombre");
+            return PartialView("_AddOperation");
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteOperation(Guid? id)
+        {
+            if (id == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Process proc = (Process)TempData["Process"];
+            Process process = await db.Process.FindAsync(proc.idProcess);
+            Operation operation = process.Operations.Where(o => o.idProcess == process.idProcess && o.idOperation == id).FirstOrDefault();
+            db.Operation.Remove(operation);
+            await db.SaveChangesAsync();
+            TempData["Process"] = proc;
+            return Json(new { sucess = true });
+        }
+        [HttpGet]
+        public ActionResult EditOperation(Guid? id)
+        {
+            if(id == null || TempData["Process"] == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Process proceso = (Process)TempData["Process"];
+            Process process =  db.Process.Find(proceso.idProcess);
+            Operation operation = process.Operations.Where(o => o.idOperation == id).First();
+            List<Operation> operaciones = process.Operations.Where(o => o.idOperation != id).ToList();
+            ViewBag.idPredecesora = new SelectList(operaciones, "idOperation", "Nombre");
+            ViewBag.Proceso = process.Criterio;
+            TempData["ProcesoAux"] = process;
+            return View("EditOperation", operation);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation)
         {
             if (ModelState.IsValid)
             {
-                Process proc =(Process) TempData["Process"];
-                Process process = db.Process.Find(proc.idProcess);
-                process.Operations.Add(operation);
-                await db.SaveChangesAsync();
-                return Json(new { success = true });
+                Operation operacion = db.Operation.Single(o=> o.idOperation == operation.idOperation);
+                operacion.Nombre = operation.Nombre;
+                operacion.Descripcion = operation.Descripcion;
+                operacion.Type = operation.Type;
+                operacion.Predecesora = operation.Predecesora;
+                db.SaveChanges();
+                db.Dispose();
+                return RedirectToAction("Index");
             }
-            return PartialView("_CreateOperation",operation);
+            ViewBag.idPredecesora = new SelectList(db.Operation.ToList(), "idOperation", "Nombre");
+            return View("EditOperation", operation);
         }
     }
 }

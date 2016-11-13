@@ -24,7 +24,10 @@ namespace SMGPA.Models
         public Guid idProcess { get; set; }
         [ForeignKey("idProcess")]
         public virtual Process Process { get; set; }
-		
+        public Guid? idPredecesora { get; set; }
+        [ForeignKey("idPredecesora")]
+        public virtual Operation Predecesora { get; set; }
+
 	}
-	public enum OperationType { SUBIR_DOCUMENTO, VALIDAR_DOCUMENTO, ENVIAR_DOCUMENTO, HACER_TEST, SUBIR_TEST}
+	public enum OperationType { SUBIR_DOCUMENTO}
 }

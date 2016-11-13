@@ -45,7 +45,7 @@ namespace SMGPA.Migrations
             Permission p24 = new Permission { TextLink = "Operaciones", Controller = "Processes", ActionResult = "Operations", ActiveMenu = false };
             Permission p25 = new Permission { TextLink = "Crear Operaciones", Controller = "Processes", ActionResult = "AddOperation", ActiveMenu = false };
             Permission p26 = new Permission { TextLink = "Editar Operaciones", Controller = "Processes", ActionResult = "EditOperation", ActiveMenu = false };
-            Permission p27 = new Permission { TextLink = "Detalles Operaciones", Controller = "Processes", ActionResult = "DeleteOperation", ActiveMenu = false };
+            Permission p27 = new Permission { TextLink = "Eliminar Operaciones", Controller = "Processes", ActionResult = "DeleteOperation", ActiveMenu = false };
             Permission p28 = new Permission { TextLink = "Entidades", Controller = "Entities", ActionResult = "Index", ActiveMenu = true };
             Permission p29 = new Permission { TextLink = "Crear Entidad", Controller = "Entities", ActionResult = "Create", ActiveMenu = false };
             Permission p30 = new Permission { TextLink = "Editar Entidad", Controller = "Entities", ActionResult = "Edit", ActiveMenu = false };
@@ -59,7 +59,7 @@ namespace SMGPA.Migrations
             permisos.Add(p9); permisos.Add(p10); permisos.Add(p11); permisos.Add(p12); permisos.Add(p13); permisos.Add(p14); permisos.Add(p15); permisos.Add(p16);
             permisos.Add(p17); permisos.Add(p18); permisos.Add(p19); permisos.Add(p20); permisos.Add(p21); permisos.Add(p22); permisos.Add(p23); permisos.Add(p24);
             permisos.Add(p25); permisos.Add(p26); permisos.Add(p27); permisos.Add(p28); permisos.Add(p29); permisos.Add(p30); permisos.Add(p31); permisos.Add(p32);
-            permisos.Add(p33); permisos.Add(p34); permisos.Add(p35);
+            permisos.Add(p33); permisos.Add(p34); permisos.Add(p35); 
             foreach (Permission p in permisos)
             {
                 p.Roles.Add(rol);

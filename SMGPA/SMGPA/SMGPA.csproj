@@ -190,8 +190,12 @@
     <Compile Include="Migrations\201611070537421_update3.Designer.cs">
       <DependentUpon>201611070537421_update3.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201611072136016_smgpamodel05.cs" />
-    <Compile Include="Migrations\201611072136016_smgpamodel05.Designer.cs">
+    <Compile Include="Migrations\201611121805310_operationtry.cs" />
+    <Compile Include="Migrations\201611121805310_operationtry.Designer.cs">
+      <DependentUpon>201611121805310_operationtry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\201611072136016_smgpamodel05.cs" />
+    <Compile Include="Models\201611072136016_smgpamodel05.Designer.cs">
       <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201611072307218_updateModel2.cs" />
@@ -382,6 +386,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\entitiesfunctionary.js" />
+    <Content Include="Scripts\operations.js" />
     <Content Include="Scripts\rolespermission.js" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.4.js" />
@@ -413,14 +418,13 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\LoggedInFunctionary.cshtml" />
-    <Content Include="Views\Processes\_Operations.cshtml" />
     <Content Include="Views\Account\LoggedInAdmin.cshtml" />
     <Content Include="Views\Processes\Details.cshtml" />
     <Content Include="Views\Processes\Create.cshtml" />
     <Content Include="Views\Processes\Edit.cshtml" />
     <Content Include="Views\Processes\Delete.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Processes\_CreateOperation.cshtml" />
+    <Content Include="Views\Processes\_AddOperation.cshtml" />
     <Content Include="Views\Processes\Index.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
@@ -449,6 +453,8 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPass.cshtml" />
     <Content Include="Views\Entities\_Functionaries.cshtml" />
+    <Content Include="Views\Processes\EditOperation.cshtml" />
+    <Content Include="Views\Processes\_Operations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -538,7 +544,10 @@
     <EmbeddedResource Include="Migrations\201611070537421_update3.resx">
       <DependentUpon>201611070537421_update3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611072136016_smgpamodel05.resx">
+    <EmbeddedResource Include="Migrations\201611121805310_operationtry.resx">
+      <DependentUpon>201611121805310_operationtry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Models\201611072136016_smgpamodel05.resx">
       <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611072307218_updateModel2.resx">

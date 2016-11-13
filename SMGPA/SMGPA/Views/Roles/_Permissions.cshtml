@@ -2,6 +2,7 @@
 @{
     Layout = null;
 }
+
 <div class="modal-header">
     <div id="alertsucess"class="alert alert-success" role="alert" hidden="hidden">Permiso Agregado</div>
     <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">Permiso Eliminado</div>
@@ -20,45 +21,49 @@
 </div>
 
 <div class="modal-body">
-
-    <table id="tablePermission" class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TextLink)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Controller)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ActionResult)
-            </th>
-            <th></th>
-        </tr>
-        @if (Model != null)
-        {
-            foreach (var item in Model)
+    <div style="height: 300px; overflow: auto;">
+        <table id="tablePermission" class="table-bordered">
+            <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Nombre")
+                </th>
+                <th style="padding-left:10px; padding-right:80px;">
+                    @Html.DisplayName("Controlador")
+                </th>
+                <th>
+                    @Html.DisplayName("Acción")
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            @if (Model != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TextLink)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Controller)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ActionResult)
-                    </td>
-                     <td>
-                        <a id="deletePermission" url="/Roles/DeletePermission/" value="@item.idPermission">
-                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </a> 
-                    </td> 
-                    
-                </tr>
-            }
-        }
-    </table>
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TextLink)
+                        </td>
+                        <td style="padding-left:10px;" >
+                            @Html.DisplayFor(modelItem => item.Controller)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ActionResult)
+                        </td>
+                        <td>
+                            <a id="deletePermission" url="/Roles/DeletePermission/" value="@item.idPermission">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a>
+                        </td>
 
+                    </tr>
+                }
+            }
+        </table>
+
+    </div>
+   
 </div>
 <div class="modal-footer">
     <button class="btn" data-dismiss="modal">Cerrar</button>
