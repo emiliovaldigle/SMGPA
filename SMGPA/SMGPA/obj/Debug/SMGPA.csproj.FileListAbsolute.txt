@@ -158,9 +158,8 @@ C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.user_update1.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.update3.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.operationtry.resources
-C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.smgpamodel05.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.updateModel2.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.smgpamodel05.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.csproj.GenerateResource.Cache
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.dll
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.pdb
-C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.csprojResolveAssemblyReference.cache

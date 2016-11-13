@@ -194,13 +194,13 @@
     <Compile Include="Migrations\201611121805310_operationtry.Designer.cs">
       <DependentUpon>201611121805310_operationtry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\201611072136016_smgpamodel05.cs" />
-    <Compile Include="Models\201611072136016_smgpamodel05.Designer.cs">
-      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201611072307218_updateModel2.cs" />
     <Compile Include="Migrations\201611072307218_updateModel2.Designer.cs">
       <DependentUpon>201611072307218_updateModel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611072136016_smgpamodel05.cs" />
+    <Compile Include="Migrations\201611072136016_smgpamodel05.Designer.cs">
+      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
@@ -547,11 +547,12 @@
     <EmbeddedResource Include="Migrations\201611121805310_operationtry.resx">
       <DependentUpon>201611121805310_operationtry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Models\201611072136016_smgpamodel05.resx">
-      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611072307218_updateModel2.resx">
       <DependentUpon>201611072307218_updateModel2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611072136016_smgpamodel05.resx">
+      <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

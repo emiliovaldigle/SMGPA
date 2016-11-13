@@ -15,12 +15,12 @@ namespace SMGPA.Migrations
             CreateTable(
                 "dbo.Document",
                 c => new
-                    {
-                        idDocument = c.Guid(nullable: false, identity: true),
-                        Path = c.String(),
-                    })
+                {
+                    idDocument = c.Guid(nullable: false, identity: true),
+                    Path = c.String(),
+                })
                 .PrimaryKey(t => t.idDocument);
-            
+
             AddColumn("dbo.Tasks", "idDocument", c => c.Guid(nullable: false));
             AddColumn("dbo.Observation", "Tarea_idTask", c => c.Guid());
             AddColumn("dbo.Career", "Descripcion", c => c.String(nullable: false));
@@ -41,12 +41,12 @@ namespace SMGPA.Migrations
             DropColumn("dbo.Tasks", "Documento");
             DropColumn("dbo.Tasks", "idObservation");
             DropColumn("dbo.Observation", "idTask");
-            DropColumn("dbo.Career", "DescripciÃ³n");
+            DropColumn("dbo.Career", "Descripción");
         }
         
         public override void Down()
         {
-            AddColumn("dbo.Career", "DescripciÃ³n", c => c.String(nullable: false));
+            AddColumn("dbo.Career", "Descripción", c => c.String(nullable: false));
             AddColumn("dbo.Observation", "idTask", c => c.Guid(nullable: false));
             AddColumn("dbo.Tasks", "idObservation", c => c.Guid(nullable: false));
             AddColumn("dbo.Tasks", "Documento", c => c.String());
