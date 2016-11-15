@@ -161,6 +161,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivitiesController.cs" />
     <Compile Include="Controllers\CareersController.cs" />
     <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\ProcessesController.cs" />
@@ -202,6 +203,35 @@
     <Compile Include="Migrations\201611072136016_smgpamodel05.Designer.cs">
       <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611140423537_taskupdate.cs" />
+    <Compile Include="Migrations\201611140423537_taskupdate.Designer.cs">
+      <DependentUpon>201611140423537_taskupdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611140430097_taskupdate1.cs" />
+    <Compile Include="Migrations\201611140430097_taskupdate1.Designer.cs">
+      <DependentUpon>201611140430097_taskupdate1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611142023498_taskupdatex.cs" />
+    <Compile Include="Migrations\201611142023498_taskupdatex.Designer.cs">
+      <DependentUpon>201611142023498_taskupdatex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611142035222_operationUpdate.cs" />
+    <Compile Include="Migrations\201611142035222_operationUpdate.Designer.cs">
+      <DependentUpon>201611142035222_operationUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611142129529_operationUpdate2.cs" />
+    <Compile Include="Migrations\201611142129529_operationUpdate2.Designer.cs">
+      <DependentUpon>201611142129529_operationUpdate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611142252163_operationUpdate3.cs" />
+    <Compile Include="Migrations\201611142252163_operationUpdate3.Designer.cs">
+      <DependentUpon>201611142252163_operationUpdate3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611142301082_operationUpdate4.cs" />
+    <Compile Include="Migrations\201611142301082_operationUpdate4.Designer.cs">
+      <DependentUpon>201611142301082_operationUpdate4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OperationType.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
@@ -455,6 +485,14 @@
     <Content Include="Views\Entities\_Functionaries.cshtml" />
     <Content Include="Views\Processes\EditOperation.cshtml" />
     <Content Include="Views\Processes\_Operations.cshtml" />
+    <Content Include="Views\Activities\Create.cshtml" />
+    <Content Include="Views\Activities\Delete.cshtml" />
+    <Content Include="Views\Activities\Details.cshtml" />
+    <Content Include="Views\Activities\Edit.cshtml" />
+    <Content Include="Views\Activities\Index.cshtml" />
+    <Content Include="Views\Activities\Tasks.cshtml" />
+    <Content Include="Views\Activities\_DetailsTask.cshtml" />
+    <Content Include="Views\Activities\_ConfigureTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -553,6 +591,27 @@
     <EmbeddedResource Include="Migrations\201611072136016_smgpamodel05.resx">
       <DependentUpon>201611072136016_smgpamodel05.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611140423537_taskupdate.resx">
+      <DependentUpon>201611140423537_taskupdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611140430097_taskupdate1.resx">
+      <DependentUpon>201611140430097_taskupdate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611142023498_taskupdatex.resx">
+      <DependentUpon>201611142023498_taskupdatex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611142035222_operationUpdate.resx">
+      <DependentUpon>201611142035222_operationUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611142129529_operationUpdate2.resx">
+      <DependentUpon>201611142129529_operationUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611142252163_operationUpdate3.resx">
+      <DependentUpon>201611142252163_operationUpdate3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611142301082_operationUpdate4.resx">
+      <DependentUpon>201611142301082_operationUpdate4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

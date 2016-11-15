@@ -14,7 +14,7 @@ namespace SMGPA.Models
         [Key]
         public Guid idOperation { get; set; }
         [Required(ErrorMessage = "Nombre es Requerido.")]
-        [StringLength(30, ErrorMessage = "Nombre muy Largo")]
+        [StringLength(100, ErrorMessage = "Nombre muy Largo")]
         public string Nombre { get; set; }
         [StringLength(200, ErrorMessage = "Descripción muy extensa")]
         [Required(ErrorMessage = "Descripción es Requerida.")]
@@ -29,5 +29,5 @@ namespace SMGPA.Models
         public virtual Operation Predecesora { get; set; }
 
 	}
-	public enum OperationType { SUBIR_DOCUMENTO}
+	
 }

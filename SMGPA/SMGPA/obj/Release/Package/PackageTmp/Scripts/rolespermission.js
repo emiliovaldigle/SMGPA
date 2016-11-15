@@ -11,8 +11,9 @@
             $("#alertsucess").fadeOut().hide();
             $(".traceable").append("<option value = '" + result.idpermission + "'>" + result.textlink + "</option>");
             return false;
-        } else {
-            alert("Problemas Eliminando");
+        }
+        if(!result.sucess){
+            location.reload();
         }
     });
     return false;
@@ -29,15 +30,16 @@ $(document).on("change", ".traceable", function (e) {
                         +"</td><td>" + result.actionresult
                         + "</td>+<td>" + "<a id='deletePermission' url='/Roles/DeletePermission/' value='" + result.idpermission + "'>"
                         + "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>"
-                        +"</td><tr>";
-                    $('#tablePermission> tbody:last').append(row);
+                        + "</td><tr>";
+                    $("#tablePermission").find('tbody').append($(row));
                     $("#alertsucess").fadeOut().hide();
                     $("#alertsucess").fadeIn().show();
                     $("#alertdelete").fadeOut().hide();
                     $("option[value='" + result.idpermission + "']").remove();
                     return false;
-                } else {
-                    alert("Problemas Agregando");
+                }
+                if (!result.sucess) {
+                    location.reload();
                 }
                 return false;
             });

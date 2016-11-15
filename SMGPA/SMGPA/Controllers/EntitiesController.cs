@@ -168,12 +168,16 @@ namespace SMGPA.Controllers
         {
             Entities entidad = (Entities)TempData["Entity"];
             Entities entity = await db.Entity.FindAsync(entidad.idEntities);
+            if(entity == null)
+            {
+                return Json(new { sucess = false, reload = true }, JsonRequestBehavior.AllowGet);
+            }
             Functionary functionary = db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
             Functionary funcionario = entity.Involucrados.Where(fu => fu.Rut.Equals(rut)).FirstOrDefault();
             if(functionary == null || funcionario != null)
             {
                 TempData["Entity"] = entity;
-                return Json(new { sucess = false} );
+                return Json(new { sucess = false}, JsonRequestBehavior.AllowGet );
             }
             entity.Involucrados.Add(functionary);
             await db.SaveChangesAsync();
@@ -185,10 +189,14 @@ namespace SMGPA.Controllers
         {
             if (id == null)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, reload = true }, JsonRequestBehavior.AllowGet);
             }
             Entities entidad = (Entities)TempData["Entity"];
             Entities entity = await db.Entity.FindAsync(entidad.idEntities);
+            if(entity == null)
+            {
+                return Json(new { sucess = false, JsonRequestBehavior.AllowGet });
+            }
             Functionary functionary = await db.Functionary.FindAsync(id);
             bool result = (entity.Involucrados.Remove(functionary)) ? true : false;
             await db.SaveChangesAsync();

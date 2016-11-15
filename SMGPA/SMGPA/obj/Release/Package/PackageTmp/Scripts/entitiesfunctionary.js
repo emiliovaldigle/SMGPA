@@ -27,6 +27,7 @@
                 + "</td>+<td>" + "<a id='deleteFunctionary' url='/Entities/DeleteFunctionary/' value='" + result.iduser + "'>"
                 + "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>"
                 + "</td><tr>";
+                $('#deleteFunctionary').addClass("btn btn-xs btn-danger");
                 $('#tableFunctionary> tbody:last').append(row);
                 $('#alertwarning').fadeOut().hide();
                 $("#alertsucess").fadeOut().hide();
@@ -37,6 +38,9 @@
                 $("#alertsucess").fadeOut().hide();
                 $("#alertdelete").fadeOut().hide();
                 $('#alertwarning').fadeIn().show();
+                if (result.reload) {
+                    location.reload();
+                }
             }
         });
     });
@@ -53,8 +57,14 @@
                 $("#alertdelete").fadeOut().hide();
                 $("#alertdelete").fadeIn().show();
                 return false;
-            } else {
-                alert("Problemas Eliminando");
+            }
+            if(!result.sucess){
+                $("#alertsucess").fadeOut().hide();
+                $("#alertdelete").fadeOut().hide();
+                $('#alertwarning').fadeIn().show();
+                if (result.reload) {
+                    location.reload();
+                }
             }
         });
         return false;

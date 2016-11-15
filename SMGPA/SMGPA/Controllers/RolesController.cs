@@ -138,33 +138,45 @@ namespace SMGPA.Controllers
         }
         public async Task<ActionResult> LoadPermission(Guid? idRole)
         {
-            bool isIn = false;
-            List<SelectListItem> Permisos = new List<SelectListItem>();
-            Role rol = await db.Role.FindAsync(idRole);
-            foreach(Permission p in db.Permission.ToList())
+            if(idRole  != null)
             {
-                foreach(Permission pe in rol.Permisos)
+                bool isIn = false;
+                List<SelectListItem> Permisos = new List<SelectListItem>();
+                Role rol = await db.Role.FindAsync(idRole);
+                if(rol == null)
                 {
-                    if(p == pe)
+                    return Json(new { sucess = false });
+                }
+                foreach (Permission p in db.Permission.ToList())
+                {
+                    foreach (Permission pe in rol.Permisos)
                     {
-                        isIn = true;
+                        if (p == pe)
+                        {
+                            isIn = true;
+                        }
                     }
+                    if (!isIn)
+                    {
+                        SelectListItem sl = new SelectListItem { Value = p.idPermission.ToString(), Text = p.TextLink };
+                        Permisos.Add(sl);
+                    }
+                    isIn = false;
                 }
-                if (!isIn)
-                {
-                    SelectListItem sl = new SelectListItem { Value = p.idPermission.ToString(), Text = p.TextLink };
-                    Permisos.Add(sl);
-                }
-                isIn = false;
+                ViewData["Permisos"] = Permisos;
+                return Json(new { sucess = true });
             }
-            ViewData["Permisos"] = Permisos;
-            return Json(new { sucess=true});
+            return Json(new { sucess = false });
         }
         [HttpPost]
         public async Task<ActionResult> AddPermission(Guid? id)
         {
             Role rol = (Role)TempData["Role"];
             Role role = await db.Role.FindAsync(rol.idRole);
+            if (role == null)
+            {
+                return Json(new { sucess = false , JsonRequestBehavior.AllowGet});
+            }
             Permission permission = await db.Permission.FindAsync(id);
             role.Permisos.Add(permission);
             await db.SaveChangesAsync();
@@ -176,10 +188,14 @@ namespace SMGPA.Controllers
         {
             if(id == null)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, JsonRequestBehavior.AllowGet });
             }
             Role role = (Role)TempData["Role"];
             Role rol =   await db.Role.FindAsync(role.idRole);
+            if(rol == null)
+            {
+                return Json(new { sucess = false, JsonRequestBehavior.AllowGet });
+            }
             Permission permission =  await db.Permission.FindAsync(id);
             bool result = (rol.Permisos.Remove(permission)) ? true : false;
             await db.SaveChangesAsync();

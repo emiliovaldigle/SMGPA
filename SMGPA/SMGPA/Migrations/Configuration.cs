@@ -54,13 +54,22 @@ namespace SMGPA.Migrations
             Permission p33 = new Permission { TextLink = "Funcionarios de Entidad", Controller = "Entities", ActionResult = "Functionaries", ActiveMenu = false };
             Permission p34 = new Permission { TextLink = "Agregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "AddFunctionary", ActiveMenu = false };
             Permission p35 = new Permission { TextLink = "Desagregar Funcionarios a Entidad", Controller = "Entities", ActionResult = "DeleteFunctionary", ActiveMenu = false };
-           
+            Permission p36 = new Permission { TextLink = "Actividades", Controller = "Activities", ActionResult = "Index", ActiveMenu = true };
+            Permission p37 = new Permission { TextLink = "Crear Actividad", Controller = "Activities", ActionResult = "Create", ActiveMenu = false };
+            Permission p38 = new Permission { TextLink = "Editar Actividad", Controller = "Activities", ActionResult = "Edit", ActiveMenu = false };
+            Permission p39 = new Permission { TextLink = "Eliminar Actividad", Controller = "Activities", ActionResult = "Delete", ActiveMenu = false };
+            Permission p40 = new Permission { TextLink = "Detalles Actividad", Controller = "Activities", ActionResult = "Details", ActiveMenu = false };
+            Permission p41 = new Permission { TextLink = "Tareas", Controller = "Activities", ActionResult = "Tasks", ActiveMenu = false };
+            Permission p42 = new Permission { TextLink = "Cofigurar Tarea", Controller = "Activities", ActionResult = "ConfigureTask", ActiveMenu = false };
+            Permission p43 = new Permission { TextLink = "Detalles Tareas", Controller = "Activities", ActionResult = "DetailsTask", ActiveMenu = false };
+
             List<Permission> permisos = new List<Permission>();
             permisos.Add(p1); permisos.Add(p2); permisos.Add(p3); permisos.Add(p4); permisos.Add(p5); permisos.Add(p6); permisos.Add(p7); permisos.Add(p8);
             permisos.Add(p9); permisos.Add(p10); permisos.Add(p11); permisos.Add(p12); permisos.Add(p13); permisos.Add(p14); permisos.Add(p15); permisos.Add(p16);
             permisos.Add(p17); permisos.Add(p18); permisos.Add(p19); permisos.Add(p20); permisos.Add(p21); permisos.Add(p22); permisos.Add(p23); permisos.Add(p24);
             permisos.Add(p25); permisos.Add(p26); permisos.Add(p27); permisos.Add(p28); permisos.Add(p29); permisos.Add(p30); permisos.Add(p31); permisos.Add(p32);
-            permisos.Add(p33); permisos.Add(p34); permisos.Add(p35); 
+            permisos.Add(p33); permisos.Add(p34); permisos.Add(p35); permisos.Add(p36); permisos.Add(p37); permisos.Add(p38); permisos.Add(p39); permisos.Add(p40);
+            permisos.Add(p41); permisos.Add(p42); permisos.Add(p43);
             foreach (Permission p in permisos)
             {
                 p.Roles.Add(rol);

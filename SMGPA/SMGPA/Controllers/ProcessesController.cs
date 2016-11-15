@@ -111,6 +111,11 @@ namespace SMGPA.Controllers
         {
             Process process = db.Process.Find(id);
             db.Process.Remove(process);
+            List<Activity> actividades = db.Activity.Where(a => a.idProcess == id).ToList();
+            foreach(Activity a in actividades)
+            {
+                db.Activity.Remove(a);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -127,9 +132,13 @@ namespace SMGPA.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             }
             Process process = await db.Process.FindAsync(id);
+            if (process == null)
+            {
+                return HttpNotFound();
+            }
             TempData["Process"] = process;
             ViewBag.Process = process.Criterio;
             if (process.Operations == null)
@@ -140,7 +149,15 @@ namespace SMGPA.Controllers
         }
         public async Task<ActionResult> AddOperation(Guid? id)
         {
+            if(id == null)
+            {
+                return HttpNotFound();
+            }
             Process process = await db.Process.FindAsync(id);
+            if(process == null)
+            {
+                return HttpNotFound();
+            }
             ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
             ViewBag.Proceso = process.Criterio;
             TempData["Proceso"] = process;
@@ -151,6 +168,10 @@ namespace SMGPA.Controllers
         public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation)
         {
             Process proc = (Process)TempData["Proceso"];
+            if(proc == null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
                 Process process = db.Process.Find(proc.idProcess);
@@ -170,20 +191,25 @@ namespace SMGPA.Controllers
         {
             if(id == null || TempData["Process"] == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             }
             Process proceso = (Process)TempData["Process"];
             Process process =  db.Process.Find(proceso.idProcess);
-            Operation operation = db.Operation.Find(id);
-            if (operation != null)
+            if(process == null)
             {
-                List<Operation> operaciones = process.Operations.Where(o => o.idOperation != id).ToList();
-                ViewBag.idPredecesora = new SelectList(operaciones, "idOperation", "Nombre");
-                ViewBag.Proceso = process.Criterio;
-                TempData["ProcesoAux"] = process;
-                return View("EditOperation", operation);
+                return HttpNotFound();
             }
-             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);   
+            Operation operation = db.Operation.Find(id);
+            if (operation == null)
+            {
+                return HttpNotFound();
+            }
+            List<Operation> operaciones = process.Operations.Where(o => o.idOperation != id).ToList();
+            ViewBag.idPredecesora = new SelectList(operaciones, "idOperation", "Nombre");
+            ViewBag.Proceso = process.Criterio;
+            TempData["ProcesoAux"] = process;
+            return View("EditOperation", operation);
+          
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -192,6 +218,10 @@ namespace SMGPA.Controllers
             if (ModelState.IsValid)
             {
                 Operation operacion = db.Operation.Single(o=> o.idOperation == operation.idOperation);
+                if(operacion == null)
+                {
+                    return HttpNotFound();
+                }
                 operacion.Nombre = operation.Nombre;
                 operacion.Descripcion = operation.Descripcion;
                 operacion.Type = operation.Type;
@@ -213,13 +243,14 @@ namespace SMGPA.Controllers
             Process proc = (Process)TempData["Process"];
             Process process = await db.Process.FindAsync(proc.idProcess);
             Operation operation = db.Operation.Find(id);
-            if(operation != null)
+            if(process == null||operation == null)
             {
-                TempData["Operation"] = operation;
-                TempData["Process"] = process;
-                return Json(new { sucess = true });
+                return Json(new { sucess = false });
             }
-            return Json(new { sucess = false });
+            TempData["Operation"] = operation;
+            TempData["Process"] = process;
+            return Json(new { sucess = true });
+           
         }
         [Authorizate(Disabled = true)]
         [HttpPost]
@@ -230,9 +261,13 @@ namespace SMGPA.Controllers
             TempData["Process"] = proceso;
             Operation operation = (Operation)TempData["Operation"];
             Operation operacion = await db.Operation.FindAsync(operation.idOperation);
-            db.Operation.Remove(operacion);
-            await db.SaveChangesAsync();
-            return Json(new { sucess = true });
+            if(operacion != null)
+            {
+                db.Operation.Remove(operacion);
+                await db.SaveChangesAsync();
+                return Json(new { sucess = true });
+            }
+            return Json(new { sucess = false });
         }
 
     }

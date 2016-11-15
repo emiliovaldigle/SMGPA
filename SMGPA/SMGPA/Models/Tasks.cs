@@ -18,23 +18,24 @@ namespace SMGPA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid idTask { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
         public DateTime? fechaInicio { get; set; }
         public DateTime? fechaFin { get; set; }
-        public double TiempoInactividad { get; set; }
-        public double DesplazamientoHoras { get; set; }
-        public double DesplazamientoDias { get; set; }
+        public double? TiempoInactividad { get; set; }
+        public double? DesplazamientoHoras { get; set; }
+        public double? DesplazamientoDias { get; set; }
         public StatusEnum Estado { get; set; }
-        public Guid idDocument { get; set; }
-        public Guid idFunctionary { get; set; }
-        public Guid idEntities { get; set; }
+        public Guid? idDocument { get; set; }
+        public Guid? idFunctionary { get; set; }
+        public Guid? idEntities { get; set; }
+        public Guid? idOperation { get; set; }
         [ForeignKey("idDocument")]
         public Document Documento { get; set; }
         [ForeignKey("idFunctionary")]
         public virtual Functionary Responsable { get; set; }
         [ForeignKey("idEntities")]
         public virtual Entities Participantes { get; set; }
+        [ForeignKey("idOperation")]
+        public virtual Operation Operacion { get; set; }
         public virtual ICollection<Observation> Observaciones { get; set; }
     }
     public enum StatusEnum { INACTIVA, ACTIVA, EN_PROGRESO, EN_REVISION, PENDIENTE }

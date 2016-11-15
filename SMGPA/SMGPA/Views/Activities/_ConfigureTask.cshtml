@@ -1,0 +1,96 @@
+﻿@model SMGPA.Models.Tasks
+@{ 
+    Layout = null;
+}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Detalles de @ViewBag.Tarea</h4>
+</div> 
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Documento.Path)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Documento.Path)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Operacion.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Operacion.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Participantes.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Participantes.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Responsable.Rut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Responsable.Rut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaInicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaInicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaFin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaFin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TiempoInactividad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TiempoInactividad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DesplazamientoHoras)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DesplazamientoHoras)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DesplazamientoDias)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DesplazamientoDias)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+    </dl>
+</div>
+<div class="modal-footer">
+    <button class="btn" data-dismiss="modal">Cerrar</button>
+</div>

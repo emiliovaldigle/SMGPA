@@ -6,6 +6,7 @@
 <div class="modal-header">
     <div id="alertsucess"class="alert alert-success" role="alert" hidden="hidden">Permiso Agregado</div>
     <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">Permiso Eliminado</div>
+    <div id="alertproblem" class="alert alert-warning" role="alert" hidden="hidden">Problemas procesando solicitud</div>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Permisos de @ViewBag.Role</h4>
     <div>
@@ -20,15 +21,15 @@
 
 </div>
 
-<div class="modal-body">
-    <div style="height: 300px; overflow: auto;">
-        <table id="tablePermission" class="table-bordered">
-            <thead>
+<div class="modal-body" style="height: 300px; overflow: auto;">
+        <table id="tablePermission" class="table table-bordered">
+           @if (Model.Count()>0) {
+           <thead>
             <tr>
                 <th>
                     @Html.DisplayName("Nombre")
                 </th>
-                <th style="padding-left:10px; padding-right:80px;">
+                <th>
                     @Html.DisplayName("Controlador")
                 </th>
                 <th>
@@ -37,15 +38,29 @@
                 <th></th>
             </tr>
             </thead>
-            @if (Model != null)
-            {
-                foreach (var item in Model)
+           }
+           else
+           {
+            <tr>
+                <th>
+                    @Html.DisplayName("Nombre")
+                </th>
+                <th>
+                    @Html.DisplayName("Controlador")
+                </th>
+                <th>
+                    @Html.DisplayName("Acción")
+                </th>
+                <th></th>
+            </tr>
+           }
+            @foreach (var item in Model)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.TextLink)
                         </td>
-                        <td style="padding-left:10px;" >
+                        <td>
                             @Html.DisplayFor(modelItem => item.Controller)
                         </td>
                         <td>
@@ -59,12 +74,9 @@
 
                     </tr>
                 }
-            }
         </table>
 
     </div>
-   
-</div>
 <div class="modal-footer">
     <button class="btn" data-dismiss="modal">Cerrar</button>
 </div>

@@ -1,0 +1,59 @@
+﻿@model SMGPA.Models.Activity
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Activity</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Proceso.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Proceso.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Fecha de inicio")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Fecha de fin")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Estado")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.state)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a class="btn btn-default" href="@Url.Action("Edit", new { id = Model.idActivity })">Editar</a>
+    <a class="btn btn-default" href="@Url.Action("Index")">Volver</a>
+</p>

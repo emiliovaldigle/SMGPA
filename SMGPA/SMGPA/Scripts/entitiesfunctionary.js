@@ -38,6 +38,9 @@
                 $("#alertsucess").fadeOut().hide();
                 $("#alertdelete").fadeOut().hide();
                 $('#alertwarning').fadeIn().show();
+                if (result.reload) {
+                    location.reload();
+                }
             }
         });
     });
@@ -54,8 +57,14 @@
                 $("#alertdelete").fadeOut().hide();
                 $("#alertdelete").fadeIn().show();
                 return false;
-            } else {
-                alert("Problemas Eliminando");
+            }
+            if(!result.sucess){
+                $("#alertsucess").fadeOut().hide();
+                $("#alertdelete").fadeOut().hide();
+                $('#alertwarning').fadeIn().show();
+                if (result.reload) {
+                    location.reload();
+                }
             }
         });
         return false;
