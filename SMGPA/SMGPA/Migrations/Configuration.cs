@@ -78,11 +78,10 @@ namespace SMGPA.Migrations
             }
             context.Role.AddOrUpdate(r => r.idRole, rol);
             MD5Encoder md = new MD5Encoder();
-            String pass = md.EncodePasswordMd5("123.pass");
+            String pass = md.EncodePasswordMd5("1234.pass");
             context.User.AddOrUpdate(u => u.idUser,
             new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = pass, Rol = context.Role.FirstOrDefault()});
-           context.Career.AddOrUpdate(u => u.idCareer,
-           new Career() {Nombre = "Ninguna", Descripcion = "Ninguna carrera en particular" });
+           
 
         }
     }

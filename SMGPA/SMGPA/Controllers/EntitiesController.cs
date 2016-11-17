@@ -160,8 +160,9 @@ namespace SMGPA.Controllers
             if(functionary == null)
             {
                 return Json(new { sucess = false });
-            } 
-            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            string carrera = functionary.idCareer == null ? "No figura": functionary.Carrera.Nombre;
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera , sucess = true }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> AddFunctionary(string rut)
@@ -179,10 +180,11 @@ namespace SMGPA.Controllers
                 TempData["Entity"] = entity;
                 return Json(new { sucess = false}, JsonRequestBehavior.AllowGet );
             }
+            string carrera = functionary.idCareer == null ? " " : functionary.Carrera.Nombre;
             entity.Involucrados.Add(functionary);
             await db.SaveChangesAsync();
             TempData["Entity"] = entity;
-            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> DeleteFunctionary(Guid? id)
@@ -199,9 +201,10 @@ namespace SMGPA.Controllers
             }
             Functionary functionary = await db.Functionary.FindAsync(id);
             bool result = (entity.Involucrados.Remove(functionary)) ? true : false;
+            string carrera = functionary.idCareer == null ? "No figura" : functionary.Carrera.Nombre;
             await db.SaveChangesAsync();
             TempData["Entity"] = entity;
-            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = functionary.Carrera.Nombre, sucess = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
         }
     }
 }

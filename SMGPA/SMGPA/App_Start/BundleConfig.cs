@@ -10,19 +10,20 @@ namespace SMGPA
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
-
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-            "~/Scripts/jquery-ui-{version}.js"));
+            "~/Scripts/jquery-ui-{version}.js").Include( 
+            "~/Scripts/jquery-ui-timepicker-addon.js"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
                        "~/Scripts/bootstrap-hover-dropdown.js"));
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/modalform").Include("~/Scripts/modalform.js"));
+            bundles.Add(new ScriptBundle("~/bundles/tasks").Include("~/Scripts/tasks.js"));
             bundles.Add(new ScriptBundle("~/bundles/roles").Include("~/Scripts/rolespermission.js"));
             bundles.Add(new ScriptBundle("~/bundles/entities").Include("~/Scripts/entitiesfunctionary.js"));
             bundles.Add(new ScriptBundle("~/bundles/operations").Include("~/Scripts/operations.js"));
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css").Include("~/Content/bootstrap.css"));
+            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css").Include("~/Content/bootstrap.css").Include("~/Content/jquery-ui-timepicker-addon.css"));
             bundles.Add(new StyleBundle("~/Content/login").Include("~/Content/login.css", "~/Content/bootstrap.css"));
             bundles.Add(new StyleBundle("~/Content/register").Include("~/Content/register.css", "~/Content/bootstrap.css"));
             bundles.Add(new StyleBundle("~/public/bundles/scss").Include("~/Content/navbar-fixed-side.css", "~/Content/navbar-fixed-side.scss"));
@@ -38,7 +39,8 @@ namespace SMGPA
             "~/Content/themes/base/jquery.ui.tabs.css",
             "~/Content/themes/base/jquery.ui.datepicker.css",
             "~/Content/themes/base/jquery.ui.progressbar.css",
-            "~/Content/themes/base/jquery.ui.theme.css"));
+            "~/Content/themes/base/jquery.ui.theme.css",
+             "~/Content/themes/base/jquery.ui.theme.css"));
             BundleTable.EnableOptimizations = false;
         }
     }

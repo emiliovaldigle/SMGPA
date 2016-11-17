@@ -36,10 +36,15 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
-                              @if(Session["Admin"]!= null)
+                              @if (Session["Admin"] != null)
                               {
                                   Html.RenderAction("BuildMenu", "Account");
                               }
+                              @if (Session["Admin"] == null && Session["UserID"] != null)
+                              {
+                                <li><a href="@Url.Action("Tasks", "Tasks", new { id = Session["UserID"] })">Mis Tareas</a></li>    
+                              }
+
                         </ul>
                     </div>
                 </nav>

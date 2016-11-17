@@ -54,6 +54,8 @@ namespace SMGPA.Controllers
             if (ModelState.IsValid)
             {
                 activity.idActivity = Guid.NewGuid();
+                if (db.Activity.Where(a => a.Nombre.Equals(activity.Nombre) && a.idProcess.Equals(activity.idProcess)).FirstOrDefault() == null)
+                    ViewBag.Existe = "Actividad ya Existe";
                 db.Activity.Add(activity);
                 db.SaveChanges();
                 GenerateTasks(activity);
@@ -162,12 +164,13 @@ namespace SMGPA.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Activity actividad =  db.Activity.Find(id);
-            ViewBag.Actividad = actividad.Nombre;
             if(actividad == null)
             {
                 return PartialView("Tasks");
             }
-            return PartialView("Tasks", actividad.Tareas.ToList());
+            ViewBag.Actividad = actividad.Nombre;
+            TempData["Activity"] = actividad;
+            return View("Tasks", actividad.Tareas.ToList());
         }
 
         [HttpGet]
@@ -198,8 +201,56 @@ namespace SMGPA.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            Activity activity = (Activity) TempData["Activity"];
+            TempData["Activity"] = db.Activity.Find(activity.idActivity);
             ViewBag.Tarea = tarea.Operacion.Nombre;
+            ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+            ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+            ViewBag.Tarea = tarea.Operacion.Nombre;
+            TempData["Task"] = tarea;
             return PartialView("_ConfigureTask", tarea);
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfigureTask([Bind(Include = "idTask,fechaInicio,fechaFin,TiempoInactividad,DesplazamientoHoras,DesplazamientoDias, Estado, idFunctionary, idEntities, idOperation")] Tasks task)
+        {
+            Activity activity = (Activity)TempData["Activity"];
+            Tasks Tarea = (Tasks)TempData["Task"];
+            if (ModelState.IsValid)
+            {
+                Tasks tarea = await db.Task.SingleAsync(t => t.idTask == Tarea.idTask);
+                if (tarea == null)
+                {
+                    return HttpNotFound();
+                }
+                tarea.fechaInicio = task.fechaInicio;
+                tarea.fechaFin = task.fechaFin;
+                tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
+                tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
+                tarea.TiempoInactividad = task.TiempoInactividad;
+                tarea.DesplazamientoDias = task.DesplazamientoDias;
+                tarea.DesplazamientoHoras = task.DesplazamientoHoras;
+                tarea.Estado = StatusEnum.ACTIVA;    
+                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null && tarea.TiempoInactividad != null
+                    && tarea.Participantes != null && tarea.DesplazamientoDias != null && tarea.DesplazamientoHoras != null)
+                {
+                    await db.SaveChangesAsync();
+                    TempData["Task"] = tarea;
+                    ViewBag.Creada = "Tarea ha sido configurada correctamente";
+                    ViewBag.Errores = null;
+                    ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+                    ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                    return PartialView("_ConfigureTask",tarea);
+                }
+                TempData["Task"] = tarea;
+            }
+            ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+            ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+            ViewBag.Creada = null;
+            ViewBag.Errores = "Tarea con Errores"; 
+            TempData["Activity"] = db.Activity.Find(activity.idActivity);
+            return PartialView("_ConfigureTask", task);
 
         }
         protected override void Dispose(bool disposing)

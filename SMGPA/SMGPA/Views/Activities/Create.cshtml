@@ -20,10 +20,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                @if(ViewBag.Existe != null)
+                {
+                <p>@ViewBag.Existe</p>
+                }
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.idProcess, "idProcess", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.idProcess, "Proceso", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("idProcess", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.idProcess, "", new { @class = "text-danger" })

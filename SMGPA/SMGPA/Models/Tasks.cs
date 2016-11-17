@@ -39,4 +39,5 @@ namespace SMGPA.Models
         public virtual ICollection<Observation> Observaciones { get; set; }
     }
     public enum StatusEnum { INACTIVA, ACTIVA, EN_PROGRESO, EN_REVISION, PENDIENTE }
+    
 }

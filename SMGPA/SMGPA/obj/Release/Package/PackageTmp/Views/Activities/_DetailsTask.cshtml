@@ -6,90 +6,88 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Detalles de @ViewBag.Tarea</h4>
 </div> 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Documento.Path)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Documento.Path)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Operacion.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Operacion.Nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Participantes.Nombre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Participantes.Nombre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Responsable.Rut)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Responsable.Rut)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaInicio)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaInicio)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaFin)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fechaFin)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TiempoInactividad)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TiempoInactividad)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DesplazamientoHoras)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DesplazamientoHoras)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DesplazamientoDias)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DesplazamientoDias)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-
-    </dl>
+<div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group pull-right">
+                    <label>@Html.DisplayNameFor(model => model.Estado)</label>
+                    <label style="border:solid 0.5px;">@Html.DisplayFor(model => model.Estado)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@Html.DisplayNameFor(model => model.Operacion.Nombre)</label>
+                        <label>@Html.DisplayFor(model => model.Operacion.Nombre)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Responsable")</label>
+                        <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Fecha de inicio")</label>
+                        <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Fecha de fin")</label>
+                        <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                        @Html.DisplayName("Entidad Validadora")
+                     </div>
+                     <div class="form-group">
+                        @Html.DisplayFor(model => model.Participantes.Nombre)
+                     </div>
+                     <div class="form-group">
+                        @Html.DisplayName("Documento")
+                     </div>
+                     <div class="form-group">
+                        @Html.DisplayFor(model => model.Documento.Path)
+                     </div>
+               </div>
+            </div>   
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Fecha")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Funcionario")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Comentario")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Estado de validación")
+                    </th>
+                </tr>
+                @foreach (var item in Model.Observaciones.ToList())
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FechaComentario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Funcionario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comentario)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ValidacionEstatus)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn" data-dismiss="modal">Cerrar</button>
