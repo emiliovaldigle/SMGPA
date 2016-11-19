@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using SMGPA.Models;
 using System.Threading.Tasks;
+using SMGPA.Filters;
 
 namespace SMGPA.Controllers
 {
@@ -150,7 +151,12 @@ namespace SMGPA.Controllers
             }
             foreach(Tasks t in activity.Tareas.ToList())
             {
-                db.Task.Remove(t);
+                Document d = db.Document.Find(t.idDocument);
+                if (d != null)
+                {
+                    db.Document.Remove(d);
+                    db.Task.Remove(t);
+                }
             }
             db.Activity.Remove(activity);
             db.SaveChanges();
@@ -184,6 +190,10 @@ namespace SMGPA.Controllers
             if(tarea == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if(tarea.idDocument != null)
+            {
+                ViewBag.Documento = tarea.Document.Path;
             }
             ViewBag.Tarea = tarea.Operacion.Nombre;
             return PartialView("_DetailsTask", tarea);
@@ -252,6 +262,11 @@ namespace SMGPA.Controllers
             TempData["Activity"] = db.Activity.Find(activity.idActivity);
             return PartialView("_ConfigureTask", task);
 
+        }
+        [Authorizate(Disabled = true)]
+        public FileResult Download(string file)
+        {
+            return File("~/uploads/"+file, System.Net.Mime.MediaTypeNames.Application.Octet, file);
         }
         protected override void Dispose(bool disposing)
         {

@@ -1,0 +1,106 @@
+﻿@model SMGPA.Models.Tasks
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/bundles/tasks")
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+        <div class="container">
+            <div class="col-md-12">
+                <div class="form-group pull-right">
+                    <label>@Html.DisplayNameFor(model => model.Estado)</label>
+                    <label style="border:solid 0.5px;">@Html.DisplayFor(model => model.Estado)</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h2>Tarea @Html.DisplayFor(model => model.Operacion.Nombre)</h2>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Responsable")</label>
+                        <label>@Html.DisplayFor(model => model.Responsable.Nombre, new { @style = "padding-right:5px !important;" })@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion)</label>
+                        <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Fecha de inicio")</label>
+                        <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Fecha de fin")</label>
+                        <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    @if (ViewBag.Documento != null)
+                    {
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Descargar Documento</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group well">
+                                    <label>@ViewBag.Documento</label>
+                                </div>
+                                <div class="form-group">
+                                    @Html.ActionLink("Descargar", "Download", new { file = @Model.Document.Path } ,new { @class ="btn btn-default" })
+                                </div>
+                            </div>
+                        </div>
+                       
+                    }
+               </div>
+            </div>   
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div style="margin-bottom: 25px;">
+                @Html.ActionLink("Agregar Observación", "AddObservation", new { id = Model.idTask }, new { @class = "btn btn-default btn-sm", data_modal = "" })
+            </div>     
+            @foreach (var item in Model.Observaciones.ToList())
+            {
+                <div class="panel panel-info">
+                     <div class="panel-heading">
+                             <h3 class="panel-title">Observación</h3>
+                     </div>
+                     <div class="panel-body">
+                             <div class="col-md-3">
+                                 <div style="width:70px !important; border-radius: 30px;">
+                                     <span class="glyphicon glyphicon-user"></span>
+                                 </div>
+                                 @Html.DisplayFor(modelItem => item.Funcionario.Nombre, new { @style = "padding-right:5px !important;" }) @Html.DisplayFor(modelItem => item.Funcionario.Apellido)
+                                 <div class="well well-sm">
+                                     @Html.DisplayFor(modelItem => item.ValidacionEstatus)
+                                 </div>
+                                 
+                             </div>
+                             <div class="col-md-9">
+                                 <div class="well well-sm">
+                                     @Html.DisplayFor(modelItem => item.FechaComentario)
+                                 </div>
+                                 <div class="well well-lg">
+                                     @Html.DisplayFor(modelItem => item.Comentario)
+                                 </div>
+                             </div>
+                     </div>
+                    
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/modalform")
+}

@@ -1,0 +1,48 @@
+﻿@model SMGPA.Models.Observation
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    @if (ViewBag.Agregada != null)
+    {
+    <div id="alertsucess" class="alert alert-success" role="alert" hidden="hidden">Observación Agregada</div>
+    }
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">Añadir Comentario</h4>
+</div> 
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Comentario, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.Comentario, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Comentario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ValidacionEstatus, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EnumDropDownListFor(model => model.ValidacionEstatus, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ValidacionEstatus, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Enviar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        </div>
+        }
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal">Cerrar</button>
+        </div>

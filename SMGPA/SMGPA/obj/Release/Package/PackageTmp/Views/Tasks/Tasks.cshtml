@@ -4,13 +4,15 @@
     ViewBag.Title = "Tasks";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>Mis Tareas</h2>
 
 <table class="table table-bordered">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Operacion.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Operacion.Descripcion)
         </th>
         <th>
             @Html.DisplayName("Fecha de inicio")
@@ -30,6 +32,9 @@
             @Html.DisplayFor(modelItem => item.Operacion.Nombre)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Operacion.Descripcion)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.fechaInicio)
         </td>
         <td>
@@ -39,9 +44,10 @@
             @Html.DisplayFor(modelItem => item.Estado)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { id=item.idTask }) 
+            @Html.ActionLink("Detalle", "Details", new { id = item.idTask }, new { @class = "btn btn-info btn-sm", data_modal = "" })
         </td>
     </tr>
 }
 
 </table>
+

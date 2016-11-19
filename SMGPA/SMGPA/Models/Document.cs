@@ -12,6 +12,8 @@ namespace SMGPA.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid idDocument { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase Documento { get; set; }
         public string Path { get; set; }
     }
 }

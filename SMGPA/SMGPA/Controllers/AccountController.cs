@@ -13,7 +13,7 @@ using System.Data.Entity;
 
 namespace SMGPA.Controllers
 {
-    [Authorizate(Disabled = true)]
+    [Authorizate(Disabled = true, Public = true)]
     public class AccountController : AsyncController
     {
         MD5Encoder mdencoder = new MD5Encoder();
@@ -31,7 +31,10 @@ namespace SMGPA.Controllers
             {
                 return View();
             }
-           return RedirectToAction("Index", "Home");
+            if(Session["Admin"]!= null)
+                return RedirectToAction("LoggedInAdmin", "Account");
+          
+          return RedirectToAction("LoggedInFunctionary", "Account");
         }
         [HttpPost]
         public ActionResult Login(User user)

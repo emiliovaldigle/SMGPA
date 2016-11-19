@@ -52,7 +52,7 @@
             @Html.DisplayFor(modelItem => item.Estado)
         </td>
         <td>
-           @Html.ActionLink("Configurar", "ConfigureTask", new { id = item.idTask }, new { @class = "btn btn-success btn-sm", data_modal = "" })
+           @Html.ActionLink("Configurar", "ConfigureTask", new { id = item.idTask }, new { @class = "btn btn-primary btn-sm", data_modal = "" })
         </td>
         <td>
             @Html.ActionLink("Detalle", "DetailsTask", new { id = item.idTask }, new { @class = "btn btn-info btn-sm", data_modal = "" })

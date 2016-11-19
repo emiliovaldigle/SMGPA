@@ -11,6 +11,7 @@ namespace SMGPA.Filters
     public class Authorizate : ActionFilterAttribute, IAuthorizationFilter
     {
         public bool Disabled { get; set; }
+        public bool Public { get; set; }
         public void OnAuthorization(AuthorizationContext filterContext)
         {
 
@@ -33,6 +34,24 @@ namespace SMGPA.Filters
                         }
                     }
                     filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "NotAuthorized" }));
+                }
+                else
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Login" }));
+                }
+            }
+            if(Disabled && Public)
+            {
+                if(HttpContext.Current.Session["UserID"] == null)
+                {
+                    return;
+                }
+            }
+            if (Disabled)
+            {
+                if (HttpContext.Current.Session["UserID"] != null)
+                {
+                    return;
                 }
                 else
                 {

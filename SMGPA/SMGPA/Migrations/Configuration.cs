@@ -18,16 +18,16 @@ namespace SMGPA.Migrations
 
         protected override void Seed(SMGPA.Models.SMGPAContext context)
         {
-            Role rol = new Role{ Nombre = "Usuario ROOT", Descripcion = "Usuario con acceso global al sistema" };
-            Permission p1 = new Permission { TextLink = "Usuarios", Controller = "Users", ActionResult = "Index", ActiveMenu = true};
+            Role rol = new Role { Nombre = "Usuario ROOT", Descripcion = "Usuario con acceso global al sistema" };
+            Permission p1 = new Permission { TextLink = "Usuarios", Controller = "Users", ActionResult = "Index", ActiveMenu = true };
             Permission p2 = new Permission { TextLink = "Crear Usuario", Controller = "Users", ActionResult = "Create", ActiveMenu = false };
             Permission p3 = new Permission { TextLink = "Editar Usuarios", Controller = "Users", ActionResult = "Edit", ActiveMenu = false };
             Permission p4 = new Permission { TextLink = "Eliminar Usuarios", Controller = "Users", ActionResult = "Delete", ActiveMenu = false };
             Permission p5 = new Permission { TextLink = "Detalles de Usuario", Controller = "Users", ActionResult = "Details", ActiveMenu = false };
             Permission p6 = new Permission { TextLink = "Carreras", Controller = "Careers", ActionResult = "Index", ActiveMenu = true };
-            Permission p7= new Permission { TextLink = "Crear Carrera", Controller = "Careers", ActionResult = "Create", ActiveMenu = false };
+            Permission p7 = new Permission { TextLink = "Crear Carrera", Controller = "Careers", ActionResult = "Create", ActiveMenu = false };
             Permission p8 = new Permission { TextLink = "Editar Carreras", Controller = "Careers", ActionResult = "Edit", ActiveMenu = false };
-            Permission p9= new Permission { TextLink = "Eliminar Carreras", Controller = "Careers", ActionResult = "Delete", ActiveMenu = false };
+            Permission p9 = new Permission { TextLink = "Eliminar Carreras", Controller = "Careers", ActionResult = "Delete", ActiveMenu = false };
             Permission p10 = new Permission { TextLink = "Detalles de Carrera", Controller = "Careers", ActionResult = "Details", ActiveMenu = false };
             Permission p11 = new Permission { TextLink = "Roles", Controller = "Roles", ActionResult = "Index", ActiveMenu = true };
             Permission p12 = new Permission { TextLink = "Crear Roles", Controller = "Roles", ActionResult = "Create", ActiveMenu = false };
@@ -80,8 +80,8 @@ namespace SMGPA.Migrations
             MD5Encoder md = new MD5Encoder();
             String pass = md.EncodePasswordMd5("1234.pass");
             context.User.AddOrUpdate(u => u.idUser,
-            new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = pass, Rol = context.Role.FirstOrDefault()});
-           
+            new Administrator() { Rut = "1111111-1", Nombre = "Administrador", Apellido = "Root", MailInstitucional = "admin@root.org", Contrasena = pass, Rol = context.Role.FirstOrDefault() });
+
 
         }
     }

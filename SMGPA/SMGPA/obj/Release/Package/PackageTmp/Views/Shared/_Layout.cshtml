@@ -9,17 +9,27 @@
     @Styles.Render("~/Content/css")
     @Styles.Render("~/public/bundles/scss")
 </head>
-<body style="padding-top:0px !important;">
-        @if (Session["UserID"] != null)
-        {
-        <a href="@Url.Action("LogOut", "Account")"  class="btn btn-primary btn-md pull-right">
-          Cerrar sesión
-        </a>
-        }
-    <div class="container-fluid">
+<body style="margin-bottom:-2px !important;">
+    <nav class="navbar navbar-inverse" style="border-radius: 0 !important;">
+        <ul class="nav nav-pills pull-right" role="tablist">  
+            <li role="presentation"><a href="#">Perfil</a></li>
+            <li role="presentation"><a href="#"><span class="glyphicon glyphicon-envelope"></span> <span class="badge">3</span></a></li>
+            @if (Session["UserID"] != null)
+            {
+                <li role="presentation">
+                    <a href="@Url.Action("LogOut", "Account")">
+                        <span class="glyphicon glyphicon-log-out">
+                        </span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+       
+    <div class="container-fluid" style="margin-top:-200px !important;">
         <div class="row">
-            <div class="col-sm-6 col-lg-2">
-            <nav class="navbar navbar-inverse navbar-fixed-side" style="padding-left:10px !important;">
+            <div class="col-sm-6 col-md-2">
+            <nav class="navbar navbar-inverse navbar-fixed-side" style="padding-left:10px !important; border: none !important;">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                            <span class="glyphicon glyphicon-list"></span>
@@ -52,7 +62,7 @@
         </div>
 
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="padding-top:33px;">
         @RenderBody()
         <footer>
             <p>&copy; @DateTime.Now.Year - Sistema de Modelamiento y Gestión de procesos académicos</p>

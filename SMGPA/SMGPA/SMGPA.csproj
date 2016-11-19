@@ -236,8 +236,24 @@
     <Compile Include="Migrations\201611161644239_updateTask1.Designer.cs">
       <DependentUpon>201611161644239_updateTask1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\OperationType.cs" />
+    <Compile Include="Migrations\201611180356366_taskupdate2.cs" />
+    <Compile Include="Migrations\201611180356366_taskupdate2.Designer.cs">
+      <DependentUpon>201611180356366_taskupdate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611180400576_taskupdate3.cs" />
+    <Compile Include="Migrations\201611180400576_taskupdate3.Designer.cs">
+      <DependentUpon>201611180400576_taskupdate3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611181434354_uploadtask5.cs" />
+    <Compile Include="Migrations\201611181434354_uploadtask5.Designer.cs">
+      <DependentUpon>201611181434354_uploadtask5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611181511264_uploadtask6.cs" />
+    <Compile Include="Migrations\201611181511264_uploadtask6.Designer.cs">
+      <DependentUpon>201611181511264_uploadtask6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\OperationType.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
     <Compile Include="Migrations\201610272148317_initial.Designer.cs">
@@ -551,9 +567,13 @@
     <Content Include="Views\Activities\_DetailsTask.cshtml" />
     <Content Include="Views\Activities\_ConfigureTask.cshtml" />
     <Content Include="Views\Tasks\Tasks.cshtml" />
+    <Content Include="Views\Tasks\_DetailsValidate.cshtml" />
+    <Content Include="Views\Tasks\_DetailsUpload.cshtml" />
+    <Content Include="Views\Tasks\_AddObservation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -673,6 +693,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611161644239_updateTask1.resx">
       <DependentUpon>201611161644239_updateTask1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611180356366_taskupdate2.resx">
+      <DependentUpon>201611180356366_taskupdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611180400576_taskupdate3.resx">
+      <DependentUpon>201611180400576_taskupdate3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611181434354_uploadtask5.resx">
+      <DependentUpon>201611181434354_uploadtask5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611181511264_uploadtask6.resx">
+      <DependentUpon>201611181511264_uploadtask6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
