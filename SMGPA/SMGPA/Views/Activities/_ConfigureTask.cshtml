@@ -50,24 +50,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.Label("Tiempo de inactividad", htmlAttributes: new { @class = "control-label col-md-6" })
+                    @Html.Label("Días de inactividad", htmlAttributes: new { @class = "control-label col-md-6" })
                     <div class="col-md-6">
                         @Html.EditorFor(model => model.TiempoInactividad, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.TiempoInactividad, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.Label("Desplazamiento en Horas", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
-                        @Html.EditorFor(model => model.DesplazamientoHoras, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DesplazamientoHoras, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.Label("Desplazamiento en Dias", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
-                        @Html.EditorFor(model => model.DesplazamientoDias, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DesplazamientoDias, "", new { @class = "text-danger" })
                     </div>
                 </div>
       </div>

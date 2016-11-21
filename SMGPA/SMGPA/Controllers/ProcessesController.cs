@@ -252,7 +252,7 @@ namespace SMGPA.Controllers
             return Json(new { sucess = true });
            
         }
-        [Authorizate(Disabled = true)]
+        [Authorizate(Disabled = true, Public = false)]
         [HttpPost]
         public async Task<ActionResult> ConfirmDeleteOperation()
         {

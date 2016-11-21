@@ -34,6 +34,10 @@
                         <label>@Html.DisplayName("Fecha de fin")</label>
                         <label>@Html.DisplayFor(model => model.fechaFin) </label>
                     </div>
+                    <div class="form-group">
+                        <label>@Html.DisplayName("Cantidad de Re programaciones")</label>
+                        <label>@Html.DisplayFor(model => model.Reprogramaciones) </label>
+                    </div>
                 </div>
                 <div class="col-md-6">
                      <div class="form-group">
@@ -44,7 +48,7 @@
                      </div>
                     @if (ViewBag.Documento != null)
                     {
-                        <div class="panel panel-primary">
+                       <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Descargar Documento</h3>
                             </div>
@@ -53,7 +57,32 @@
                                     <label>@ViewBag.Documento</label>
                                 </div>
                                 <div class="form-group">
-                                    @Html.ActionLink("Descargar", "Download", new { file = @Model.Document.Path })
+                                   
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayName("Versión")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Nombre")
+                                            </th>
+                                            <th>
+                                              
+                                            </th>
+                                        </tr>
+                                        @{
+                                            int version = 1;
+                                        }
+                                        @foreach (var item in Model.Documentos.ToList())
+                                        {
+                                            <tr>
+                                                <td>@version</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Path)</td>
+                                                <td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>
+                                            </tr>
+                                           version++;
+                                        }
+                                    </table>
                                 </div>
                             </div>
                         </div>

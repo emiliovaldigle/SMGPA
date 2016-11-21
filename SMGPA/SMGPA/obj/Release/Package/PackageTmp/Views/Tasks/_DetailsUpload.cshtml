@@ -2,7 +2,7 @@
 @{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Scripts.Render("~/bundles/tasks")
+
 <div class="row">
     <h2>Tarea @ViewBag.Tarea</h2>
         <div class="container">
@@ -37,10 +37,48 @@
                    @using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data" }))
                    {
                     @Html.AntiForgeryToken()
-                    @Html.TextBoxFor(t => t.Document.Path, new { type = "file" })
-                    <input type="submit" value="Subir" />
+                    <input type="file" name="fileDoc"/>
+                    <input type="submit" value="Subir" id="uploadDocument" />
                    }
-          
+                    @if (ViewBag.Documento != null)
+                    {
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Descargar Documento</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group well">
+                                    <label>@ViewBag.Documento</label>
+                                </div>
+                                <div class="form-group">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>
+                                                @Html.DisplayName("Versión")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Nombre")
+                                            </th>
+                                            <th>
+
+                                            </th>
+                                        </tr>
+                                        @foreach (var item in Model.Documentos.ToList())
+                                        {
+                                            var version = 1;
+                                            <tr>
+                                                <td>@version</td>
+                                                <td>@Html.DisplayFor(modelItem => item.Path)</td>
+                                                <td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>
+                                            </tr>
+                                            version++;
+                                        }
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
                </div>
             </div>   
     </div>
@@ -81,3 +119,10 @@
     </div>
     <a class="btn btn-default" href="@Url.Action("Tasks", new { id = Model.idFunctionary})">Volver</a>
 </div>
+@section Scripts{ 
+    <script type="text/javascript">
+        $(document).on("click", "#uploadDocument", function (e) {
+            location.reload();
+        });
+    </script>
+}

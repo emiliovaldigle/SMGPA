@@ -47,7 +47,7 @@ namespace SMGPA.Filters
                     return;
                 }
             }
-            if (Disabled)
+            if (Disabled && !Public)
             {
                 if (HttpContext.Current.Session["UserID"] != null)
                 {

@@ -75,10 +75,22 @@ namespace SMGPA.Controllers
                 Activity actividad = db.Activity.Find(activity.idActivity);
                 foreach (Operation o in operaciones)
                 {
-                    Guid idTarea = Guid.NewGuid();
                     Tasks tarea = new Tasks();
-                    tarea.idTask = idTarea;
+                    tarea.idTask = Guid.NewGuid();
                     tarea.Operacion = o;
+                    if(o.idPredecesora != null)
+                    {
+                        Operation predecesora = db.Operation.Find(o.idPredecesora);
+                        List<Tasks> tareas = actividad.Tareas.ToList();
+                        foreach(Tasks ta in tareas)
+                        {
+                            Tasks aux = db.Task.Find(ta.idTask);
+                            if (aux.Operacion.idOperation == predecesora.idOperation)
+                            {
+                                tarea.Predecesora = ta;
+                            }
+                        }
+                    }
                     actividad.Tareas.Add(tarea);
                     db.SaveChanges();
                 }
@@ -151,12 +163,17 @@ namespace SMGPA.Controllers
             }
             foreach(Tasks t in activity.Tareas.ToList())
             {
-                Document d = db.Document.Find(t.idDocument);
-                if (d != null)
+                List<Observation> obs = db.Observation.Where(o=> o.Tarea.idTask == t.idTask).ToList();
+                foreach(Observation ob in obs)
                 {
-                    db.Document.Remove(d);
-                    db.Task.Remove(t);
+                    db.Observation.Remove(ob);
                 }
+                List<Document> docs = db.Document.Where(d => d.idTask == t.idTask).ToList();
+                foreach(Document doc in docs)
+                {
+                    db.Document.Remove(doc);
+                }
+                db.Task.Remove(t);
             }
             db.Activity.Remove(activity);
             db.SaveChanges();
@@ -191,9 +208,9 @@ namespace SMGPA.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if(tarea.idDocument != null)
+            if(tarea.Documentos.Count > 0)
             {
-                ViewBag.Documento = tarea.Document.Path;
+                ViewBag.Documento = "Documentos";
             }
             ViewBag.Tarea = tarea.Operacion.Nombre;
             return PartialView("_DetailsTask", tarea);
@@ -239,18 +256,17 @@ namespace SMGPA.Controllers
                 tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
                 tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
                 tarea.TiempoInactividad = task.TiempoInactividad;
-                tarea.DesplazamientoDias = task.DesplazamientoDias;
-                tarea.DesplazamientoHoras = task.DesplazamientoHoras;
-                tarea.Estado = StatusEnum.ACTIVA;    
-                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null && tarea.TiempoInactividad != null
-                    && tarea.Participantes != null && tarea.DesplazamientoDias != null && tarea.DesplazamientoHoras != null)
+                tarea.Estado = StatusEnum.INACTIVA;    
+                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null && tarea.TiempoInactividad >= 0
+                    && tarea.Participantes != null && tarea.fechaInicio >= DateTime.Now
+                    && tarea.fechaFin > tarea.fechaInicio)
                 {
                     await db.SaveChangesAsync();
                     TempData["Task"] = tarea;
                     ViewBag.Creada = "Tarea ha sido configurada correctamente";
                     ViewBag.Errores = null;
                     ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
-                    ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                    ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");     
                     return PartialView("_ConfigureTask",tarea);
                 }
                 TempData["Task"] = tarea;
@@ -258,12 +274,12 @@ namespace SMGPA.Controllers
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
             ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.Creada = null;
-            ViewBag.Errores = "Tarea con Errores"; 
+            ViewBag.Errores = "Tarea con Errores, considerar que Fecha de Inicio debe ser mayor al tiempo actual"; 
             TempData["Activity"] = db.Activity.Find(activity.idActivity);
             return PartialView("_ConfigureTask", task);
 
         }
-        [Authorizate(Disabled = true)]
+        [Authorizate(Disabled = true, Public = false)]
         public FileResult Download(string file)
         {
             return File("~/uploads/"+file, System.Net.Mime.MediaTypeNames.Application.Octet, file);

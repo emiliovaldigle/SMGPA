@@ -132,7 +132,7 @@ namespace SMGPA.Controllers
             }
             return PartialView("_Functionaries", entity.Involucrados.ToList());
         }
-        [Authorizate(Disabled = true)]
+        [Authorizate(Disabled = true, Public = false)]
         public JsonResult RutAutoComplete(string term)
         {
             List<String> Rut = new List<String>();
@@ -148,7 +148,7 @@ namespace SMGPA.Controllers
             }
             base.Dispose(disposing);
         }
-        [Authorizate(Disabled =true)]
+        [Authorizate(Disabled =true, Public = false)]
         [HttpGet]
         public JsonResult CheckUser(string rut)
         {

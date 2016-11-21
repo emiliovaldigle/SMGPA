@@ -252,6 +252,30 @@
     <Compile Include="Migrations\201611181511264_uploadtask6.Designer.cs">
       <DependentUpon>201611181511264_uploadtask6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611192343211_taskupdate6.cs" />
+    <Compile Include="Migrations\201611192343211_taskupdate6.Designer.cs">
+      <DependentUpon>201611192343211_taskupdate6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611200729277_taskupdate7.cs" />
+    <Compile Include="Migrations\201611200729277_taskupdate7.Designer.cs">
+      <DependentUpon>201611200729277_taskupdate7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611201748230_updateTaqsk9.cs" />
+    <Compile Include="Migrations\201611201748230_updateTaqsk9.Designer.cs">
+      <DependentUpon>201611201748230_updateTaqsk9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611201920018_updateTaqsk10.cs" />
+    <Compile Include="Migrations\201611201920018_updateTaqsk10.Designer.cs">
+      <DependentUpon>201611201920018_updateTaqsk10.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611210120323_updateTaqsk11.cs" />
+    <Compile Include="Migrations\201611210120323_updateTaqsk11.Designer.cs">
+      <DependentUpon>201611210120323_updateTaqsk11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611210250067_updateTaqsk12.cs" />
+    <Compile Include="Migrations\201611210250067_updateTaqsk12.Designer.cs">
+      <DependentUpon>201611210250067_updateTaqsk12.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\OperationType.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
@@ -705,6 +729,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611181511264_uploadtask6.resx">
       <DependentUpon>201611181511264_uploadtask6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611192343211_taskupdate6.resx">
+      <DependentUpon>201611192343211_taskupdate6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611200729277_taskupdate7.resx">
+      <DependentUpon>201611200729277_taskupdate7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611201748230_updateTaqsk9.resx">
+      <DependentUpon>201611201748230_updateTaqsk9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611201920018_updateTaqsk10.resx">
+      <DependentUpon>201611201920018_updateTaqsk10.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611210120323_updateTaqsk11.resx">
+      <DependentUpon>201611210120323_updateTaqsk11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611210250067_updateTaqsk12.resx">
+      <DependentUpon>201611210250067_updateTaqsk12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

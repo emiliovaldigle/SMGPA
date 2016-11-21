@@ -85,7 +85,6 @@ namespace SMGPA.Controllers
             return View();
 
         }
-        [Authorizate(Disabled = true)]
         public ActionResult Register()
         {
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
@@ -171,37 +170,14 @@ namespace SMGPA.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<ActionResult> ResetPassword(User user)
+        public  async Task<ActionResult> ResetPassword(User user)
         {
-            User usuario = db.User.Where(f => f.MailInstitucional.Equals(user.MailInstitucional)).FirstOrDefault();
-            if(usuario != null)
-            {
-                string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPass", "Account", new { id = usuario.idUser});
-                var body = "<p>Por favor ingresar a la siguiente URL para restablecer contraseña</p>"+
-                    "<p>"+link+"</p>";
-                var message = new MailMessage();
-                message.To.Add(new MailAddress(usuario.MailInstitucional));  // replace with valid value 
-                message.From = new MailAddress("soportesmgpa@gmail.com");  // replace with valid value
-                message.Subject = "Restablecer contraseña SMGPA";
-                message.Body = string.Format(body);
-                message.IsBodyHtml = true;
-
-                using (var smtp = new SmtpClient())
-                {
-                    var credential = new System.Net.NetworkCredential
-                    {
-                        UserName = "soportesmgpa@gmail.com",  // replace with valid value
-                        Password = "123.pass"  // replace with valid value
-                    };
-                    smtp.Credentials = credential;
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    await smtp.SendMailAsync(message);
-                }
-                ViewBag.Mensaje = "Hemos enviado un correo para que restablezcas tu contraseña";
-            }
-           return View();
+            User functionary = db.User.Where(f => f.MailInstitucional.Equals(user.MailInstitucional)).FirstOrDefault();
+            string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPass", "Account", new { id = functionary.idUser});
+            Notification n = new Notification();
+            await n.RecoverPassword(functionary, link);
+            ViewBag.Mensaje = "Hemos enviado un correo para que restablezcas tu contraseña";
+            return View();
         }
         public ActionResult ResetPass(Guid? id)
         {

@@ -15,5 +15,9 @@ namespace SMGPA.Models
         [NotMapped]
         public HttpPostedFileBase Documento { get; set; }
         public string Path { get; set; }
+        public Guid idTask { get; set; }
+        [ForeignKey("idTask")]
+        public Tasks Tarea { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }

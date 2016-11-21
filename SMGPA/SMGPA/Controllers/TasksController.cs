@@ -13,7 +13,7 @@ using System.IO;
 
 namespace SMGPA.Controllers
 {
-    [Authorizate(Disabled = true)]
+    [Authorizate(Disabled = true, Public = false)]
     public class TasksController : Controller { 
     
 
@@ -32,12 +32,20 @@ namespace SMGPA.Controllers
             List<Tasks> Tareas = new List<Tasks>();
             List<Tasks> tasks = db.Task.ToList();
             List<Tasks> tareasresponsable = tasks.Where(t => t.idFunctionary == usuario.idUser).ToList();
+            List<Tasks> tareasfiltradas = tareasresponsable.Where(t => t.Estado != StatusEnum.COMPLETADA).ToList();
+            List<Tasks> tareasdisponibles = tareasfiltradas.Where(t => t.Estado != StatusEnum.INACTIVA).ToList();
             List<Entities> entidades = usuario.Entidades.ToList();
-            Tareas = tareasresponsable;
+            Tareas = tareasdisponibles;
+            //El funcionario no puede validar las Tareas si es el responsable
             foreach(Entities e in entidades)
             {
-                List<Tasks> tareasvalidador = db.Task.Where(t => t.idEntities == e.idEntities).ToList();
-                Tareas.AddRange(tareasvalidador);
+                //obtener todas las tareas donde participa la entidad del funcionario
+                List<Tasks> tareasentidad = db.Task.Where(t => t.idEntities == e.idEntities).ToList();
+                //filtrar las tareas en la cual el funcionario es responsable
+                List<Tasks> tareasvalidador = tareasentidad.Where(t=> t.idFunctionary != idUser).ToList();
+                //filtrar las tareas Completadas
+                List<Tasks> tareasnocompletas = tareasvalidador.Where(t => t.Estado != StatusEnum.COMPLETADA).ToList();
+                Tareas.AddRange(tareasnocompletas);
             }
             return View(Tareas);
         }
@@ -50,12 +58,15 @@ namespace SMGPA.Controllers
             }
             Tasks tarea = await db.Task.FindAsync(id);
             ViewBag.Tarea = tarea.Operacion.Nombre;
-            if(tarea == null)
+            if (tarea == null)
             {
                 return HttpNotFound();
             }
             TempData["Tarea"] = tarea;
-            ViewBag.DocumentO = tarea.Document.Path;
+            if (tarea.Documentos.Count > 0)
+            {
+                ViewBag.Documento = "Tareas";
+            }
             List<SelectListItem> ValidacionEstatus = new List<SelectListItem>();
             ViewBag.EstatusEnum = new SelectList(db.Role, "idRole", "Nombre");
             if (tarea.idFunctionary == (Guid)Session["UserID"])
@@ -66,9 +77,9 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UploadFile(Tasks _task)
+        public async Task<ActionResult> UploadFile(HttpPostedFileBase fileDoc)
         {
-            if (_task == null)
+            if (fileDoc == null)
             { 
                 return HttpNotFound();
             }
@@ -76,11 +87,7 @@ namespace SMGPA.Controllers
             {
                 Tasks tarea = (Tasks)TempData["Tarea"];
                 Tasks task = db.Task.Single(t => t.idTask == tarea.idTask);    
-                if(task.idDocument != null)
-                {
-                    Document doc = db.Document.Find(task.idDocument);
-                    db.Document.Remove(doc);
-                }
+               
                 if (Request.Files.Count > 0)
                 {
                     HttpPostedFileBase file = Request.Files[0];
@@ -88,14 +95,21 @@ namespace SMGPA.Controllers
                     {
                         var pathToSave = "~/uploads";
                         var fileName = Path.GetFileName(file.FileName);
-                        _task.Document.Path = Path.Combine(
+                        string Ruta = Path.Combine(
                             Server.MapPath(pathToSave), fileName);
-                        file.SaveAs(_task.Document.Path);
-                        Document documento = new Document { idDocument = Guid.NewGuid(), Path = fileName };
-                        task.Document = documento;
+                        file.SaveAs(Ruta);
+                        Document documento = new Document { idDocument = Guid.NewGuid(), Path = fileName, idTask = task.idTask, Fecha = DateTime.Today };
+                        task.Documentos.Add(documento);
                         task.Estado = StatusEnum.EN_PROGRESO;
                     }               
                     db.SaveChanges();
+                    string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = task.idTask });
+                    Notification notificator = new Notification();
+                    Tasks _Tarea = await db.Task.FindAsync(tarea.idTask);
+                    foreach(Functionary f in _Tarea.Participantes.Involucrados)
+                    {
+                       await notificator.NotificateParticipants(_Tarea.Responsable,db.Functionary.Find(f.idUser), _Tarea, link);
+                    }
                     return RedirectToAction("Tasks",task);
                 }
             }
@@ -131,8 +145,63 @@ namespace SMGPA.Controllers
                 observation.FechaComentario = DateTime.Now;
                 observation.Funcionario = user;
                 Tarea.Observaciones.Add(observation);
-                await db.SaveChangesAsync();
+                user.Observaciones.Add(observation);
+                Tarea.Estado = StatusEnum.EN_PROGRESO;
                 ViewBag.Agregada = "Observación agregada";
+                List<Guid> idsUsuario = new List<Guid>();
+                bool Completada = false;
+                Entities Entidad = await db.Entity.FindAsync(Tarea.idEntities);
+                List<Observation> Obs = Tarea.Observaciones.ToList();
+                foreach (Observation o in Obs)
+                {
+                    if (!idsUsuario.Contains(o.Funcionario.idUser))
+                    {
+                        var userObs = Obs.Where(ob => ob.Funcionario.idUser == o.Funcionario.idUser);
+                        var lastObs = userObs.Last();
+                        Completada = (lastObs.ValidacionEstatus.Equals(Validate.APROBADO)) ? true : false;
+                        idsUsuario.Add(o.Funcionario.idUser);
+                    }
+                }
+                //se debe validar que todos los Funcionarios de la Entidad tengan observaciones sobre la Tarea 
+                bool Comented = false;
+                //esto para poder considerar la tarea como Completada
+                foreach (Functionary f in Entidad.Involucrados)
+                {
+                    if (f.idUser != Tarea.idFunctionary)
+                    {
+                        if (idsUsuario.Contains(f.idUser))
+                        {
+                            Comented = true;
+                        }
+                        else
+                        {
+                            Comented = false;
+                        }
+                    }
+                }
+                if (Comented)
+                {
+                    Tarea.Estado = Completada ? StatusEnum.COMPLETADA : StatusEnum.EN_PROGRESO;
+                    if (Tarea.Estado == StatusEnum.COMPLETADA)
+                    {
+                        List<Tasks> dependencies = db.Task.Where(t=> t.idPredecesora == Tarea.idTask).ToList();
+                        foreach(Tasks ta in dependencies)
+                        {
+                            ta.Documentos.Add(Tarea.Documentos.Last());
+                        }
+                        
+                    }
+                }
+        
+                await db.SaveChangesAsync();
+                string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = Tarea.idTask });
+                Notification notificator = new Notification();
+                Tasks _Tarea = await db.Task.FindAsync(Tarea.idTask);
+                foreach (Functionary f in _Tarea.Participantes.Involucrados)
+                {
+                    await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), _Tarea, link,3);
+                }
+
                 return PartialView();
             }
             return PartialView();

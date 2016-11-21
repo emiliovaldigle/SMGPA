@@ -110,3 +110,9 @@ C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Releas
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.taskupdate3.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.uploadtask5.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.uploadtask6.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.taskupdate6.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.taskupdate7.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateTaqsk9.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateTaqsk10.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateTaqsk11.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateTaqsk12.resources
