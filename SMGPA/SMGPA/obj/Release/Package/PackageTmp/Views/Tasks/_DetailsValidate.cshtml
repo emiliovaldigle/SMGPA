@@ -24,19 +24,19 @@
             <div class="col-md-12">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>@Html.DisplayName("Responsable")</label>
+                        <label>@Html.DisplayName("Responsable"):</label>
                         <label>@Html.DisplayFor(model => model.Responsable.Nombre, new { @style = "padding-right:5px !important;" })@Html.DisplayFor(model => model.Responsable.Apellido)</label>
                     </div>
                     <div class="form-group">
-                        <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion)</label>
+                        <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion):</label>
                         <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
                     </div>
                     <div class="form-group">
-                        <label>@Html.DisplayName("Fecha de inicio")</label>
+                        <label>@Html.DisplayName("Fecha de inicio"):</label>
                         <label>@Html.DisplayFor(model => model.fechaInicio)</label>
                     </div>
                     <div class="form-group">
-                        <label>@Html.DisplayName("Fecha de fin")</label>
+                        <label>@Html.DisplayName("Fecha de fin"):</label>
                         <label>@Html.DisplayFor(model => model.fechaFin) </label>
                     </div>
                 </div>
@@ -64,9 +64,11 @@
 
                                             </th>
                                         </tr>
+                                        @{
+                                            int version = 1;
+                                        }
                                         @foreach (var item in Model.Documentos.ToList())
                                         {
-                                            var version = 1;
                                             <tr>
                                                 <td>@version</td>
                                                 <td>@Html.DisplayFor(modelItem => item.Path)</td>
@@ -95,20 +97,16 @@
                              <h3 class="panel-title">Observación</h3>
                      </div>
                      <div class="panel-body">
-                             <div class="col-md-3">
-                                 <div style="width:70px !important; border-radius: 30px;">
-                                     <span class="glyphicon glyphicon-user"></span>
-                                 </div>
-                                 @Html.DisplayFor(modelItem => item.Funcionario.Nombre, new { @style = "padding-right:5px !important;" }) @Html.DisplayFor(modelItem => item.Funcionario.Apellido)
+                             <div class="col-md-3">     
                                  <div class="well well-sm">
                                      @Html.DisplayFor(modelItem => item.ValidacionEstatus)
                                  </div>
-                                 
-                             </div>
-                             <div class="col-md-9">
                                  <div class="well well-sm">
                                      @Html.DisplayFor(modelItem => item.FechaComentario)
                                  </div>
+                             </div>
+                             <div class="col-md-9">
+                                 @Html.DisplayFor(modelItem => item.Funcionario.Nombre, new { @style = "padding-right:5px !important;" }) @Html.DisplayFor(modelItem => item.Funcionario.Apellido) Dice:
                                  <div class="well well-lg">
                                      @Html.DisplayFor(modelItem => item.Comentario)
                                  </div>
@@ -127,10 +125,9 @@
     @Scripts.Render("~/bundles/modalform")
     <script type="text/javascript">
         $(function (e) {
-            $(".observation").on('click'), function (e) {
-                $('#myModal').modal('hide');
+            $('#myModal').on('hidden.bs.modal', function () {
                 location.reload();
-            };
+            })
         });
     </script>
 }

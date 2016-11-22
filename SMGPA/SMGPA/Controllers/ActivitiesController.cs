@@ -255,9 +255,8 @@ namespace SMGPA.Controllers
                 tarea.fechaFin = task.fechaFin;
                 tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
                 tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
-                tarea.TiempoInactividad = task.TiempoInactividad;
                 tarea.Estado = StatusEnum.INACTIVA;    
-                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null && tarea.TiempoInactividad >= 0
+                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null
                     && tarea.Participantes != null && tarea.fechaInicio >= DateTime.Now
                     && tarea.fechaFin > tarea.fechaInicio)
                 {

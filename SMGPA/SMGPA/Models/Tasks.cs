@@ -22,7 +22,6 @@ namespace SMGPA.Models
         public Guid idTask { get; set; }
         public DateTime? fechaInicio { get; set; }
         public DateTime? fechaFin { get; set; }
-        public decimal? TiempoInactividad { get; set; }
         public StatusEnum Estado { get; set; }
         public Guid? idFunctionary { get; set; }
         public Guid? idEntities { get; set; }

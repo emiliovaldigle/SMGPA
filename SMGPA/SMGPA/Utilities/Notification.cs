@@ -116,10 +116,5 @@ namespace SMGPA
             return true;
         }
 
-        public async Task<bool> AddNotification()
-        {
-            return false;
-        }
-
     }
 }

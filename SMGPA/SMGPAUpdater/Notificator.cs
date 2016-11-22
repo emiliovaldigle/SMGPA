@@ -62,10 +62,6 @@ namespace Notificator
         }
 
 
-        public async Task<bool> AddNotification()
-        {
-            return false;
-        }
 
     }
 }

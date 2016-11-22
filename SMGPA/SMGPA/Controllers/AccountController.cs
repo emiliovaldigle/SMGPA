@@ -23,7 +23,7 @@ namespace SMGPA.Controllers
         {
             return View();
         }
-  
+
 
         public ActionResult Login()
         {
@@ -31,24 +31,24 @@ namespace SMGPA.Controllers
             {
                 return View();
             }
-            if(Session["Admin"]!= null)
+            if (Session["Admin"] != null)
                 return RedirectToAction("LoggedInAdmin", "Account");
-          
-          return RedirectToAction("LoggedInFunctionary", "Account");
+
+            return RedirectToAction("LoggedInFunctionary", "Account");
         }
         [HttpPost]
         public ActionResult Login(User user)
-        {  
+        {
             using (SMGPAContext db = new SMGPAContext())
             {
                 try
                 {
                     ICollection<Administrator> Administrator = db.Administrator.ToList();
                     ICollection<Functionary> Functionary = db.Functionary.ToList();
-                   
-                    foreach(Administrator a in Administrator)
+
+                    foreach (Administrator a in Administrator)
                     {
-                        if(a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
+                        if (a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
                             Session["Admin"] = a;
                             Session["UserID"] = a.idUser;
@@ -67,6 +67,8 @@ namespace SMGPA.Controllers
                         {
                             Session["UserID"] = f.idUser;
                             Session["Username"] = f.Nombre + " " + f.Apellido;
+                            ViewBag.Notificaciones = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).ToList();
+                            ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
                             return View("LoggedInFunctionary");
                         }
                         else
@@ -77,11 +79,12 @@ namespace SMGPA.Controllers
                     }
 
                 }
-                catch(SqlException ex) when (ex.Errors.Count > 0) { 
+                catch (SqlException ex) when (ex.Errors.Count > 0)
+                {
 
                 }
-             
-          }
+
+            }
             return View();
 
         }
@@ -130,7 +133,7 @@ namespace SMGPA.Controllers
         }
         public ActionResult LoggedInFunctionary()
         {
-            if(Session["UserID"] != null)
+            if (Session["UserID"] != null)
             {
                 return View();
             }
@@ -164,16 +167,16 @@ namespace SMGPA.Controllers
             }
             return RedirectToAction("Login");
         }
-        
+
         public ActionResult ResetPassword()
         {
             return View();
         }
         [HttpPost]
-        public  async Task<ActionResult> ResetPassword(User user)
+        public async Task<ActionResult> ResetPassword(User user)
         {
             User functionary = db.User.Where(f => f.MailInstitucional.Equals(user.MailInstitucional)).FirstOrDefault();
-            string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPass", "Account", new { id = functionary.idUser});
+            string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPass", "Account", new { id = functionary.idUser });
             Notification n = new Notification();
             await n.RecoverPassword(functionary, link);
             ViewBag.Mensaje = "Hemos enviado un correo para que restablezcas tu contraseña";
@@ -186,7 +189,7 @@ namespace SMGPA.Controllers
             if (user != null)
             {
                 return View(user);
-                
+
             }
             return View(user);
         }
@@ -194,10 +197,10 @@ namespace SMGPA.Controllers
         public async Task<ActionResult> ResetPass(User usuario)
         {
             User user = (User)TempData["account"];
-            using( SMGPAContext db = new SMGPAContext())
+            using (SMGPAContext db = new SMGPAContext())
             {
                 db.Configuration.ValidateOnSaveEnabled = false;
-                User u =  await db.User.FindAsync(user.idUser);
+                User u = await db.User.FindAsync(user.idUser);
                 u.Contrasena = mdencoder.EncodePasswordMd5(usuario.Contrasena);
                 db.User.Attach(u);
                 db.Entry(u).Property(x => x.Contrasena).IsModified = true;
@@ -206,8 +209,6 @@ namespace SMGPA.Controllers
                 return View();
             }
 
-        }
-        
-
+        } 
     }
 }

@@ -13,6 +13,7 @@ namespace SMGPA.Models
         {
             Entidades = new HashSet<Entities>();
             Observaciones = new HashSet<Observation>();
+            Notificaciones = new HashSet<Notificacion>();
             Carrera = null;
         }
         [Required(ErrorMessage = "Número Telefónico es requerido.")]
@@ -27,6 +28,7 @@ namespace SMGPA.Models
         public virtual Career Carrera { get; set; }
         public virtual ICollection<Entities> Entidades { get; set; }
         public virtual ICollection<Observation> Observaciones { get; set; }
+        public virtual ICollection<Notificacion> Notificaciones { get; set; }
 
     }
 }

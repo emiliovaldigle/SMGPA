@@ -80,8 +80,8 @@ namespace SMGPA.Controllers
         public async Task<ActionResult> UploadFile(HttpPostedFileBase fileDoc)
         {
             if (fileDoc == null)
-            { 
-                return HttpNotFound();
+            {
+                return Content("Error, no hay archivo seleccionado");
             }
             if (ModelState.IsValid)
             {
@@ -102,14 +102,23 @@ namespace SMGPA.Controllers
                         task.Documentos.Add(documento);
                         task.Estado = StatusEnum.EN_PROGRESO;
                     }               
-                    db.SaveChanges();
                     string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = task.idTask });
                     Notification notificator = new Notification();
                     Tasks _Tarea = await db.Task.FindAsync(tarea.idTask);
-                    foreach(Functionary f in _Tarea.Participantes.Involucrados)
+                    Functionary user = await db.Functionary.FindAsync((Guid)Session["UserID"]);
+                    foreach (Functionary f in _Tarea.Participantes.Involucrados)
                     {
-                       await notificator.NotificateParticipants(_Tarea.Responsable,db.Functionary.Find(f.idUser), _Tarea, link);
+                        Notificacion n = new Notificacion();
+                        n.idNotification = Guid.NewGuid();
+                        n.Fecha = DateTime.Now;
+                        n.Funcionario = f;
+                        n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + _Tarea.Operacion.Nombre;
+                        n.UrlAction = link;
+                        n.Vista = false;
+                        f.Notificaciones.Add(n);
+                        await notificator.NotificateParticipants(_Tarea.Responsable,db.Functionary.Find(f.idUser), _Tarea, link);
                     }
+                    db.SaveChanges();
                     return RedirectToAction("Tasks",task);
                 }
             }
@@ -147,7 +156,6 @@ namespace SMGPA.Controllers
                 Tarea.Observaciones.Add(observation);
                 user.Observaciones.Add(observation);
                 Tarea.Estado = StatusEnum.EN_PROGRESO;
-                ViewBag.Agregada = "Observación agregada";
                 List<Guid> idsUsuario = new List<Guid>();
                 bool Completada = false;
                 Entities Entidad = await db.Entity.FindAsync(Tarea.idEntities);
@@ -192,19 +200,41 @@ namespace SMGPA.Controllers
                         
                     }
                 }
-        
-                await db.SaveChangesAsync();
                 string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = Tarea.idTask });
                 Notification notificator = new Notification();
+                List<Notificacion> Notificaciones = new List<Notificacion>();
                 Tasks _Tarea = await db.Task.FindAsync(Tarea.idTask);
                 foreach (Functionary f in _Tarea.Participantes.Involucrados)
                 {
                     await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), _Tarea, link,3);
-                }
+                    Notificacion n = new Notificacion();
+                    n.idNotification = Guid.NewGuid();
+                    n.Fecha = DateTime.Now;
+                    n.Funcionario = f;
+                    n.Cuerpo = "El Funcionario "+ user.Nombre +" "+user.Apellido+ " ha comentado la Tarea: " +_Tarea.Operacion.Nombre;
+                    n.UrlAction = link;
+                    n.Vista = false;
+                    f.Notificaciones.Add(n);
 
+                }
+                ViewBag.Agregada = "Observación agregada";
+                await db.SaveChangesAsync();
                 return PartialView();
             }
             return PartialView();
+        }
+        [HttpPost]
+        public async Task<JsonResult> SetNotificationView(Guid? id)
+        {
+            Notificacion notification = await db.Notificacion.FindAsync(id);
+            if (notification != null)
+            {
+                notification.Vista = true;
+                await db.SaveChangesAsync();
+                return Json(new { sucess = true });
+            }
+            return Json(new { sucess = false });
+
         }
         protected override void Dispose(bool disposing)
         {

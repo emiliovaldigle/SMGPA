@@ -178,6 +178,10 @@ C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.updateTaqsk10.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.updateTaqsk11.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.updateTaqsk12.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.updateTaskfinal.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.notifications.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.notifications1.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.Migrations.notifications2.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.csproj.GenerateResource.Cache
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.dll
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Debug\SMGPA.pdb

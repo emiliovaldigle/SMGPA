@@ -40,12 +40,16 @@ namespace SMGPAUpdater
                             Notification notificator = new Notification();
                             string DestinatarioA = db.Functionary.Find(t.idFunctionary).MailInstitucional;
                             notificator.NotificateAll(DestinatarioA, link, 1);
+                            string CuerpoA = "Haz sido asignado como Responsable a la Tarea "+ t.Operacion.Nombre;
+                            addNotification(CuerpoA, t.idFunctionary, t.fechaInicio, link);
                             foreach (Functionary f in t.Participantes.Involucrados)
                             {
                                 string DestinatarioB = db.Functionary.Find(f.idUser).MailInstitucional;
                                 if (f.idUser != t.idFunctionary)
                                 {
+                                    string CuerpoB = "Haz sido asignado como Validador a la Tarea "+ t.Operacion.Nombre;
                                     notificator.NotificateAll(DestinatarioB, link, 2);
+                                    addNotification(CuerpoB, f.idUser, t.fechaInicio, link);
                                 }
                             }
                             Console.WriteLine("Task: " + t.idTask + " updated ");
@@ -100,14 +104,29 @@ namespace SMGPAUpdater
                         foreach (Functionary f in t.Participantes.Involucrados)
                         {
                             string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
-                            if (f.idUser != t.idFunctionary)
-                            {
-                                notificator.NotificateAll(Destinatario, link, 3);
-                            }
+                            string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
+                            addNotification(Cuerpo,f.idUser, t.fechaInicio, link);
+                            notificator.NotificateAll(Destinatario, link, 3);
                         }
                         Console.WriteLine("Task: " + t.idTask + " updated ");
                     }
                 }
+                db.SaveChanges();
+            }
+        }
+        static void addNotification(string Cuerpo, Guid? idFunctionary, DateTime? Fecha, string URL)
+        {
+     
+            using(SMGPAContext db = new SMGPAContext())
+            {
+                Functionary User = db.Functionary.Find(idFunctionary);
+                Notificacion n = new Notificacion();
+                n.idNotification = Guid.NewGuid();
+                n.Funcionario = User;
+                n.Cuerpo = Cuerpo;
+                n.Fecha = Fecha;
+                n.UrlAction = URL;
+                User.Notificaciones.Add(n);
                 db.SaveChanges();
             }
         }

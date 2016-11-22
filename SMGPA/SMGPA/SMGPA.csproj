@@ -169,6 +169,7 @@
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Filters\Authorizate.cs" />
+    <Compile Include="Filters\Notificator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -276,7 +277,24 @@
     <Compile Include="Migrations\201611210250067_updateTaqsk12.Designer.cs">
       <DependentUpon>201611210250067_updateTaqsk12.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611211535271_updateTaskfinal.cs" />
+    <Compile Include="Migrations\201611211535271_updateTaskfinal.Designer.cs">
+      <DependentUpon>201611211535271_updateTaskfinal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611211901336_notifications.cs" />
+    <Compile Include="Migrations\201611211901336_notifications.Designer.cs">
+      <DependentUpon>201611211901336_notifications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611211950423_notifications1.cs" />
+    <Compile Include="Migrations\201611211950423_notifications1.Designer.cs">
+      <DependentUpon>201611211950423_notifications1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611212044450_notifications2.cs" />
+    <Compile Include="Migrations\201611212044450_notifications2.Designer.cs">
+      <DependentUpon>201611212044450_notifications2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Models\OperationType.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
@@ -512,6 +530,7 @@
     <Content Include="Scripts\jquery-ui-sliderAccess.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.min.js" />
+    <Content Include="Scripts\notification.js" />
     <Content Include="Scripts\operations.js" />
     <Content Include="Scripts\rolespermission.js" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
@@ -747,6 +766,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611210250067_updateTaqsk12.resx">
       <DependentUpon>201611210250067_updateTaqsk12.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611211535271_updateTaskfinal.resx">
+      <DependentUpon>201611211535271_updateTaskfinal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611211901336_notifications.resx">
+      <DependentUpon>201611211901336_notifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611211950423_notifications1.resx">
+      <DependentUpon>201611211950423_notifications1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611212044450_notifications2.resx">
+      <DependentUpon>201611212044450_notifications2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

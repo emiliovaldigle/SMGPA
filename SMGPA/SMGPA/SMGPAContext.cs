@@ -23,6 +23,7 @@ namespace SMGPA.Models
         public virtual DbSet<Tasks> Task { get; set; }
         public virtual DbSet<Observation> Observation { get; set; }
         public virtual DbSet<Document> Document { get; set; }
+        public virtual DbSet<Notificacion> Notificacion { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

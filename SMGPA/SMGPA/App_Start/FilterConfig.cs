@@ -9,6 +9,7 @@ namespace SMGPA
         {
             filters.Add(new HandleErrorAttribute());
             filters.Add(new Authorizate());
+            filters.Add(new Notificator());
         }
     }
 }
