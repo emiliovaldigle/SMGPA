@@ -12,7 +12,8 @@ namespace SMGPA
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             "~/Scripts/jquery-ui-{version}.js").Include( 
-            "~/Scripts/jquery-ui-timepicker-addon.js"));
+            "~/Scripts/jquery-ui-timepicker-addon.js").Include(
+            "~/Scripts/jquery.canvasjs.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
@@ -23,6 +24,7 @@ namespace SMGPA
             bundles.Add(new ScriptBundle("~/bundles/roles").Include("~/Scripts/rolespermission.js"));
             bundles.Add(new ScriptBundle("~/bundles/entities").Include("~/Scripts/entitiesfunctionary.js"));
             bundles.Add(new ScriptBundle("~/bundles/operations").Include("~/Scripts/operations.js"));
+            bundles.Add(new ScriptBundle("~/bundles/chart").Include("~/Scripts/chart.js"));
             bundles.Add(new ScriptBundle("~/bundles/notification").Include("~/Scripts/notification.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css").Include("~/Content/bootstrap.css").Include("~/Content/jquery-ui-timepicker-addon.css"));
             bundles.Add(new StyleBundle("~/Content/login").Include("~/Content/login.css", "~/Content/bootstrap.css"));

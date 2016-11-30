@@ -1,5 +1,42 @@
 ﻿@model IEnumerable<SMGPA.Models.Permission>
-@foreach (var item in Model)
+@if (Model != null)
 {
-    <li>@Html.ActionLink(item.TextLink, item.ActionResult, item.Controller)</li>
+    foreach (var item in Model)
+    {
+        string clase = "";
+        switch (item.TextLink)
+        {
+            case "Usuarios":
+                {
+                    clase = "glyphicon glyphicon-user";
+                    break;
+                }
+            case "Carreras":
+                {
+                    clase = "glyphicon glyphicon-education";
+                    break;
+                }
+            case "Roles":
+                {
+                    clase = "glyphicon glyphicon-eye-close";
+                    break;
+                }
+            case "Procesos":
+                {
+                    clase = "glyphicon glyphicon-cog";
+                    break;
+                }
+            case "Entidades":
+                {
+                    clase = "glyphicon glyphicon-tower";
+                    break;
+                }
+            case "Actividades":
+                {
+                    clase = "glyphicon glyphicon-calendar";
+                    break;
+                }
+        }
+        <li>@Html.ActionLink(item.TextLink, item.ActionResult, item.Controller,null, new { @class = clase })</li>
+    }
 }

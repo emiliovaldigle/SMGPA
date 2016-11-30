@@ -25,7 +25,7 @@
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
                                     </div>
@@ -33,21 +33,21 @@
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Mail Institucional", new {@class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.MailInstitucional, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.MailInstitucional, "", new { @class = "text-danger" })
                                     </div>
@@ -55,21 +55,21 @@
 
                                 <div class="form-group">
                                     @Html.Label("Contraseña", new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.Contrasena, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Contrasena, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Número telefónico", new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.NumeroTelefono, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.NumeroTelefono, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     @Html.Label("Correo Personal ", new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         @Html.EditorFor(model => model.CorreoPersonal, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.CorreoPersonal, "", new { @class = "text-danger" })
                                     </div>
@@ -77,22 +77,22 @@
 
                                 <div class="form-group">
                                     @Html.Label("Carrera", new { @class = "control-label col-md-4" })
-                                    <div class="col-md-4">
-                                        @Html.DropDownList("idCareer", null, htmlAttributes: new { @class = "form-control" })
+                                    <div class="col-md-6">
+                                        @Html.DropDownList("idCareer", null, "--Seleccionar Carrera", htmlAttributes: new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.idCareer, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Create" class="btn btn-default" />
+                                    <div class="col-md-offset-2 col-md-12">
+                                        <input type="submit" value="Registrarse" class="btn btn-default" />
                                     </div>
                                 </div>
                             </div>
                         }
 
                         <div>
-                            @Html.ActionLink("Iniciar sesión", "Login")
+                            @Html.ActionLink("Iniciar sesión", "Login", null, new { @class ="btn btn-primary"})
                         </div>
         
             </div>

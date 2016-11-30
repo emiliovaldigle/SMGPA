@@ -480,6 +480,7 @@
     <None Include="Properties\PublishProfiles\SMGPA.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\entitiesfunctionary.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.min.js" />
@@ -530,6 +531,7 @@
     <Content Include="Scripts\jquery-ui-sliderAccess.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.js" />
     <Content Include="Scripts\jquery-ui-timepicker-addon.min.js" />
+    <Content Include="Scripts\jquery.canvasjs.min.js" />
     <Content Include="Scripts\notification.js" />
     <Content Include="Scripts\operations.js" />
     <Content Include="Scripts\rolespermission.js" />

@@ -16,15 +16,15 @@
                     <a href="#" class="dropdown-toggle dropdown-toggle-notifications" id="notifications-dropdown-toggle" data-toggle="dropdown">
                         &nbsp;
                         @Session["Username"]&nbsp; 
-                        <span class="glyphicon glyphicon-envelope">
-                                @if(ViewBag.Total != null)
+                                @if (ViewBag.Total != null)
                                 {
-                                    <span class="badge">
-                                        @ViewBag.Total 
+                                    <span class="glyphicon glyphicon-globe">
+                                        <span class="badge">
+                                            @ViewBag.Total
+                                        </span>
+                                        <b class="caret"></b>
                                     </span>
-                                }
-                            <b class="caret"></b>   
-                        </span>
+                                }                                             
                     </a>
                 @if (ViewBag.Notificaciones != null)
                 {
@@ -46,7 +46,7 @@
                                          @using (Html.BeginForm())
                                          {
                                             <a id="removeNotification" url="/Tasks/SetNotificationView/" value="@item.idNotification">
-                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                
                                             </a> 
                                          }
                                         <time class="help-block no-margin">
@@ -94,6 +94,12 @@
                         <ul class="nav navbar-nav">
                               @if (Session["Admin"] != null)
                               {
+                            <li>
+                                <a href="@Url.Action("LoggedInAdmin", "Account")">
+                               <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+                                Dashboard 
+                                </a>
+                            </li>
                                   Html.RenderAction("BuildMenu", "Account");
                               }
                               @if (Session["Admin"] == null && Session["UserID"] != null)
@@ -120,6 +126,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/notification")
+    @Scripts.Render("~/bundles/chart")
     @RenderSection("scripts", required: false)
 </body>
 </html>

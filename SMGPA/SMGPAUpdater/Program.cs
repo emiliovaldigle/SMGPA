@@ -130,5 +130,9 @@ namespace SMGPAUpdater
                 db.SaveChanges();
             }
         }
+        static void updateActivities()
+        {
+
+        }
     }
 }
