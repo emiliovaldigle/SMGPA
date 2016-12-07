@@ -263,6 +263,11 @@ namespace SMGPA.Controllers
             Operation operacion = await db.Operation.FindAsync(operation.idOperation);
             if(operacion != null)
             {
+                List<Operation> esPredecesora = proceso.Operations.Where(o => o.idPredecesora.Equals(operacion.idOperation)).ToList();
+                if (esPredecesora.Count > 0)
+                {
+                    return Json(new { sucess = false });
+                }
                 db.Operation.Remove(operacion);
                 await db.SaveChangesAsync();
                 return Json(new { sucess = true });

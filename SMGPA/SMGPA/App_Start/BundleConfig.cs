@@ -24,6 +24,7 @@ namespace SMGPA
             bundles.Add(new ScriptBundle("~/bundles/roles").Include("~/Scripts/rolespermission.js"));
             bundles.Add(new ScriptBundle("~/bundles/entities").Include("~/Scripts/entitiesfunctionary.js"));
             bundles.Add(new ScriptBundle("~/bundles/operations").Include("~/Scripts/operations.js"));
+            bundles.Add(new ScriptBundle("~/bundles/faculty").Include("~/Scripts/faculty.js"));
             bundles.Add(new ScriptBundle("~/bundles/chart").Include("~/Scripts/chart.js"));
             bundles.Add(new ScriptBundle("~/bundles/notification").Include("~/Scripts/notification.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css").Include("~/Content/bootstrap.css").Include("~/Content/jquery-ui-timepicker-addon.css"));

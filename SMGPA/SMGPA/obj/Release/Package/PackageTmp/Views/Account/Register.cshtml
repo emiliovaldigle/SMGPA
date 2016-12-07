@@ -50,6 +50,10 @@
                                     <div class="col-md-6">
                                         @Html.EditorFor(model => model.MailInstitucional, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.MailInstitucional, "", new { @class = "text-danger" })
+                                        @if (ViewBag.CIDisponible != null)
+                                        {
+                                            <p class="warning">@ViewBag.CIDisponible</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -72,6 +76,10 @@
                                     <div class="col-md-6">
                                         @Html.EditorFor(model => model.CorreoPersonal, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.CorreoPersonal, "", new { @class = "text-danger" })
+                                        @if (ViewBag.CPDisponible != null)
+                                        {
+                                            <p class="warning">@ViewBag.CPDisponible</p>
+                                        }
                                     </div>
                                 </div>
 

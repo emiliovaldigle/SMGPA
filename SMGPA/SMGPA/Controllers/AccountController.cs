@@ -50,12 +50,21 @@ namespace SMGPA.Controllers
                     {
                         if (a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
-                            Session["Admin"] = a;
-                            Session["UserID"] = a.idUser;
-                            Session["Username"] = a.Nombre + " " + a.Apellido;
-                            return View("LoggedInAdmin");
+                            if (a.Activo)
+                            {
+                                Session["Admin"] = a;
+                                Session["UserID"] = a.idUser;
+                                Session["Username"] = a.Nombre + " " + a.Apellido;
+                                return View("LoggedInAdmin");
+                            }
+                            if (!a.Activo)
+                            {
+                                ModelState.AddModelError("", "Usuario inactivo");
+                                ViewBag.validation = "Usuario inactivo";
+                                return View();
+                            }
                         }
-                        else
+                        if (!a.MailInstitucional.Equals(user.MailInstitucional) || !a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
                             ModelState.AddModelError("", "Usuario o contraseña erróneos");
                             ViewBag.validation = "Usuario o Contraseña incorrecta";
@@ -65,16 +74,26 @@ namespace SMGPA.Controllers
                     {
                         if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
-                            Session["UserID"] = f.idUser;
-                            Session["Username"] = f.Nombre + " " + f.Apellido;
-                            ViewBag.Notificaciones = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).ToList();
-                            ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
-                            return View("LoggedInFunctionary");
+                            if (f.Activo)
+                            {
+                                Session["UserID"] = f.idUser;
+                                Session["Username"] = f.Nombre + " " + f.Apellido;
+                                ViewBag.Notificaciones = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).ToList();
+                                ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
+                                return View("LoggedInFunctionary");
+                            }
+                            if(!f.Activo)
+                            {
+                                ModelState.AddModelError("", "Usuario inactivo");
+                                ViewBag.validation = "Usuario inactivo";
+                                return View();
+                            }
                         }
-                        else
+                        if (!f.MailInstitucional.Equals(user.MailInstitucional) || !f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                         {
                             ModelState.AddModelError("", "Usuario o contraseña erróneos");
                             ViewBag.validation = "Usuario o Contraseña incorrecta";
+      
                         }
                     }
 
@@ -88,6 +107,7 @@ namespace SMGPA.Controllers
             return View();
 
         }
+
         public ActionResult Register()
         {
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
@@ -99,12 +119,37 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
         {
+            foreach (User u in db.User.ToList())
+            {
+                if(u.MailInstitucional.Equals(functionary.MailInstitucional)|| functionary.CorreoPersonal.Equals(u.MailInstitucional))
+                {
+                    ViewBag.CIDisponible = !functionary.CorreoPersonal.Equals(u.MailInstitucional) ? "Correo institucional se encuentra en uso":null;
+                    ViewBag.CPDisponible = functionary.CorreoPersonal.Equals(u.MailInstitucional)?"Correo Personal ingresado se encuentra en uso":null;
+                    ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
+                    return View();
+                }
+            }
+            foreach(Functionary f in db.Functionary.ToList())
+            {
+                if(f.CorreoPersonal.Equals(functionary.CorreoPersonal))
+                {
+                    ViewBag.CPDisponible = "Correo Personal ingresado se encuentra en uso";
+                    ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
+                    return View();
+                }
+            }
             if (ModelState.IsValid)
             {
                 functionary.Contrasena = mdencoder.EncodePasswordMd5(functionary.Contrasena);
                 functionary.Activo = true; ;
                 functionary.idUser = Guid.NewGuid();
                 db.Functionary.Add(functionary);
+                Career c = db.Career.Find(functionary.idCareer);
+                if (c.idFaculty != null)
+                {
+                    Faculty faculty = db.Faculty.Find(c.idFaculty);
+                    faculty.Involucrados.Add(functionary);
+                }
                 db.SaveChanges();
                 return RedirectToAction("Login");
             }

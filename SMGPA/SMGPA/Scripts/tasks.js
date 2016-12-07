@@ -19,6 +19,8 @@
     $.datepicker.setDefaults($.datepicker.regional['es']);
     $("#datepicker1").datetimepicker();
     $("#datepicker2").datetimepicker();
+    $("#datepicker3").datepicker();
+    $("#datepicker4").datepicker();
     $('#myModal').on('hidden.bs.modal', function () {
         location.reload();
     })

@@ -12,9 +12,15 @@
                 $("#confirmButton").unbind('click').click(function (e) {
                     $.post(".." + "/Processes/ConfirmDeleteOperation/", function (result) {
                         if (result.sucess) {
+                            $("#alertpredecesora").fadeOut().hide();
                             $("#alertdelete").fadeOut().hide();
-                            $("#alertdeleted").fadeIn().show
+                            $("#alertdeleted").fadeIn().show();
                             $tr.fadeOut().remove();
+                        }
+                        if (!result.sucess) {
+                            $("#alertdelete").fadeOut().hide();
+                            $("#alertdeleted").fadeOut().hide();
+                            $("#alertpredecesora").fadeIn().show();
                         }
                     });
                 });
@@ -22,9 +28,8 @@
                    $("#alertdelete").fadeOut().hide();
                 });
                 return false;
-            } else {
-                location.reload();
             }
+           
         });
         return false;
     });

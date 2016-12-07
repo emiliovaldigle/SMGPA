@@ -51,6 +51,24 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idUser,Rut,Nombre,Apellido,MailInstitucional,Contrasena,Activo,idRole")] Administrator administrator)
         {
+            foreach (User u in db.User.ToList())
+            {
+                if (u.MailInstitucional.Equals(administrator.MailInstitucional))
+                { 
+                    ViewBag.CIDisponible =  "Correo institucional se encuentra en uso";
+                    ViewBag.idRole = new SelectList(db.Role, "idRole", "Nombre", administrator.idRole);
+                    return View(administrator);
+                }
+            }
+            foreach (Functionary f in db.Functionary.ToList())
+            {
+                if (f.CorreoPersonal.Equals(administrator.MailInstitucional))
+                {
+                    ViewBag.CIDisponible = "Correo institucional se encuentra en uso";
+                    ViewBag.idRole = new SelectList(db.Role, "idRole", "Nombre", administrator.idRole);
+                    return View(administrator);
+                }
+            }
             if (ModelState.IsValid)
             {
                 administrator.Contrasena = encoder.EncodePasswordMd5(administrator.Contrasena);

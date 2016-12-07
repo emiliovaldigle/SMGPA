@@ -14,6 +14,7 @@ namespace SMGPA.Models
         public virtual DbSet<Functionary> Functionary { get; set; }
         public virtual DbSet<Career> Career { get; set; }
         public virtual DbSet<Entities> Entity { get; set; }
+        public virtual DbSet<Faculty> Faculty { get; set; }
         public virtual DbSet<Administrator> Administrator { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Permission> Permission { get; set; }

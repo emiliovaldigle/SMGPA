@@ -85,6 +85,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -168,8 +176,8 @@
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\TasksController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
-    <Compile Include="Filters\Authorizate.cs" />
-    <Compile Include="Filters\Notificator.cs" />
+    <Compile Include="Controllers\Filters\Authorizate.cs" />
+    <Compile Include="Controllers\Filters\Notificator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -293,7 +301,16 @@
     <Compile Include="Migrations\201611212044450_notifications2.Designer.cs">
       <DependentUpon>201611212044450_notifications2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612030503246_faculty.cs" />
+    <Compile Include="Migrations\201612030503246_faculty.Designer.cs">
+      <DependentUpon>201612030503246_faculty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612030512177_faculty2.cs" />
+    <Compile Include="Migrations\201612030512177_faculty2.Designer.cs">
+      <DependentUpon>201612030512177_faculty2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
+    <Compile Include="Models\Faculty.cs" />
     <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Models\OperationType.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
@@ -407,6 +424,7 @@
     <Content Include="Content\jquery-ui-timepicker-addon.min.css" />
     <Content Include="Content\login.css" />
     <Content Include="Content\navbar-fixed-side.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\register.css" />
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -481,6 +499,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\chart.js" />
+    <Content Include="Scripts\faculty.js" />
     <Content Include="Scripts\entitiesfunctionary.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.js" />
     <Content Include="Scripts\i18n\jquery-ui-timepicker-addon-i18n.min.js" />
@@ -615,6 +634,7 @@
     <Content Include="Views\Tasks\_DetailsValidate.cshtml" />
     <Content Include="Views\Tasks\_DetailsUpload.cshtml" />
     <Content Include="Views\Tasks\_AddObservation.cshtml" />
+    <Content Include="Views\Entities\CreateFaculty.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -780,6 +800,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611212044450_notifications2.resx">
       <DependentUpon>201611212044450_notifications2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612030503246_faculty.resx">
+      <DependentUpon>201612030503246_faculty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612030512177_faculty2.resx">
+      <DependentUpon>201612030512177_faculty2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

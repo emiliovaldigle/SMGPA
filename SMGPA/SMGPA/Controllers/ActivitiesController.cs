@@ -4,12 +4,11 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SMGPA.Models;
 using System.Threading.Tasks;
 using SMGPA.Filters;
-
+using PagedList;
 namespace SMGPA.Controllers
 {
     public class ActivitiesController : Controller
@@ -17,10 +16,73 @@ namespace SMGPA.Controllers
         private SMGPAContext db = new SMGPAContext();
 
         // GET: Activities
-        public ActionResult Index()
+        public ActionResult Index(string proc_search, string dateini, string datend, string state, int? page, string cfilter1, string cfilter2, string cfilter3, string cfilter4)
         {
+            int pageSize;
+            int pageNumber;
             var activity = db.Activity.Include(a => a.Proceso);
-            return View(activity.ToList());
+            if(proc_search != null || dateini != null || datend!=null||state != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                if (dateini == null)
+                {
+                    dateini = cfilter1;
+                }
+                if (datend == null)
+                {
+                    datend = cfilter2;
+                }
+                if(proc_search == null)
+                {
+                    proc_search = cfilter3;
+                }
+                if(state == null)
+                {
+                    state = cfilter4;
+                }
+            }
+            ViewBag.cfilter1 = dateini;
+            ViewBag.cfilter2 = datend;
+            ViewBag.cfilter3 = proc_search;
+            ViewBag.cfilter4 = state;
+            if (!string.IsNullOrEmpty(proc_search))
+            {
+                activity = activity.Where(a => a.idProcess.ToString().Equals(proc_search));
+            }
+            if (!string.IsNullOrEmpty(dateini) && !string.IsNullOrEmpty(datend))
+            {
+                DateTime myDateStart;
+                DateTime myDateEnd;
+                if (DateTime.TryParse(dateini, out myDateStart) && DateTime.TryParse(datend, out myDateEnd))
+                {
+                   myDateStart = DateTime.ParseExact(dateini, "dd/MM/yyyy",
+                                  System.Globalization.CultureInfo.InvariantCulture);
+                   myDateEnd = DateTime.ParseExact(datend, "dd/MM/yyyy",
+                                              System.Globalization.CultureInfo.InvariantCulture);
+                   activity = activity.Where(a => a.start_date >= myDateStart && a.end_date <= myDateEnd);
+                }
+                else
+                {
+                    pageSize = 6;
+                    pageNumber = (page ?? 1);
+                    ViewBag.proc_search = new SelectList(db.Process, "idProcess", "Criterio");
+                    return View(activity.ToList().ToPagedList(pageNumber, pageSize));
+                }
+            }
+
+            if (!string.IsNullOrEmpty(state))
+            {
+                States estatus;
+                Enum.TryParse(state, out estatus);
+                activity = activity.Where(a => a.state == estatus);
+            }
+            pageSize = 6;
+            pageNumber = (page ?? 1);
+            ViewBag.proc_search = new SelectList(db.Process, "idProcess", "Criterio");
+            return View(activity.ToList().ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Activities/Details/5
@@ -229,7 +291,8 @@ namespace SMGPA.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Activity activity = (Activity) TempData["Activity"];
-            TempData["Activity"] = db.Activity.Find(activity.idActivity);
+            Activity actividad = db.Activity.Find(activity.idActivity);       
+            TempData["Activity"] = actividad;
             ViewBag.Tarea = tarea.Operacion.Nombre;
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
             ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
@@ -243,6 +306,9 @@ namespace SMGPA.Controllers
         public async Task<ActionResult> ConfigureTask([Bind(Include = "idTask,fechaInicio,fechaFin,TiempoInactividad,DesplazamientoHoras,DesplazamientoDias, Estado, idFunctionary, idEntities, idOperation")] Tasks task)
         {
             Activity activity = (Activity)TempData["Activity"];
+            DateTime? higherdate = null;
+            DateTime? lowerdate = null;
+            Activity actividad = db.Activity.Find(activity.idActivity);
             Tasks Tarea = (Tasks)TempData["Task"];
             if (ModelState.IsValid)
             {
@@ -260,6 +326,20 @@ namespace SMGPA.Controllers
                     && tarea.Participantes != null && tarea.fechaInicio >= DateTime.Now
                     && tarea.fechaFin > tarea.fechaInicio)
                 {
+                    foreach(Tasks t in actividad.Tareas)
+                    {
+                            if(t.fechaInicio < lowerdate || lowerdate == null)
+                            {
+                                lowerdate = t.fechaInicio;     
+                            }
+                            if (t.fechaFin > higherdate || higherdate == null)
+                            {
+                                higherdate = t.fechaFin;
+                            }
+                        
+                    }
+                    actividad.start_date = ((DateTime) lowerdate).Date;
+                    actividad.end_date = ((DateTime)higherdate).Date;
                     await db.SaveChangesAsync();
                     TempData["Task"] = tarea;
                     ViewBag.Creada = "Tarea ha sido configurada correctamente";
