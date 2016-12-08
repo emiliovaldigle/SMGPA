@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using SMGPA.Models;
 using System.Threading.Tasks;
 using SMGPA.Filters;
-
+using PagedList;
 namespace SMGPA.Controllers
 {
     public class EntitiesController : AsyncController
@@ -15,9 +15,37 @@ namespace SMGPA.Controllers
         private SMGPAContext db = new SMGPAContext();
 
         // GET: Entities
-        public ActionResult Index(string sortOrder)
+        public ActionResult Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
-            return View(db.Entity.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParam = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+            var Entities = from e in db.Entity
+                           select e;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                Entities = Entities.Where(e => e.Nombre.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    Entities = Entities.OrderByDescending(e => e.Nombre);
+                    break;
+                default:
+                    Entities = Entities.OrderBy(e => e.Nombre);
+                    break;
+            }
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+            return View(Entities.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Entities/Details/5
@@ -76,43 +104,43 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateFaculty([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Faculty faculty)
         {
-                List<Career> _Carreras = new List<Career>();
-                List<Career> Carreras = db.Career.ToList();
-                if (ModelState.IsValid)
+            List<Career> _Carreras = new List<Career>();
+            List<Career> Carreras = db.Career.ToList();
+            if (ModelState.IsValid)
+            {
+                Guid idEntities = Guid.NewGuid();
+                faculty.idEntities = idEntities;
+                List<Career> Careers = (List<Career>)TempData["Carreras"];
+                //Si viene sin carreras retorno mensaje indicando que no es posible
+                if (Careers == null)
                 {
-                    Guid idEntities = Guid.NewGuid();
-                    faculty.idEntities = idEntities;
-                    List<Career> Careers = (List<Career>)TempData["Carreras"];
-                    //Si viene sin carreras retorno mensaje indicando que no es posible
-                    if (Careers == null)
+                    ViewBag.Errores = "No puede crear una Facultad sin Carreras asociadas";
+                    ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
+                    return View(faculty);
+                }
+                foreach (Career c in Careers)
+                {
+                    Career car = db.Career.Find(c.idCareer);
+                    car.idFaculty = idEntities;
+                    List<Functionary> funcionarios = db.Functionary.Where(f => f.idCareer == c.idCareer).ToList();
+                    if (funcionarios != null)
                     {
-                        ViewBag.Errores = "No puede crear una Facultad sin Carreras asociadas";
-                        ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
-                        return View(faculty);
-                    }
-                    foreach (Career c in Careers)
-                    {
-                        Career car = db.Career.Find(c.idCareer);
-                        car.idFaculty = idEntities;
-                        List<Functionary> funcionarios = db.Functionary.Where(f => f.idCareer == c.idCareer).ToList();
-                        if (funcionarios != null)
+                        foreach (Functionary f in funcionarios)
                         {
-                            foreach (Functionary f in funcionarios)
-                            {
-                                faculty.Involucrados.Add(f);
-                            }
+                            faculty.Involucrados.Add(f);
                         }
                     }
-
-                    db.Faculty.Add(faculty);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
                 }
-                ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
-                return View(faculty);
+
+                db.Faculty.Add(faculty);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
+            return View(faculty);
         }
         [HttpPost]
-        public  async Task<JsonResult> AddCareer(Guid id)
+        public async Task<JsonResult> AddCareer(Guid id)
         {
             if (id == null)
             {
@@ -120,10 +148,10 @@ namespace SMGPA.Controllers
             }
             Faculty facultad = (Faculty)TempData["Facultad"];
             Career carrera = await db.Career.FindAsync(id);
-            facultad.Carreras.Add(carrera); 
+            facultad.Carreras.Add(carrera);
             TempData["Carreras"] = facultad.Carreras;
-            TempData["Faculta0.d"] = facultad;
-            return Json(new { sucess = true , nombre = carrera.Nombre, idcareer = carrera.idCareer}, JsonRequestBehavior.AllowGet);
+            TempData["Facultad"] = facultad;
+            return Json(new { sucess = true, nombre = carrera.Nombre, idcareer = carrera.idCareer }, JsonRequestBehavior.AllowGet);
         }
         // GET: Entities/Edit/5
         public ActionResult Edit(Guid? id)
@@ -176,20 +204,26 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            Faculty facultad = db.Faculty.Find(id);
-            if(facultad != null)
+            Entities entidad = db.Entity.Find(id);
+            var type = entidad.GetType().UnderlyingSystemType.Name.ToString();
+            if (type.Contains("Faculty"))
             {
-                if(facultad.Carreras != null)
+                Faculty facultad = db.Faculty.Find(id);
+                if (facultad.Carreras != null)
                 {
-                    foreach(Career c in facultad.Carreras)
+                    foreach (Career c in facultad.Carreras)
                     {
                         c.idFaculty = null;
                     }
                 }
+                int index = db.Task.ToList().FindIndex(t => t.idEntities.Equals(facultad.idEntities));
+                if(index > 0){
+                    return RedirectToAction("Index");
+                }
                 db.Faculty.Remove(facultad);
                 db.SaveChanges();
             }
-            if(facultad == null)
+            if (type.Contains("Entities"))
             {
                 Entities entities = db.Entity.Find(id);
                 db.Entity.Remove(entities);
