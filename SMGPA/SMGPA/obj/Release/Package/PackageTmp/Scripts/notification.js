@@ -4,7 +4,7 @@
         var url = $(this).attr('url');
         var urlf = url + id;
         //SMGPA for publishing and .. for local run 
-        $.post("../"+urlf, function (result) {
+        $.post("/SMGPA/"+urlf, function (result) {
             if (result.sucess) {
                 location.reload();
             }

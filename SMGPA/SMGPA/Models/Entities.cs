@@ -19,7 +19,7 @@ namespace SMGPA.Models
         [Key]
         public Guid idEntities { get; set; }
         [Required(ErrorMessage = "Nombre es Requerido.")]
-        [StringLength(30, ErrorMessage = "Nombre muy Largo")]
+        [StringLength(90, ErrorMessage = "Nombre muy Largo")]
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Descripcion es Requerido.")]
         public string Descripcion { get; set; }

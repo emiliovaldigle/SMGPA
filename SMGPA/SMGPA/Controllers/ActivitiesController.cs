@@ -140,6 +140,7 @@ namespace SMGPA.Controllers
                     Tasks tarea = new Tasks();
                     tarea.idTask = Guid.NewGuid();
                     tarea.Operacion = o;
+                    tarea.Actividad = actividad;
                     if(o.idPredecesora != null)
                     {
                         Operation predecesora = db.Operation.Find(o.idPredecesora);

@@ -27,6 +27,9 @@ namespace SMGPA.Models
         public Guid? idEntities { get; set; }
         public Guid? idOperation { get; set; }
         public Guid? idPredecesora { get; set; }
+        public Guid idActivity { get; set; }
+        [ForeignKey("idActivity")]
+        public virtual Activity Actividad { get; set; }
         [ForeignKey("idPredecesora")]
         public virtual Tasks Predecesora { get; set; }
         public virtual ICollection<Document> Documentos { get; set; }

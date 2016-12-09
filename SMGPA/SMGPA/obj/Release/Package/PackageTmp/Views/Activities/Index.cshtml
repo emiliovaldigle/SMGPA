@@ -1,5 +1,5 @@
-﻿@model IEnumerable<SMGPA.Models.Activity>
-
+﻿@model PagedList.IPagedList<SMGPA.Models.Activity>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -8,26 +8,40 @@
 <h2>Actividades académicas</h2>
 
 <p>
-    <a class="btn btn-default btn-sm" href="@Url.Action("Create","Activities")">
+    <a class="btn btn-default btn-sm" href="@Url.Action("Create", "Activities")">
         <span>Nueva Actividad</span>
     </a>
 </p>
+@using (Html.BeginForm("Index", "Activities", FormMethod.Get))
+{
+    <div class="col-md-12" style="margin-top:10px!important;">
+       Buscar por Proceso: @Html.DropDownList("proc_search", null, "--Seleccionar Proceso", ViewBag.cfilter3 as string)
+       Buscar por Estado : @Html.EnumDropDownListFor(model => model.FirstOrDefault().state, "--Seleccionar Estado", ViewBag.cfilter4 as string)
+    </div>
+    <div class="col-md-12" style="margin-top:20px!important; margin-bottom:20px!important;">
+        <p>Buscar por Rango de Fechas:</p>
+        Inicio: @Html.TextBox("dateini", ViewBag.cfilter1 as string, new { id = "datepicker3"})
+        Fin: @Html.TextBox("datend", ViewBag.cfilter2 as string, new { id = "datepicker4"} )
+        <input type="submit" value="Buscar" />
+    </div>
+   
+}
 <table class="table table-bordered">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre)
+           @Html.DisplayName("Nombre")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Proceso.Descripcion)
+          Criterio @Html.Display("Criterio", new { cfilter3 = ViewBag.cfilter3 })
         </th>
         <th>
-            @Html.DisplayName("Fecha de inicio")
+          Inicio @Html.Display("Inicio", new { cfilter1 = ViewBag.cfilter1 })
         </th>
         <th>
-            @Html.DisplayName("Fecha de fin")
+          Fecha Fin @Html.Display("Fin", new { cfilter2 = ViewBag.cfilter2 })
         </th>
         <th>
-            @Html.DisplayName("Estado")
+          Estado @Html.Display("Estado", new { cfilter4 = ViewBag.cfilter4 })
         </th>
         <th></th>
     </tr>
@@ -38,7 +52,7 @@
             @Html.DisplayFor(modelItem => item.Nombre)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Proceso.Descripcion)
+            @Html.DisplayFor(modelItem => item.Proceso.Criterio)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.start_date)
@@ -67,3 +81,12 @@
 }
 
 </table>
+<br />
+Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, cfilter1 = ViewBag.cfilter1, cfilter2 = ViewBag.cfilter2, cfilter3 = ViewBag.cfilter3, cfilter4 = ViewBag.cfilter4 }))
+@section Scripts
+{ 
+    @Scripts.Render("~/bundles/tasks")
+}

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<SMGPA.Models.Entities>
-
+﻿@model PagedList.IPagedList<SMGPA.Models.Entities>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,16 +22,24 @@
         <span>Nueva Facultad</span>
     </a>
 </p>
+@using (Html.BeginForm("Index", "Entities", FormMethod.Get))
+{
+    <p>
+        Buscar por nombre: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Buscar" />
+    </p>
+}
+
 <table class="table table-bordered">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Nombre)
+           @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm ,currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
+            @Html.DisplayName("Descripción")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Activo)
+            @Html.DisplayName("Activo")
         </th>
         <th></th>
     </tr>
@@ -63,7 +71,11 @@
 }
 
 </table>
+<br />
+Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
 
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 @section Scripts {
     @Scripts.Render("~/bundles/modalform")
     

@@ -20,7 +20,7 @@ namespace SMGPA.Models
         public States state { get; set; }
         public DateTime? start_date { get; set; }
         public DateTime? end_date { get; set; }
-        [StringLength(50, ErrorMessage = "Nombre muy Largo")]
+        [StringLength(90, ErrorMessage = "Nombre muy Largo")]
         [Required(ErrorMessage = "Nombre es Requerido.")]
         public string Nombre { get; set; }
         public Guid idProcess { get; set; }

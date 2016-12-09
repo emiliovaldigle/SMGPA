@@ -309,6 +309,14 @@
     <Compile Include="Migrations\201612030512177_faculty2.Designer.cs">
       <DependentUpon>201612030512177_faculty2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612082055014_updateModel.cs" />
+    <Compile Include="Migrations\201612082055014_updateModel.Designer.cs">
+      <DependentUpon>201612082055014_updateModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612082319351_updateModel21.cs" />
+    <Compile Include="Migrations\201612082319351_updateModel21.Designer.cs">
+      <DependentUpon>201612082319351_updateModel21.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Faculty.cs" />
     <Compile Include="Models\Notificacion.cs" />
@@ -806,6 +814,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612030512177_faculty2.resx">
       <DependentUpon>201612030512177_faculty2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612082055014_updateModel.resx">
+      <DependentUpon>201612082055014_updateModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612082319351_updateModel21.resx">
+      <DependentUpon>201612082319351_updateModel21.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

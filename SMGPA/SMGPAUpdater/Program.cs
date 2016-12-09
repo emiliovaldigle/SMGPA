@@ -13,9 +13,10 @@ namespace SMGPAUpdater
             Console.WriteLine("Starting Background Tasks of SMPGA");
                 while (true)
                 {
-                UpdateActiva();
-                UpdatePendiente();
-                ReSchedule();
+                    UpdateActiva();
+                    UpdatePendiente();
+                    ReSchedule();
+                    updateActivities();
                 }
         }
         static void UpdateActiva()
@@ -36,6 +37,8 @@ namespace SMGPAUpdater
                         foreach (Tasks t in _Tasks)
                         {
                             t.Estado = StatusEnum.ACTIVA;
+                            Activity actividad = db.Activity.Where(a => a.idActivity.Equals(t.idActivity)).FirstOrDefault();
+                            actividad.state = States.Activa;
                             string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
                             Notification notificator = new Notification();
                             string DestinatarioA = db.Functionary.Find(t.idFunctionary).MailInstitucional;
@@ -132,7 +135,28 @@ namespace SMGPAUpdater
         }
         static void updateActivities()
         {
-
+            using (SMGPAContext db = new SMGPAContext())
+            {
+                List<Activity> Activities = db.Activity.ToList();
+                List<Activity> Actividades =Activities.Where(a => a.state.Equals(States.Inactiva)).ToList();
+                if(Actividades != null)
+                {
+                    foreach(Activity a in Actividades)
+                    {
+                        foreach(Tasks t in a.Tareas)
+                        {
+                            if(t.Estado.Equals(StatusEnum.EN_PROGRESO)|| t.Estado.Equals(StatusEnum.ACTIVA))
+                            {
+                                Console.WriteLine("Updating Activities status from Inactiva to Active");
+                                a.state = States.Activa;
+                               
+                            }
+                        }
+                    }
+                    db.SaveChanges();
+                }
+            }
+                
         }
     }
 }

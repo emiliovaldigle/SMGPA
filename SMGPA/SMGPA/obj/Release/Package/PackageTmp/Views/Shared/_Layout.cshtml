@@ -40,15 +40,15 @@
                              {
                                 <div id="notifications-list" class="list-group thin-scroll">
                                     <div class="list-group-item" href="@item.UrlAction" >
+                                        @using (Html.BeginForm())
+                                        {
+                                            <a id="removeNotification" url="/Tasks/SetNotificationView/" value="@item.idNotification" class="pull-right">
+                                                &times;
+                                            </a>
+                                        }
                                         <a  href="@item.UrlAction">
                                           @item.Cuerpo
                                         </a>
-                                         @using (Html.BeginForm())
-                                         {
-                                            <a id="removeNotification" url="/Tasks/SetNotificationView/" value="@item.idNotification">
-                                                
-                                            </a> 
-                                         }
                                         <time class="help-block no-margin">
                                           @item.Fecha
                                         </time>
