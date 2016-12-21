@@ -41,18 +41,37 @@ namespace SMGPAUpdater
                             actividad.state = States.Activa;
                             string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
                             Notification notificator = new Notification();
-                            string DestinatarioA = db.Functionary.Find(t.idFunctionary).MailInstitucional;
-                            notificator.NotificateAll(DestinatarioA, link, 1);
-                            string CuerpoA = "Haz sido asignado como Responsable a la Tarea "+ t.Operacion.Nombre;
-                            addNotification(CuerpoA, t.idFunctionary, t.fechaInicio, link);
-                            foreach (Functionary f in t.Participantes.Involucrados)
+                            if (t.idFunctionary != null)
                             {
-                                string DestinatarioB = db.Functionary.Find(f.idUser).MailInstitucional;
-                                if (f.idUser != t.idFunctionary)
+                                string DestinatarioA = db.Functionary.Find(t.idFunctionary).MailInstitucional;
+                                notificator.NotificateAll(DestinatarioA, link, 1);
+                                string CuerpoA = "Haz sido asignado como Responsable a la Tarea " + t.Operacion.Nombre;
+                                addNotification(CuerpoA, t.idFunctionary, t.fechaInicio, link);
+                            }
+                            if(t.idResponsable != null)
+                            {
+                                foreach (Functionary f in t.ResponsableEntity.Involucrados)
                                 {
-                                    string CuerpoB = "Haz sido asignado como Validador a la Tarea "+ t.Operacion.Nombre;
-                                    notificator.NotificateAll(DestinatarioB, link, 2);
-                                    addNotification(CuerpoB, f.idUser, t.fechaInicio, link);
+                                    string DestinatarioB = db.Functionary.Find(f.idUser).MailInstitucional;
+                                    if (f.idUser != t.idFunctionary)
+                                    {
+                                        string CuerpoB = "Haz sido asignado como Responsable a la Tarea " + t.Operacion.Nombre;
+                                        notificator.NotificateAll(DestinatarioB, link, 2);
+                                        addNotification(CuerpoB, f.idUser, t.fechaInicio, link);
+                                    }
+                                }
+                            }
+                            if (t.idEntities != null)
+                            {
+                                foreach (Functionary f in t.Participantes.Involucrados)
+                                {
+                                    string DestinatarioC = db.Functionary.Find(f.idUser).MailInstitucional;
+                                    if (f.idUser != t.idFunctionary)
+                                    {
+                                        string CuerpoB = "Haz sido asignado como Validador a la Tarea " + t.Operacion.Nombre;
+                                        notificator.NotificateAll(DestinatarioC, link, 2);
+                                        addNotification(CuerpoB, f.idUser, t.fechaInicio, link);
+                                    }
                                 }
                             }
                             Console.WriteLine("Task: " + t.idTask + " updated ");

@@ -165,7 +165,7 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation)
+        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass")] Operation operation)
         {
             Process proc = (Process)TempData["Proceso"];
             if(proc == null)
@@ -213,7 +213,7 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora")] Operation operation)
+        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass")] Operation operation)
         {
             if (ModelState.IsValid)
             {
@@ -225,6 +225,7 @@ namespace SMGPA.Controllers
                 operacion.Nombre = operation.Nombre;
                 operacion.Descripcion = operation.Descripcion;
                 operacion.Type = operation.Type;
+                operacion.Clase = operation.Clase;
                 operacion.Predecesora = operation.Predecesora;
                 db.SaveChanges();
                 db.Dispose();

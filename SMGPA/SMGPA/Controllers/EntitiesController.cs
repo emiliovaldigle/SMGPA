@@ -104,7 +104,6 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateFaculty([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Faculty faculty)
         {
-            List<Career> _Carreras = new List<Career>();
             List<Career> Carreras = db.Career.ToList();
             if (ModelState.IsValid)
             {
@@ -131,7 +130,7 @@ namespace SMGPA.Controllers
                         }
                     }
                 }
-
+                TempData["Facultad"] = faculty;
                 db.Faculty.Add(faculty);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -167,7 +166,6 @@ namespace SMGPA.Controllers
             }
             return View(entities);
         }
-
         // POST: Entities/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -183,7 +181,71 @@ namespace SMGPA.Controllers
             }
             return View(entities);
         }
+        public ActionResult EditFaculty(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Faculty Faculty = db.Faculty.Find(id);
+            TempData["Facultad"] = Faculty;
+            List<Career> Carreras = db.Career.ToList();
+            ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
+            if (Faculty == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Faculty);
+        }
 
+        // POST: Entities/Edit/5
+        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
+        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditFaculty([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Faculty faculty)
+        {
+            List<Career> Carreras = db.Career.ToList();
+            Faculty TempFaculty = (Faculty)TempData["Facultad"];
+            if (ModelState.IsValid)
+            {
+                faculty.idEntities = TempFaculty.idEntities;
+                var carreras = TempData["Carreras"];
+                ICollection<Career> Careers = (ICollection<Career>)carreras;
+                //Si viene sin carreras retorno mensaje indicando que no es posible
+                if (Careers == null && faculty.Carreras == null)
+                {
+                    ViewBag.Errores = "No puede crear una Facultad sin Carreras asociadas";
+                    ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
+                    return View(faculty);
+                }
+                if (Careers != null)
+                {
+                    foreach (Career c in Careers)
+                    {
+                        if (c.idFaculty == null)
+                        {          
+                            Career car = db.Career.Find(c.idCareer);
+                            car.idFaculty = TempFaculty.idEntities;
+                            List<Functionary> funcionarios = db.Functionary.Where(f => f.idCareer == c.idCareer).ToList();
+                            if (funcionarios != null)
+                            {
+                                foreach (Functionary f in funcionarios)
+                                {
+                                    faculty.Involucrados.Add(f);
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+                db.Entry(faculty).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
+            return View(faculty);
+        }
         // GET: Entities/Delete/5
         public ActionResult Delete(Guid? id)
         {

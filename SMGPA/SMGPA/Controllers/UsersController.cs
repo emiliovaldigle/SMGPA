@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using SMGPA.Models;
 using System.Security.Cryptography;
 using System.Text;
+using PagedList;
 
 namespace SMGPA.Controllers
 {
@@ -17,9 +18,56 @@ namespace SMGPA.Controllers
         private SMGPAContext db = new SMGPAContext();
         MD5Encoder encoder = new MD5Encoder();
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string searchString, string rutString, string currentFilter, int? page)
         {
-            return View(db.Administrator.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParam = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.RutSortParam = sortOrder == "Rut" ? "rut_desc" : "Rut";
+            if (searchString != null || rutString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                if (searchString == null)
+                {
+                    searchString = currentFilter;
+                }
+                if (rutString == null)
+                {
+                    rutString = currentFilter;
+                }
+            }
+            ViewBag.CurrentFilter = searchString;
+            ViewBag.CurrentFilter2 = rutString;
+            var Users = from u in db.User
+                           select u;
+            if (!string.IsNullOrEmpty(rutString))
+            {
+                Users = Users.Where(e => e.Rut.Contains(rutString));
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                Users = Users.Where(e => e.Apellido.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    Users = Users.OrderByDescending(e => e.Apellido);
+                    break;
+                case "Rut":
+                    Users = Users.OrderBy(e => e.Rut);
+                    break;
+                case "rut_desc":
+                    Users = Users.OrderByDescending(e => e.Rut);
+                    break;
+                default:
+                    Users = Users.OrderBy(e => e.Apellido);
+                    break;
+            }
+            int pageSize = 6;
+            int pageNumber = (page ?? 1);
+            return View(Users.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Users/Details/5
@@ -29,7 +77,7 @@ namespace SMGPA.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Administrator user = db.Administrator.Find(id);
+            User user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -90,12 +138,12 @@ namespace SMGPA.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ViewBag.idRole = new SelectList(db.Role, "idRole", "Nombre");
-            Administrator administrator = db.Administrator.Find(id);
-            if (administrator == null)
+            User user = db.User.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(administrator);
+            return View(user);
         }
 
         // POST: Users/Edit/5
@@ -141,6 +189,29 @@ namespace SMGPA.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Off(Guid? id)
+        {
+            if(id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Functionary funcionario = db.Functionary.Find(id);
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", funcionario.idCareer);
+            return View(funcionario);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public  ActionResult Off([Bind(Include = "idUser,Rut,Nombre,Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary user)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(user).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", user.idCareer);
+            return View(user);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

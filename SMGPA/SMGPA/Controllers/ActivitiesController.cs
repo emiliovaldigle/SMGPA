@@ -296,6 +296,7 @@ namespace SMGPA.Controllers
             TempData["Activity"] = actividad;
             ViewBag.Tarea = tarea.Operacion.Nombre;
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+            ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.Tarea = tarea.Operacion.Nombre;
             TempData["Task"] = tarea;
@@ -304,7 +305,7 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ConfigureTask([Bind(Include = "idTask,fechaInicio,fechaFin,TiempoInactividad,DesplazamientoHoras,DesplazamientoDias, Estado, idFunctionary, idEntities, idOperation")] Tasks task)
+        public async Task<ActionResult> ConfigureTask([Bind(Include = "idTask,fechaInicio,fechaFin,TiempoInactividad,DesplazamientoHoras,DesplazamientoDias, Estado, idFunctionary, idResponsable, idEntities, idOperation")] Tasks task)
         {
             Activity activity = (Activity)TempData["Activity"];
             DateTime? higherdate = null;
@@ -313,18 +314,68 @@ namespace SMGPA.Controllers
             Tasks Tarea = (Tasks)TempData["Task"];
             if (ModelState.IsValid)
             {
-                Tasks tarea = await db.Task.SingleAsync(t => t.idTask == Tarea.idTask);
+                Tasks tarea = await db.Task.SingleAsync(t=> t.idTask.Equals(Tarea.idTask));
                 if (tarea == null)
                 {
                     return HttpNotFound();
                 }
+                Operation operacion = await db.Operation.FindAsync(tarea.idOperation);
+                switch (operacion.Type)
+                {
+                    case OperationType.ENTIDAD:
+                        if (task.idResponsable != null)
+                        {
+                           tarea.ResponsableEntity = await db.Entity.FindAsync(task.idResponsable);
+                        }else
+                        {
+                            TempData["Task"] = tarea;
+                            ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+                            ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                            ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                            ViewBag.Creada = null;
+                            ViewBag.Errores = "Tarea con Errores, debe especificar a la Entidad responsable";
+                            TempData["Activity"] = db.Activity.Find(activity.idActivity);
+                            return PartialView("_ConfigureTask", task);
+                        }
+                           break;
+                    case OperationType.FUNCIONARIO:
+                        if(task.idFunctionary != null)
+                        {
+                           tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
+                        }else
+                        {
+                            TempData["Task"] = tarea;
+                            ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+                            ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                            ViewBag.Creada = null;
+                            ViewBag.Errores = "Tarea con Errores, debe especificar al funcionario Responsable";
+                            TempData["Activity"] = db.Activity.Find(activity.idActivity);
+                            return PartialView("_ConfigureTask", task);
+                        }
+                        break;
+                }
+                if (operacion.Validable)
+                {
+                    if(task.idEntities != null)
+                    {
+                        tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
+                    }
+                    else
+                    {
+                        TempData["Task"] = tarea;
+                        ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
+                        ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                        ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                        ViewBag.Creada = null;
+                        ViewBag.Errores = "Tarea con Errores, debe especificar a la Entidad validadora";
+                        TempData["Activity"] = db.Activity.Find(activity.idActivity);
+                        return PartialView("_ConfigureTask", task);
+                    }
+                }
                 tarea.fechaInicio = task.fechaInicio;
                 tarea.fechaFin = task.fechaFin;
-                tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
-                tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
                 tarea.Estado = StatusEnum.INACTIVA;    
-                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.Responsable != null
-                    && tarea.Participantes != null && tarea.fechaInicio >= DateTime.Now
+                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.fechaInicio >= DateTime.Now
                     && tarea.fechaFin > tarea.fechaInicio)
                 {
                     foreach(Tasks t in actividad.Tareas)
@@ -345,12 +396,14 @@ namespace SMGPA.Controllers
                     TempData["Task"] = tarea;
                     ViewBag.Creada = "Tarea ha sido configurada correctamente";
                     ViewBag.Errores = null;
+                    ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
                     ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
                     ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");     
                     return PartialView("_ConfigureTask",tarea);
-                }
-                TempData["Task"] = tarea;
+                }            
             }
+            TempData["Task"] = await db.Task.FindAsync(Tarea.idTask);
+            ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
             ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.Creada = null;

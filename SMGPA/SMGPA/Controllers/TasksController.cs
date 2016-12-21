@@ -20,32 +20,47 @@ namespace SMGPA.Controllers
         private SMGPAContext db = new SMGPAContext();
 
         // GET: Tasks
-        
-       public ActionResult Tasks()
+
+        public ActionResult Tasks()
         {
-            Guid idUser = (Guid) Session["UserID"];
-            if(idUser == null)
+            Guid idUser = (Guid)Session["UserID"];
+            if (idUser == null)
             {
                 RedirectToAction("LogOut", "Account");
             }
             Functionary usuario = db.Functionary.Find(idUser);
             List<Tasks> Tareas = new List<Tasks>();
-            List<Tasks> tasks = db.Task.ToList();
-            List<Tasks> tareasresponsable = tasks.Where(t => t.idFunctionary == usuario.idUser).ToList();
-            List<Tasks> tareasfiltradas = tareasresponsable.Where(t => t.Estado != StatusEnum.COMPLETADA).ToList();
-            List<Tasks> tareasdisponibles = tareasfiltradas.Where(t => t.Estado != StatusEnum.INACTIVA).ToList();
-            List<Entities> entidades = usuario.Entidades.ToList();
-            Tareas = tareasdisponibles;
-            //El funcionario no puede validar las Tareas si es el responsable
-            foreach(Entities e in entidades)
+            List<Tasks> Tasks = db.Task.ToList();
+            List<Tasks> TasksFiltered = Tasks.Where(t => t.Estado.Equals(StatusEnum.ACTIVA) || t.Estado.Equals(StatusEnum.EN_PROGRESO)).ToList();
+            foreach (Tasks t in TasksFiltered)
             {
-                //obtener todas las tareas donde participa la entidad del funcionario
-                List<Tasks> tareasentidad = db.Task.Where(t => t.idEntities == e.idEntities).ToList();
-                //filtrar las tareas en la cual el funcionario es responsable
-                List<Tasks> tareasvalidador = tareasentidad.Where(t=> t.idFunctionary != idUser).ToList();
-                //filtrar las tareas Completadas
-                List<Tasks> tareasnocompletas = tareasvalidador.Where(t => t.Estado != StatusEnum.COMPLETADA).ToList();
-                Tareas.AddRange(tareasnocompletas);
+                if (t.idFunctionary != null)
+                {
+                    if (t.idFunctionary.Equals(idUser))
+                    {
+                        Tareas.Add(t);
+                    }
+                }
+                if (t.idResponsable != null)
+                {
+                    foreach (Functionary f in db.Entity.Find(t.idResponsable).Involucrados)
+                    {
+                        if (f.idUser.Equals(idUser))
+                        {
+                            Tareas.Add(t);
+                        }
+                    }
+                }
+                if (t.idEntities != null)
+                {
+                    foreach (Functionary f in db.Entity.Find(t.idEntities).Involucrados)
+                    {
+                        if (f.idUser.Equals(idUser))
+                        {
+                            Tareas.Add(t);
+                        }
+                    }
+                }
             }
             return View(Tareas);
         }
@@ -72,6 +87,17 @@ namespace SMGPA.Controllers
             if (tarea.idFunctionary == (Guid)Session["UserID"])
             {
                 return View("_DetailsUpload", tarea);
+                
+            }
+            if(tarea.idResponsable != null)
+            {
+                foreach(Functionary f in db.Entity.Find(tarea.idResponsable).Involucrados)
+                {
+                    if (f.idUser.Equals((Guid)Session["UserID"]))
+                    {
+                        return View("_Details", tarea);
+                    }
+                }
             }
             return View("_DetailsValidate", tarea);
         }

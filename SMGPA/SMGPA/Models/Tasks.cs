@@ -28,6 +28,7 @@ namespace SMGPA.Models
         public Guid? idOperation { get; set; }
         public Guid? idPredecesora { get; set; }
         public Guid idActivity { get; set; }
+        public Guid? idResponsable { get; set; }
         [ForeignKey("idActivity")]
         public virtual Activity Actividad { get; set; }
         [ForeignKey("idPredecesora")]
@@ -35,6 +36,8 @@ namespace SMGPA.Models
         public virtual ICollection<Document> Documentos { get; set; }
         [ForeignKey("idFunctionary")]
         public virtual Functionary Responsable { get; set; }
+        [ForeignKey("idResponsable")]
+        public virtual Entities ResponsableEntity { get; set; }
         [ForeignKey("idEntities")]
         public virtual Entities Participantes { get; set; }
         [ForeignKey("idOperation")]
@@ -43,5 +46,5 @@ namespace SMGPA.Models
         public int? Reprogramaciones { get; set; }
     }
     public enum StatusEnum { INACTIVA, ACTIVA, EN_PROGRESO, COMPLETADA, PENDIENTE }
-    
+
 }

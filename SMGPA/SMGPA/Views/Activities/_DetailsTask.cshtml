@@ -10,8 +10,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group pull-right">
-                    <label>@Html.DisplayNameFor(model => model.Estado)</label>
-                    <label style="border:solid 0.5px;">@Html.DisplayFor(model => model.Estado)</label>
+                    <div class="btn-info btn-sm">
+                        <label>@Html.DisplayFor(model => model.Estado)</label>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -19,33 +21,36 @@
             <div class="col-md-12">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>@Html.DisplayNameFor(model => model.Operacion.Nombre)</label>
-                        <label>@Html.DisplayFor(model => model.Operacion.Nombre)</label>
-                    </div>
-                    <div class="form-group">
                         <label>@Html.DisplayName("Responsable")</label>
-                        <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>@Html.DisplayName("Fecha de inicio")</label>
-                        <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                        </div>    
                     </div>
                     <div class="form-group">
                         <label>@Html.DisplayName("Fecha de fin")</label>
-                        <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                        </div>     
                     </div>
-                    <div class="form-group">
-                        <label>@Html.DisplayName("Cantidad de Re programaciones")</label>
-                        <label>@Html.DisplayFor(model => model.Reprogramaciones) </label>
-                    </div>
+                   
                 </div>
                 <div class="col-md-6">
                      <div class="form-group">
-                        @Html.DisplayName("Entidad Validadora")
-                     </div>
-                     <div class="form-group">
-                        @Html.DisplayFor(model => model.Participantes.Nombre)
-                     </div>
+                         <label>@Html.DisplayName("Entidad Validadora")</label>
+                             <div class="well well-sm">
+                                 <label>@Html.DisplayFor(model => model.Participantes.Nombre)</label>
+                             </div>
+                </div>
+                <div class="form-group">
+                   <label>@Html.DisplayName("Re calendarizaciones")</label>
+                      <span class="badge"><label>@Html.DisplayFor(model => model.Reprogramaciones) </label></span>
+                </div>
                     @if (ViewBag.Documento != null)
                     {
                        <div class="panel panel-primary">
