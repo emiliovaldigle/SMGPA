@@ -129,3 +129,9 @@ C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Releas
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateModel.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateModel21.resources
 C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.modelUpdate5.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.operationUpdate1.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.operationTypeRemove.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.operationUpdate5.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.operationUpdate6.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.updateProcessLenght.resources
+C:\Users\Emilio\Desktop\UNAB S2\Proyecto de Título\SMGPA\SMGPA\SMGPA\obj\Release\SMGPA.Migrations.UpdateTaskModelOperation.resources

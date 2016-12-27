@@ -165,7 +165,7 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass")] Operation operation)
+        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
         {
             Process proc = (Process)TempData["Proceso"];
             if(proc == null)
@@ -174,12 +174,15 @@ namespace SMGPA.Controllers
             }
             if (ModelState.IsValid)
             {
-                Process process = db.Process.Find(proc.idProcess);
-                process.Operations.Add(operation);
-                ViewBag.Proceso = process.Criterio;
-                await db.SaveChangesAsync();
-                ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
-                return PartialView("_AddOperation");
+                if (operation.IteracionesPermitidas >= 0)
+                {
+                    Process process = db.Process.Find(proc.idProcess);
+                    process.Operations.Add(operation);
+                    ViewBag.Proceso = process.Criterio;
+                    await db.SaveChangesAsync();
+                    ViewBag.idPredecesora = new SelectList(process.Operations.ToList(), "idOperation", "Nombre");
+                    return PartialView("_AddOperation");
+                }
             }
             TempData["Proceso"] = proc;
             ViewBag.Proceso = proc.Criterio;
@@ -213,7 +216,7 @@ namespace SMGPA.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass")] Operation operation)
+        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
         {
             if (ModelState.IsValid)
             {
@@ -222,14 +225,19 @@ namespace SMGPA.Controllers
                 {
                     return HttpNotFound();
                 }
-                operacion.Nombre = operation.Nombre;
-                operacion.Descripcion = operation.Descripcion;
-                operacion.Type = operation.Type;
-                operacion.Clase = operation.Clase;
-                operacion.Predecesora = operation.Predecesora;
-                db.SaveChanges();
-                db.Dispose();
-                return RedirectToAction("Index");
+                if (operation.IteracionesPermitidas >= 0)
+                {
+                    operacion.Nombre = operation.Nombre;
+                    operacion.Descripcion = operation.Descripcion;
+                    operacion.Type = operation.Type;
+                    operacion.Clase = operation.Clase;
+                    operacion.Validable = operation.Validable;
+                    operacion.Predecesora = operation.Predecesora;
+                    operacion.IteracionesPermitidas = operation.IteracionesPermitidas;
+                    db.SaveChanges();
+                    db.Dispose();
+                    return RedirectToAction("Index");
+                }
             }
             ViewBag.idPredecesora = new SelectList(db.Operation.ToList(), "idOperation", "Nombre");
             return View("EditOperation", operation);

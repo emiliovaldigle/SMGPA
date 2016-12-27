@@ -8,6 +8,7 @@ namespace SMGPAUpdater
 {
     class Program
     {
+        private static DateTime? DailyStamp { get; set; }
         static void Main(string[] args)
         {
             Console.WriteLine("Starting Background Tasks of SMPGA");
@@ -17,6 +18,7 @@ namespace SMGPAUpdater
                     UpdatePendiente();
                     ReSchedule();
                     updateActivities();
+                    dailyNotification();
                 }
         }
         static void UpdateActiva()
@@ -95,8 +97,25 @@ namespace SMGPAUpdater
                 {
                     foreach (Tasks t in Tareas)
                     {
+                        Tasks tarea = db.Task.Find(t.idTask);
+                        if (tarea.Operacion.IteracionesPermitidas > 0)
+                        {
+                            if(tarea.Reprogramaciones < tarea.Operacion.IteracionesPermitidas)
+                            {
+                                t.Estado = StatusEnum.PENDIENTE;
+                            }
+                            else
+                            {
+                                t.Estado = StatusEnum.CERRADA_SIN_CONCLUIR;
+                            }
+
+                        }
+                        else
+                        {
+                            t.Estado = StatusEnum.CERRADA_SIN_CONCLUIR;
+                        }
                         Console.WriteLine("Task: " + t.idTask + " updated to Pendiente");
-                        t.Estado = StatusEnum.PENDIENTE;
+                      
                     }
                 }
                 db.SaveChanges();
@@ -123,13 +142,53 @@ namespace SMGPAUpdater
                         Console.WriteLine("Task: " + t.idTask + " Scheduled");
                         string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
                         Notification notificator = new Notification();
-                        foreach (Functionary f in t.Participantes.Involucrados)
+                        Tasks tarea = db.Task.Find(t.idTask);
+                        switch (tarea.Operacion.Type)
                         {
-                            string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
-                            string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
-                            addNotification(Cuerpo,f.idUser, t.fechaInicio, link);
-                            notificator.NotificateAll(Destinatario, link, 3);
+                            case OperationType.ENTIDAD:
+                                if (tarea.Operacion.Validable)
+                                {
+                                    foreach (Functionary f in t.Participantes.Involucrados)
+                                    {
+                                        string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                        string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
+                                        addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                        notificator.NotificateAll(Destinatario, link, 3);
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (Functionary f in t.ResponsableEntity.Involucrados)
+                                    {
+                                        string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                        string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
+                                        addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                        notificator.NotificateAll(Destinatario, link, 3);
+                                    }
+                                }
+                                break;
+
+                            case OperationType.FUNCIONARIO:
+                                if (tarea.Operacion.Validable)
+                                {
+                                    foreach (Functionary f in t.Participantes.Involucrados)
+                                    {
+                                        string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                        string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
+                                        addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                        notificator.NotificateAll(Destinatario, link, 3);
+                                    }
+                                }
+                                else
+                                {
+                                    string Destinatario = db.Functionary.Find(t.idFunctionary).MailInstitucional;
+                                    string Cuerpo = "Tarea " + t.Operacion.Nombre + " ha sido reprogramada debido a falta de gestión";
+                                    addNotification(Cuerpo, t.idFunctionary, t.fechaInicio, link);
+                                    notificator.NotificateAll(Destinatario, link, 3);
+                                }
+                                break;
                         }
+                       
                         Console.WriteLine("Task: " + t.idTask + " updated ");
                     }
                 }
@@ -157,7 +216,7 @@ namespace SMGPAUpdater
             using (SMGPAContext db = new SMGPAContext())
             {
                 List<Activity> Activities = db.Activity.ToList();
-                List<Activity> Actividades =Activities.Where(a => a.state.Equals(States.Inactiva)).ToList();
+                List<Activity> Actividades = Activities.Where(a => a.state.Equals(States.Inactiva)).ToList();
                 if(Actividades != null)
                 {
                     foreach(Activity a in Actividades)
@@ -177,5 +236,141 @@ namespace SMGPAUpdater
             }
                 
         }
+        public static void dailyNotification()
+        {
+            if (DailyStamp != null)
+            {
+                DateTime DateParsed = (DateTime) DailyStamp;
+                if (DateTime.Today >= DateParsed.AddDays(1))
+                {
+                    using (SMGPAContext db = new SMGPAContext())
+                    {
+                        List<Tasks> _Tareas = db.Task.ToList();
+                        Notification notificator = new Notification();
+                        List<Tasks> Tareas = _Tareas.Where(t => t.Estado.Equals(StatusEnum.ACTIVA)
+                         || t.Estado.Equals(StatusEnum.EN_PROGRESO)).ToList();
+                        foreach (Tasks t in Tareas)
+                        {
+                            Tasks tarea = db.Task.Find(t.idTask);
+                            switch (tarea.Operacion.Type)
+                            {
+                                case OperationType.ENTIDAD:
+                                    if (tarea.Operacion.Validable)
+                                    {
+                                        foreach(Functionary f in tarea.ResponsableEntity.Involucrados)
+                                        {
+                                            bool Participa = false;
+                                            foreach (Observation o in tarea.Observaciones)
+                                            {
+                                                if (f.idUser.Equals(o.Funcionario.idUser))
+                                                {
+                                                    Participa = true;
+                                                }
+                                            }
+                                            if (!Participa)// acá debo informarle que debe participar en tarea
+                                            {
+                                                string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
+                                                string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                                string Cuerpo = "No ha participado en Tarea:  " + t.Operacion.Nombre + " está corriendo el riesgo que dicha Tarea"
+                                                    + " tenga una reprogramación debido a falta de gestión";
+                                                addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                                notificator.NotificateAll(Destinatario, link, 4);
+                                            }
+                                        }
+                                        foreach(Functionary f in tarea.Participantes.Involucrados)
+                                        {
+                                            bool Participa = false;
+                                            foreach (Observation o in tarea.Observaciones)
+                                            {
+                                                if (f.idUser.Equals(o.Funcionario.idUser))
+                                                {
+                                                    Participa = true;
+                                                }
+                                            }
+                                            if (!Participa)// acá debo informarle que debe participar en tarea
+                                            {
+                                                string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
+                                                string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                                string Cuerpo = "No ha participado en Tarea:  " + t.Operacion.Nombre + " está corriendo el riesgo que dicha Tarea"
+                                                    + " tenga una reprogramación debido a falta de gestión";
+                                                addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                                notificator.NotificateAll(Destinatario, link, 4);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (Functionary f in tarea.ResponsableEntity.Involucrados)
+                                        {
+                                            bool Participa = false;
+                                            foreach (Observation o in tarea.Observaciones)
+                                            {
+                                                if (f.idUser.Equals(o.Funcionario.idUser))
+                                                {
+                                                    Participa = true;
+                                                }
+                                            }
+                                            if (!Participa)// acá debo informarle que debe participar en tarea
+                                            {
+                                                string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
+                                                string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                                string Cuerpo = "No ha participado en Tarea:  " + t.Operacion.Nombre + " está corriendo el riesgo que dicha Tarea"
+                                                    + " tenga una reprogramación debido a falta de gestión";
+                                                addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                                notificator.NotificateAll(Destinatario, link, 4);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case OperationType.FUNCIONARIO:
+                                    if (tarea.Operacion.Validable)
+                                    {
+                                        foreach (Functionary f in tarea.Participantes.Involucrados)
+                                        {
+                                            bool Participa = false;
+                                            foreach (Observation o in tarea.Observaciones)
+                                            {
+                                                if (f.idUser.Equals(o.Funcionario.idUser))
+                                                {
+                                                    Participa = true;
+                                                }
+                                            }
+                                            if (!Participa)// acá debo informarle que debe participar en tarea
+                                            {
+                                                string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
+                                                string Destinatario = db.Functionary.Find(f.idUser).MailInstitucional;
+                                                string Cuerpo = "No ha participado en Tarea:  " + t.Operacion.Nombre + " está corriendo el riesgo que dicha Tarea"
+                                                    + " tenga una reprogramación debido a falta de gestión";
+                                                addNotification(Cuerpo, f.idUser, t.fechaInicio, link);
+                                                notificator.NotificateAll(Destinatario, link, 4);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(t.Documentos.Count == 0)
+                                        {
+                                            string link = "http://localhost/SMGPA/Tasks/Details/" + t.idTask;
+                                            string Destinatario = db.Functionary.Find(t.idFunctionary).MailInstitucional;
+                                            string Cuerpo = "No ha participado en Tarea:  " + t.Operacion.Nombre + " está corriendo el riesgo que dicha Tarea"
+                                                + " tenga una reprogramación debido a falta de gestión";
+                                            addNotification(Cuerpo, t.idFunctionary, t.fechaInicio, link);
+                                            notificator.NotificateAll(Destinatario, link, 4);
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+
+                    }
+                    DailyStamp = DateTime.Today;
+                }
+            }
+            else
+            {
+                DailyStamp = DateTime.Today;
+            }
+        }
+
     }
 }

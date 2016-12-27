@@ -30,6 +30,8 @@ namespace SMGPA.Models
         public virtual Operation Predecesora { get; set; }
         [Required(ErrorMessage ="Especifíque el tipo de Operación")]
         public OperationClass Clase {get; set;}
+        [Required(ErrorMessage ="Debe indicar la cantidad de iteraciones permitidas para esta Operación")]
+        public int IteracionesPermitidas { get; set; }
 	}
     public enum OperationType { ENTIDAD, FUNCIONARIO }
     public enum OperationClass { SUBIR_DOCUMENTO}

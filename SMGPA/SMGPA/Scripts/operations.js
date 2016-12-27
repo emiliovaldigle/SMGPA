@@ -1,4 +1,5 @@
 ﻿$(function () {
+    $("#spinner").spinner({});
     $(document).on("click", "#deleteOperation", function (e) {
         var $tr = $(this).closest('tr');
         var id = $(this).attr('value');

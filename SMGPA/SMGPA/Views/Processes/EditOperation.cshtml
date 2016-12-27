@@ -62,7 +62,13 @@
                 @Html.ValidationMessageFor(model => model.idPredecesora, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="form-group">
+            @Html.Label("Iteraciones Permitidas", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IteracionesPermitidas, new { htmlAttributes = new { @class = "form-control", id = "spinner", name ="value"} })
+                @Html.ValidationMessageFor(model => model.IteracionesPermitidas, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Guardar" class="btn btn-default" />

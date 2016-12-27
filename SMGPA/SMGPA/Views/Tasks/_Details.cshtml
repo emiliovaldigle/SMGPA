@@ -2,7 +2,6 @@
 @{ 
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div id='myModal' class='modal fade in'>
     <div class="modal-dialog">
         <div class="modal-content">
@@ -14,8 +13,9 @@
         <div class="container">
             <div class="col-md-12">
                 <div class="form-group pull-right">
-                    <label>@Html.DisplayNameFor(model => model.Estado)</label>
-                    <label style="border:solid 0.5px;">@Html.DisplayFor(model => model.Estado)</label>
+                    <div class="btn-info btn-sm">
+                        <label>@Html.DisplayFor(model => model.Estado)</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,30 +23,64 @@
             <h2>Tarea @Html.DisplayFor(model => model.Operacion.Nombre)</h2>
             <div class="col-md-12">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label>@Html.DisplayName("Responsable"):</label>
-                        <label>@Html.DisplayFor(model => model.Responsable.Nombre, new { @style = "padding-right:5px !important;" })@Html.DisplayFor(model => model.Responsable.Apellido)</label>
-                    </div>
+                    @switch (Model.Operacion.Type)
+                    {
+                        case OperationType.ENTIDAD:
+                            <div class="form-group">
+                                <label>@Html.DisplayName("Responsable")</label>
+                                <div class="well well-sm">
+                                    <label>@Html.DisplayFor(model => model.ResponsableEntity.Nombre)</label>
+                                </div>
+                            </div>
+                            break;
+                        case OperationType.FUNCIONARIO:
+                            <div class="form-group">
+                                <label>@Html.DisplayName("Responsable")</label>
+                                <div class="well well-sm">
+                                    <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                                </div>
+                            </div>
+                            break;
+                    }
+
                     <div class="form-group">
                         <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion):</label>
-                        <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>@Html.DisplayName("Fecha de inicio"):</label>
-                        <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>@Html.DisplayName("Fecha de fin"):</label>
-                        <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                        <div class="well well-sm">
+                            <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                        </div>
                     </div>
+                    @if (Model.Operacion.Validable)
+                    {
+                        <div class="form-group">
+                            <label>@Html.DisplayName("Entidad Validadora")</label>
+                            <div class="well well-sm">
+                                <label>@Html.DisplayFor(model => model.Participantes.Nombre)</label>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div class="col-md-6">
-                    @using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data" }))
+              @if (Model.Estado == StatusEnum.ACTIVA || Model.Estado == StatusEnum.EN_PROGRESO)
+              {
+                    using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         @Html.AntiForgeryToken()
                         <input type="file" name="fileDoc" />
                         <input type="submit" value="Subir" id="uploadDocument" />
                     }
+              }
                     @if (ViewBag.Documento != null)
                     {
                         <div class="panel panel-info">
@@ -93,9 +127,13 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div style="margin-bottom: 25px;">
-                @Html.ActionLink("Agregar Observación", "AddObservation", new { id = Model.idTask }, new { @class = "observation btn btn-default btn-sm", data_modal = "" })
-            </div>     
+            @if (Model.Estado == StatusEnum.ACTIVA || Model.Estado == StatusEnum.EN_PROGRESO)
+            {
+                <div style="margin-bottom: 25px;">
+                    @Html.ActionLink("Agregar Observación", "AddObservation", new { id = Model.idTask }, new { @class = "observation btn btn-default btn-sm", data_modal = "" })
+                </div>
+            }
+         
             @foreach (var item in Model.Observaciones.ToList())
             {
                 <div class="panel panel-info">
@@ -130,10 +168,17 @@
 @section Scripts {
     @Scripts.Render("~/bundles/modalform")
     <script type="text/javascript">
-        $(function (e) {
+        $(document).on("click", "#uploadDocument", function (e) {
+            
+            location.reload();
+        });
+        $(document).on("click", "#subButton", function (e) {
+            $('#myModal').modal('hide');
+        });
+        $(function (e) {    
             $('#myModal').on('hidden.bs.modal', function () {
                 location.reload();
-            })
+            });
         });
     </script>
 }

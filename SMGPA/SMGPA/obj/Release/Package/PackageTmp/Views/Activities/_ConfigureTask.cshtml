@@ -21,18 +21,18 @@
     @Html.AntiForgeryToken()
 <div class="modal-body">
     <div class="row">
-                @switch (Model.Operacion.Responsable)
+                @switch (Model.Operacion.Type)
                 {
-                    case TipoResponsable.Entidad:
+                    case  OperationType.ENTIDAD:
                         <div class="form-group">
                             @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
                             <div class="col-md-6">
-                                @Html.DropDownList("idEntities", null, htmlAttributes: new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.idEntities, "", new { @class = "text-danger" })
+                                @Html.DropDownList("idResponsable", null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.idResponsable, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         break;
-                    case TipoResponsable.Funcionario:
+                    case OperationType.FUNCIONARIO:
                         <div class="form-group">
                             @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
                             <div class="col-md-6">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 }
-                
+            
       </div>
 </div>
 

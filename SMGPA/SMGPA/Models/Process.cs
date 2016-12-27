@@ -17,7 +17,7 @@ namespace SMGPA.Models
         [Key]
         public Guid idProcess { get; set; }
         [Required(ErrorMessage = "Criterio es Requerido.")]
-        [StringLength(20, ErrorMessage = "Criterio muy largo")]
+        [StringLength(100, ErrorMessage = "Criterio muy largo")]
         public string Criterio { get; set; }
         [StringLength(200, ErrorMessage = "Descripción muy extensa")]
         [Required(ErrorMessage = "Descripción es Requerida.")]

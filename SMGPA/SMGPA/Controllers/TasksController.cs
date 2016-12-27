@@ -55,7 +55,7 @@ namespace SMGPA.Controllers
                 {
                     foreach (Functionary f in db.Entity.Find(t.idEntities).Involucrados)
                     {
-                        if (f.idUser.Equals(idUser))
+                        if (f.idUser.Equals(idUser)&& !Tareas.Contains(t))
                         {
                             Tareas.Add(t);
                         }
@@ -77,7 +77,7 @@ namespace SMGPA.Controllers
             {
                 return HttpNotFound();
             }
-            TempData["Tarea"] = tarea;
+            TempData["Tarea"] = id;
             if (tarea.Documentos.Count > 0)
             {
                 ViewBag.Documento = "Tareas";
@@ -111,9 +111,8 @@ namespace SMGPA.Controllers
             }
             if (ModelState.IsValid)
             {
-                Tasks tarea = (Tasks)TempData["Tarea"];
-                Tasks task = db.Task.Single(t => t.idTask == tarea.idTask);    
-               
+                Guid id = (Guid)TempData["Tarea"];
+                Tasks task = db.Task.Single(t => t.idTask == id);         
                 if (Request.Files.Count > 0)
                 {
                     HttpPostedFileBase file = Request.Files[0];
@@ -121,31 +120,67 @@ namespace SMGPA.Controllers
                     {
                         var pathToSave = "~/uploads";
                         var fileName = Path.GetFileName(file.FileName);
+                        int count = 1;
+                        string fileNameOnly = Path.GetFileNameWithoutExtension(fileName);
+                        string extension = Path.GetExtension(fileName);
+                        string path = Path.GetDirectoryName(fileName);
+                        string newFullPath = fileName;
+                        string absolutePath = HttpContext.Server.MapPath(pathToSave+'/'+newFullPath);
+                        bool exists = System.IO.File.Exists(absolutePath);
+                        while (System.IO.File.Exists(absolutePath))
+                        {
+                            string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
+                            newFullPath = Path.Combine(path, tempFileName + extension);
+                            absolutePath = HttpContext.Server.MapPath(pathToSave + '/' + newFullPath);
+                        }
                         string Ruta = Path.Combine(
-                            Server.MapPath(pathToSave), fileName);
+                         Server.MapPath(pathToSave), newFullPath);
                         file.SaveAs(Ruta);
-                        Document documento = new Document { idDocument = Guid.NewGuid(), Path = fileName, idTask = task.idTask, Fecha = DateTime.Today };
+                        Document documento = new Document { idDocument = Guid.NewGuid(), Path = newFullPath, idTask = task.idTask, Fecha = DateTime.Today };
                         task.Documentos.Add(documento);
                         task.Estado = StatusEnum.EN_PROGRESO;
                     }               
                     string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = task.idTask });
                     Notification notificator = new Notification();
-                    Tasks _Tarea = await db.Task.FindAsync(tarea.idTask);
                     Functionary user = await db.Functionary.FindAsync((Guid)Session["UserID"]);
-                    foreach (Functionary f in _Tarea.Participantes.Involucrados)
+                    if (!task.idResponsable.Equals(task.idEntities))
                     {
-                        Notificacion n = new Notificacion();
-                        n.idNotification = Guid.NewGuid();
-                        n.Fecha = DateTime.Now;
-                        n.Funcionario = f;
-                        n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + _Tarea.Operacion.Nombre;
-                        n.UrlAction = link;
-                        n.Vista = false;
-                        f.Notificaciones.Add(n);
-                        await notificator.NotificateParticipants(_Tarea.Responsable,db.Functionary.Find(f.idUser), _Tarea, link);
+                        Operation Operacion = db.Operation.Find(task.idOperation);
+                        if (Operacion.Validable)
+                        {
+                            foreach (Functionary f in task.Participantes.Involucrados)
+                            {
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + task.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                                await notificator.NotificateParticipants(user, db.Functionary.Find(f.idUser), task, link);
+                            }
+                        }
+                        if (Operacion.Type.Equals(OperationType.ENTIDAD))
+                        {
+                            foreach (Functionary f in task.ResponsableEntity.Involucrados)
+                            {
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + task.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                                await notificator.NotificateParticipants(user, db.Functionary.Find(f.idUser), task, link);
+                            }
+                        }
                     }
+                    
                     db.SaveChanges();
-                    return RedirectToAction("Tasks",task);
+                    Tasks updatedTask = db.Task.Find(task.idTask);
+                    return Redirect(Request.UrlReferrer.ToString());
                 }
             }
             return HttpNotFound();
@@ -174,6 +209,8 @@ namespace SMGPA.Controllers
             Tasks Task = (Tasks)TempData["Task"];
             Tasks Tarea = await db.Task.FindAsync(Task.idTask);
             Functionary user = await db.Functionary.FindAsync((Guid)Session["UserID"]);
+            string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = Tarea.idTask });
+            Notification notificator = new Notification();
             if (ModelState.IsValid)
             {
                 observation.idObservation = Guid.NewGuid();
@@ -183,67 +220,135 @@ namespace SMGPA.Controllers
                 user.Observaciones.Add(observation);
                 Tarea.Estado = StatusEnum.EN_PROGRESO;
                 List<Guid> idsUsuario = new List<Guid>();
-                bool Completada = false;
-                Entities Entidad = await db.Entity.FindAsync(Tarea.idEntities);
                 List<Observation> Obs = Tarea.Observaciones.ToList();
+                //obtengo todas las observaciones aceptadas de tarea
                 foreach (Observation o in Obs)
                 {
-                    if (!idsUsuario.Contains(o.Funcionario.idUser))
+                    if (!idsUsuario.Contains(o.Funcionario.idUser) && o.ValidacionEstatus == Validate.APROBADO)
                     {
-                        var userObs = Obs.Where(ob => ob.Funcionario.idUser == o.Funcionario.idUser);
-                        var lastObs = userObs.Last();
-                        Completada = (lastObs.ValidacionEstatus.Equals(Validate.APROBADO)) ? true : false;
                         idsUsuario.Add(o.Funcionario.idUser);
                     }
                 }
                 //se debe validar que todos los Funcionarios de la Entidad tengan observaciones sobre la Tarea 
-                bool Comented = false;
-                //esto para poder considerar la tarea como Completada
-                foreach (Functionary f in Entidad.Involucrados)
+                switch (Tarea.Operacion.Type)
                 {
-                    if (f.idUser != Tarea.idFunctionary)
-                    {
-                        if (idsUsuario.Contains(f.idUser))
+                    case OperationType.ENTIDAD:
+                        bool EntidadParticipo = false;
+                        bool EntidadResponsable = false;
+                        if (Tarea.Operacion.Validable)
                         {
-                            Comented = true;
+
+                            foreach (Functionary f in Tarea.Participantes.Involucrados)
+                            {
+                                await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                            }
+                            int divisor1 = idsUsuario.Count;
+                            int dividendo1 = Tarea.Participantes.Involucrados.Count + Tarea.ResponsableEntity.Involucrados.Count;
+                            double division1 = (double)divisor1 / dividendo1;
+                            double resultado1 = division1 * 100.0;
+                            //verificamos que al menos el 50% de los involucrados haya comentado
+                            if (resultado1 >= 50)
+                            {
+                                EntidadParticipo = true;
+                            }
+                            foreach (Functionary f in Tarea.ResponsableEntity.Involucrados)
+                            {
+                                await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                            }
+                            int divisor2 = idsUsuario.Count;
+                            int dividendo2 = Tarea.ResponsableEntity.Involucrados.Count + Tarea.Participantes.Involucrados.Count;
+                            double division2 = (double)divisor2 / dividendo2;
+                            double resultado2 = division2 * 100.0;
+                            if (resultado2 >= 50)
+                            {
+                                EntidadResponsable = true;
+                            }
+                            if (EntidadParticipo && EntidadResponsable)
+                            {
+                               Tarea.Estado = StatusEnum.COMPLETADA;
+                            }
                         }
                         else
                         {
-                            Comented = false;
+                            foreach (Functionary f in Tarea.ResponsableEntity.Involucrados)
+                            {
+                                await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                            }
+                            int divisor2 = idsUsuario.Count;
+                            int dividendo2 = Tarea.ResponsableEntity.Involucrados.Count;
+                            double division2 = (double)divisor2 / dividendo2;
+                            double resultado2 = division2 * 100.0;
+                            if (resultado2 >= 50)
+                            {
+                                EntidadResponsable = true;
+                            }  
                         }
-                    }
-                }
-                if (Comented)
-                {
-                    Tarea.Estado = Completada ? StatusEnum.COMPLETADA : StatusEnum.EN_PROGRESO;
-                    if (Tarea.Estado == StatusEnum.COMPLETADA)
-                    {
-                        List<Tasks> dependencies = db.Task.Where(t=> t.idPredecesora == Tarea.idTask).ToList();
-                        foreach(Tasks ta in dependencies)
+                                  
+                        break;
+                    case OperationType.FUNCIONARIO:
+                        bool EntidadValidadora = false;
+                        if (Tarea.Operacion.Validable)
                         {
-                            ta.Documentos.Add(Tarea.Documentos.Last());
+                            foreach (Functionary f in Tarea.Participantes.Involucrados)
+                            {
+                                    await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
+                                    Notificacion n = new Notificacion();
+                                    n.idNotification = Guid.NewGuid();
+                                    n.Fecha = DateTime.Now;
+                                    n.Funcionario = f;
+                                    n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
+                                    n.UrlAction = link;
+                                    n.Vista = false;
+                                    f.Notificaciones.Add(n);
+                            }
+                            int divisor1 = idsUsuario.Count;
+                            int dividendo1 = Tarea.Participantes.Involucrados.Count;
+                            double division1 = (double)divisor1 / dividendo1;
+                            double resultado1 = division1 * 100.0;
+                            //verificamos que al menos el 50% de los involucrados haya comentado
+                            if (resultado1 >= 50)
+                            {
+                                EntidadParticipo = true;
+                            }
+                            //verificamos que al menos el 50% de los involucrados haya comentado
+                            if (EntidadValidadora)
+                            {
+                                Tarea.Estado = StatusEnum.COMPLETADA;
+                            }
                         }
-                        
-                    }
+                        else
+                        {
+                            if(Tarea.Documentos.Count > 0)
+                            {
+                                Tarea.Estado = StatusEnum.COMPLETADA;
+                            }
+                        }
+                        break;
                 }
-                string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = Tarea.idTask });
-                Notification notificator = new Notification();
-                List<Notificacion> Notificaciones = new List<Notificacion>();
-                Tasks _Tarea = await db.Task.FindAsync(Tarea.idTask);
-                foreach (Functionary f in _Tarea.Participantes.Involucrados)
-                {
-                    await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), _Tarea, link,3);
-                    Notificacion n = new Notificacion();
-                    n.idNotification = Guid.NewGuid();
-                    n.Fecha = DateTime.Now;
-                    n.Funcionario = f;
-                    n.Cuerpo = "El Funcionario "+ user.Nombre +" "+user.Apellido+ " ha comentado la Tarea: " +_Tarea.Operacion.Nombre;
-                    n.UrlAction = link;
-                    n.Vista = false;
-                    f.Notificaciones.Add(n);
-
-                }
-                ViewBag.Agregada = "Observación agregada";
                 await db.SaveChangesAsync();
                 return PartialView();
             }

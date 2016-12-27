@@ -36,6 +36,12 @@ namespace Notificator
                  + "<p>" + link + " Debido a falta de gestión por parte de los participantes</p>";
                 subj = "- Re programación de Tarea";
             }
+            if (Mensaje == 4)
+            {
+                body = "<p>Por favor realice acciones sobre siguiente Tarea"
+                 + "<p>" + link;
+                subj = "- Ausencia de gestión";
+            }
 
             var message = new MailMessage();
             message.To.Add(new MailAddress(Destinatario));  // replace with valid value 

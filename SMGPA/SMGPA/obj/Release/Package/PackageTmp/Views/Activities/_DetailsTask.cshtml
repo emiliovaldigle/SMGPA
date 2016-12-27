@@ -20,12 +20,25 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label>@Html.DisplayName("Responsable")</label>
-                        <div class="well well-sm">
-                            <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
-                        </div>
-                    </div>
+                    @switch (Model.Operacion.Type)
+                    {
+                        case OperationType.ENTIDAD:
+                            <div class="form-group">
+                                <label>@Html.DisplayName("Responsable")</label>
+                                <div class="well well-sm">
+                                    <label>@Html.DisplayFor(model => model.ResponsableEntity.Nombre)</label>
+                                </div>
+                            </div>
+                            break;
+                        case OperationType.FUNCIONARIO:
+                            <div class="form-group">
+                                <label>@Html.DisplayName("Responsable")</label>
+                                <div class="well well-sm">
+                                    <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                                </div>
+                            </div>
+                            break;
+                    }               
                     <div class="form-group">
                         <label>@Html.DisplayName("Fecha de inicio")</label>
                         <div class="well well-sm">
@@ -41,14 +54,21 @@
                    
                 </div>
                 <div class="col-md-6">
+                    @if (Model.Operacion.Validable)
+                    {
                      <div class="form-group">
                          <label>@Html.DisplayName("Entidad Validadora")</label>
                              <div class="well well-sm">
                                  <label>@Html.DisplayFor(model => model.Participantes.Nombre)</label>
                              </div>
+                      </div>
+                    }
+                <div class="form-group">
+                   <label>@Html.DisplayName("Re calendarizaciones Permitidas")</label>
+                   <span class="badge"><label>@Html.DisplayFor(model => model.Operacion.IteracionesPermitidas) </label></span>
                 </div>
                 <div class="form-group">
-                   <label>@Html.DisplayName("Re calendarizaciones")</label>
+                   <label>@Html.DisplayName("Re calendarizaciones Realizadas")</label>
                       <span class="badge"><label>@Html.DisplayFor(model => model.Reprogramaciones) </label></span>
                 </div>
                     @if (ViewBag.Documento != null)

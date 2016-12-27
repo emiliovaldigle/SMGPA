@@ -1,0 +1,6 @@
+diagramas de secuencia - 
+diagramas de caso de uso: muchos include con ciclos es pq algo está mal 
+Include que gatillan actividad
+Quitar actores secundarios del CU
+Definir diagramas de secuencia alto nivel, COMPELEMENTAR SECUENCIAS
+Martes entre 3 y 4
