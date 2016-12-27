@@ -178,10 +178,15 @@ namespace SMGPA.Controllers
                 return Json(new { sucess = false , JsonRequestBehavior.AllowGet});
             }
             Permission permission = await db.Permission.FindAsync(id);
-            role.Permisos.Add(permission);
-            await db.SaveChangesAsync();
-            TempData["Role"] = role;
-            return Json(new {idpermission = permission.idPermission, textlink=permission.TextLink, controller=permission.Controller, actionresult = permission.ActionResult, sucess = true }, JsonRequestBehavior.AllowGet);
+            if (!role.Permisos.Contains(permission))
+            {
+             role.Permisos.Add(permission);
+                await db.SaveChangesAsync();
+                TempData["Role"] = role;
+                return Json(new { idpermission = permission.idPermission, textlink = permission.TextLink, controller = permission.Controller, actionresult = permission.ActionResult, sucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { sucess = false }, JsonRequestBehavior.AllowGet);
+          
         }
         [HttpPost]
         public async Task<ActionResult> DeletePermission(Guid? id)

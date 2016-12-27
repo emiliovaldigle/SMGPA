@@ -326,7 +326,8 @@ namespace SMGPA.Controllers
                         if (task.idResponsable != null)
                         {
                            tarea.ResponsableEntity = await db.Entity.FindAsync(task.idResponsable);
-                        }else
+                        }
+                        else
                         {
                             TempData["Task"] = tarea;
                             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
@@ -335,7 +336,7 @@ namespace SMGPA.Controllers
                             ViewBag.Creada = null;
                             ViewBag.Errores = "Tarea con Errores, debe especificar a la Entidad responsable";
                             TempData["Activity"] = db.Activity.Find(activity.idActivity);
-                            return PartialView("_ConfigureTask", task);
+                            return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
                         }
                            break;
                     case OperationType.FUNCIONARIO:
@@ -350,7 +351,7 @@ namespace SMGPA.Controllers
                             ViewBag.Creada = null;
                             ViewBag.Errores = "Tarea con Errores, debe especificar al funcionario Responsable";
                             TempData["Activity"] = db.Activity.Find(activity.idActivity);
-                            return PartialView("_ConfigureTask", task);
+                            return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
                         }
                         break;
                 }
@@ -369,13 +370,13 @@ namespace SMGPA.Controllers
                         ViewBag.Creada = null;
                         ViewBag.Errores = "Tarea con Errores, debe especificar a la Entidad validadora";
                         TempData["Activity"] = db.Activity.Find(activity.idActivity);
-                        return PartialView("_ConfigureTask", task);
+                        return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
                     }
                 }
                 tarea.fechaInicio = task.fechaInicio;
                 tarea.fechaFin = task.fechaFin;
                 tarea.Estado = StatusEnum.INACTIVA;    
-                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.fechaInicio >= DateTime.Now
+                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.fechaInicio > DateTime.Now
                     && tarea.fechaFin > tarea.fechaInicio)
                 {
                     foreach(Tasks t in actividad.Tareas)
@@ -409,7 +410,7 @@ namespace SMGPA.Controllers
             ViewBag.Creada = null;
             ViewBag.Errores = "Tarea con Errores, considerar que Fecha de Inicio debe ser mayor al tiempo actual"; 
             TempData["Activity"] = db.Activity.Find(activity.idActivity);
-            return PartialView("_ConfigureTask", task);
+            return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
 
         }
         [Authorizate(Disabled = true, Public = false)]
