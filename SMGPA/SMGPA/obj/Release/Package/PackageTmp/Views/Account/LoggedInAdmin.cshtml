@@ -10,23 +10,20 @@ google.charts.setOnLoadCallback(drawBackgroundColor);
 
 function drawBackgroundColor() {
       var data = new google.visualization.DataTable();
-      data.addColumn('number', 'X');
-      data.addColumn('number', 'Dogs');
-      data.addColumn('number', 'Dogs2');
-      data.addColumn('number', 'Dogs3');
-
-
+      data.addColumn('number', 'COMPLETADAS');
+      data.addColumn('number', 'EN PROGRESO');
+      data.addColumn('number', 'CERRADAS CON OBS');
+      data.addColumn('number', 'ACTIVAS');
       data.addRows([
         [0, 0,70,5],   [1, 10,70,5],  [2, 23,70,5],  [3, 17,70,5],  [4, 18,70,5],  [5, 9,70,5]
-
       ]);
 
       var options = {
         hAxis: {
-          title: 'Time'
+          title: 'Tiempo'
         },
         vAxis: {
-          title: 'Popularity'
+          title: 'Tareas'
         },
         backgroundColor: '#f1f8e9'
       };
@@ -43,10 +40,11 @@ function drawBackgroundColor() {
          <div id="resizable" style="height: 300px;border:1px solid gray;">
              <div id="chartContainer1" style="height: 100%; width: 100%;"></div>
          </div>
+     </div>
+     <div class="col-md-6">
          <div id="chart_div">
 
          </div>
-
      </div>
      
  </div>

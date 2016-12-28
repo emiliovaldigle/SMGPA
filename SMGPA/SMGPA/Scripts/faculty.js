@@ -1,7 +1,7 @@
 ﻿$(document).on("change", ".traceable", function (e) {
     var id = $(this).val();
     $("#addCareer").unbind('click').click(function (e) {
-        $.post("/Entities/AddCareer/"+id, function (result) {
+        $.post("/SMGPA/Entities/AddCareer/"+id, function (result) {
             if (result.sucess) {
                 var row = "<tr><td>" + result.nombre
                     + "</td>+</tr>"
