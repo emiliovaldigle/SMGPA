@@ -15,7 +15,11 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Activities
+        /*GET: Activities
+        Return the View Index with Collection of
+        Activities, it also can be filtered by  4 differents
+        filters, on initial date, end date, status and type of 
+        the process of the Activity*/
         public ActionResult Index(string proc_search, string dateini, string datend, string state, int? page, string cfilter1, string cfilter2, string cfilter3, string cfilter4)
         {
             int pageSize;
@@ -85,7 +89,10 @@ namespace SMGPA.Controllers
             return View(activity.ToList().ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Activities/Details/5
+        /* GET: Activities/Details/id
+         Return View with full object Activity
+         but his id
+        */
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -100,16 +107,18 @@ namespace SMGPA.Controllers
             return View(activity);
         }
 
-        // GET: Activities/Create
+        /* GET: Activities/Create
+           Return the View Create who let the user        
+           create an Activity */
         public ActionResult Create()
         {
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio");
             return View();
         }
 
-        // POST: Activities/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Activities/Create
+        Post the acivity into the bd if
+        model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idActivity,state,start_date,end_date,Nombre,idProcess")] Activity activity)
@@ -128,6 +137,9 @@ namespace SMGPA.Controllers
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio", activity.idProcess);
             return View(activity);
         }
+        /*Function that add the Tasks from the Operations existing
+        in the process related to the Activity
+        */
         public static void GenerateTasks(Activity activity)
         {
             using(SMGPAContext db = new SMGPAContext())
@@ -160,7 +172,9 @@ namespace SMGPA.Controllers
             }   
         }
 
-        // GET: Activities/Edit/5
+        /* GET: Activities/Edit/id
+        Return the View with the Activity to 
+        Update*/
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -176,9 +190,9 @@ namespace SMGPA.Controllers
             return View(activity);
         }
 
-        // POST: Activities/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Activities/Edit/id
+        Update the Activity with the new params
+        from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idActivity,state,start_date,end_date,Nombre")] Activity activity)
@@ -195,7 +209,9 @@ namespace SMGPA.Controllers
             return View(activity);
         }
 
-        // GET: Activities/Delete/5
+        /* GET: Activities/Delete/id
+        Return the View who deletes physically 
+        the record with the given id    */
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -210,7 +226,9 @@ namespace SMGPA.Controllers
             return View(activity);
         }
 
-        // POST: Activities/Delete/5
+        /* POST: Activities/DeleteConfirmed/id
+        Deletes physcally the Activity with
+        the given id    */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -242,6 +260,9 @@ namespace SMGPA.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        /* Function that return the View Tasks with
+        the Tasks of the given id of an Activity
+        */
         [HttpGet]
         public ActionResult Tasks(Guid? id)
         {
@@ -258,7 +279,9 @@ namespace SMGPA.Controllers
             TempData["Activity"] = actividad;
             return View("Tasks", actividad.Tareas.ToList());
         }
-
+        /* Function that return the Modal _DetailsTask
+        with the full object (Task) loaded in here the
+        user would see observations and documents*/
         [HttpGet]
         public async Task<ActionResult> DetailsTask(Guid? id)
         {
@@ -279,6 +302,9 @@ namespace SMGPA.Controllers
             return PartialView("_DetailsTask", tarea);
             
         }
+        /*Return the View that let the user set temporallity and
+        assign responsables to the Task
+            */
         [HttpGet]
         public async Task<ActionResult> ConfigureTask(Guid? id)
         {
@@ -303,6 +329,9 @@ namespace SMGPA.Controllers
             return PartialView("_ConfigureTask", tarea);
 
         }
+        /* Function that Post the params
+        of temporallity and responsables and/or validators
+        it has validation for dates */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfigureTask([Bind(Include = "idTask,fechaInicio,fechaFin,TiempoInactividad,DesplazamientoHoras,DesplazamientoDias, Estado, idFunctionary, idResponsable, idEntities, idOperation")] Tasks task)
@@ -413,6 +442,7 @@ namespace SMGPA.Controllers
             return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
 
         }
+        //Function that allows to Download the required File
         [Authorizate(Disabled = true, Public = false)]
         public FileResult Download(string file)
         {

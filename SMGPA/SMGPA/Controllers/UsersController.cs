@@ -155,6 +155,7 @@ namespace SMGPA.Controllers
         {
             if (ModelState.IsValid)
             {
+                administrator.Contrasena = encoder.EncodePasswordMd5(administrator.Contrasena);
                 db.Entry(administrator).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

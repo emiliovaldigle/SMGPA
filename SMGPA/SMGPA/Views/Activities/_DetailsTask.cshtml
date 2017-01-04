@@ -79,9 +79,6 @@
                             </div>
                             <div class="panel-body">
                                 <div class="form-group">
-                                    <label>@ViewBag.Documento</label>
-                                </div>
-                                <div class="form-group">
                                    
                                     <table class="table table-bordered">
                                         <tr>
@@ -103,7 +100,10 @@
                                             <tr>
                                                 <td>@version</td>
                                                 <td>@Html.DisplayFor(modelItem => item.Path)</td>
-                                                <td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>
+                                                <td><a href="@Url.Action("Download", new { file = item.Path })">
+                                                    <span class="glyphicon glyphicon-download"></span></a>
+                                                </td>
+                                                @*<td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>*@
                                             </tr>
                                            version++;
                                         }

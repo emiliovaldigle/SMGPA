@@ -14,13 +14,18 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Careers
+     /* GET: Careers
+     Return the View Index with Collection of
+     Careers*/
         public ActionResult Index()
         {
             return View(db.Career.ToList());
         }
 
-        // GET: Careers/Details/5
+        /* GET: Careers/Details/id
+       Return View with full object Career
+       but his id
+      */
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -35,15 +40,17 @@ namespace SMGPA.Controllers
             return View(career);
         }
 
-        // GET: Careers/Create
+        /* GET: Careers/Create
+         Return the View Create who let the user        
+         create an Career */
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Careers/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Careers/Create
+      Post the career into the bd if
+      model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idCareer,Nombre,Descripcion")] Career career)
@@ -59,7 +66,9 @@ namespace SMGPA.Controllers
             return View(career);
         }
 
-        // GET: Careers/Edit/5
+        /* GET: Careers/Edit/id
+           Return the View with the Career to 
+           Update*/
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -74,9 +83,9 @@ namespace SMGPA.Controllers
             return View(career);
         }
 
-        // POST: Careers/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Careers/Edit/id
+         Update the Career with the new params
+        from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idCareer,Nombre,Descripcion")] Career career)
@@ -90,7 +99,9 @@ namespace SMGPA.Controllers
             return View(career);
         }
 
-        // GET: Careers/Delete/5
+        /* GET: Careers/Delete/id
+           Return the View who deletes physically 
+           the record with the given id    */
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -105,7 +116,10 @@ namespace SMGPA.Controllers
             return View(career);
         }
 
-        // POST: Careers/Delete/5
+
+        /* POST: Careers/DeleteConfirmed/id
+        Deletes physcally the Career with
+        the given id    */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)

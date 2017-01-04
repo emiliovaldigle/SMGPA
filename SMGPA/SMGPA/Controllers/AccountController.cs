@@ -13,18 +13,20 @@ using System.Data.Entity;
 
 namespace SMGPA.Controllers
 {
+    /*Controller in charge of the managment of public Accounts of the System*/
     [Authorizate(Disabled = true, Public = true)]
     public class AccountController : AsyncController
     {
         MD5Encoder mdencoder = new MD5Encoder();
         private SMGPAContext db = new SMGPAContext();
         // GET: Account
+        // This View is loaded when a User doesn't has the privileges to access a View or Function
         public ActionResult NotAuthorized()
         {
             return View();
         }
 
-
+        // Function that returns the View for Login in the APP
         public ActionResult Login()
         {
             if (Session["UserID"] == null)
@@ -36,6 +38,7 @@ namespace SMGPA.Controllers
 
             return RedirectToAction("LoggedInFunctionary", "Account");
         }
+        // Function that Post credentials from param user and validate if he exists/ is avaliable and password matchs
         [HttpPost]
         public ActionResult Login(User user)
         {
@@ -82,7 +85,7 @@ namespace SMGPA.Controllers
                                 ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
                                 return View("LoggedInFunctionary");
                             }
-                            if(!f.Activo)
+                            if (!f.Activo)
                             {
                                 ModelState.AddModelError("", "Usuario inactivo");
                                 ViewBag.validation = "Usuario inactivo";
@@ -93,7 +96,7 @@ namespace SMGPA.Controllers
                         {
                             ModelState.AddModelError("", "Usuario o contraseña erróneos");
                             ViewBag.validation = "Usuario o Contraseña incorrecta";
-      
+
                         }
                     }
 
@@ -107,31 +110,31 @@ namespace SMGPA.Controllers
             return View();
 
         }
-
+        // Function that returns the Register View for creation of Functionary Accounts
         public ActionResult Register()
         {
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View();
 
         }
-
+        // Function that Post params from user type Functionary
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "idUser,Rut,Nombre,Apellido,Nombre_Apellido,MailInstitucional,Contrasena,Activo,NumeroTelefono,CorreoPersonal,idCareer")] Functionary functionary)
         {
             foreach (User u in db.User.ToList())
             {
-                if(u.MailInstitucional.Equals(functionary.MailInstitucional)|| functionary.CorreoPersonal.Equals(u.MailInstitucional))
+                if (u.MailInstitucional.Equals(functionary.MailInstitucional) || functionary.CorreoPersonal.Equals(u.MailInstitucional))
                 {
-                    ViewBag.CIDisponible = !functionary.CorreoPersonal.Equals(u.MailInstitucional) ? "Correo institucional se encuentra en uso":null;
-                    ViewBag.CPDisponible = functionary.CorreoPersonal.Equals(u.MailInstitucional)?"Correo Personal ingresado se encuentra en uso":null;
+                    ViewBag.CIDisponible = !functionary.CorreoPersonal.Equals(u.MailInstitucional) ? "Correo institucional se encuentra en uso" : null;
+                    ViewBag.CPDisponible = functionary.CorreoPersonal.Equals(u.MailInstitucional) ? "Correo Personal ingresado se encuentra en uso" : null;
                     ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
                     return View();
                 }
             }
-            foreach(Functionary f in db.Functionary.ToList())
+            foreach (Functionary f in db.Functionary.ToList())
             {
-                if(f.CorreoPersonal.Equals(functionary.CorreoPersonal))
+                if (f.CorreoPersonal.Equals(functionary.CorreoPersonal))
                 {
                     ViewBag.CPDisponible = "Correo Personal ingresado se encuentra en uso";
                     ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
@@ -156,7 +159,8 @@ namespace SMGPA.Controllers
 
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
             return View(functionary);
-        }
+        } 
+        // Function that build the Menu for the logged Administrator
         public PartialViewResult BuildMenu()
         {
             if (Session["Admin"] != null)
@@ -176,6 +180,7 @@ namespace SMGPA.Controllers
             }
             return PartialView();
         }
+        // Function that redirect the Functionaries to Main View for them
         public ActionResult LoggedInFunctionary()
         {
             if (Session["UserID"] != null)
@@ -187,6 +192,7 @@ namespace SMGPA.Controllers
                 return RedirectToAction("Login");
             }
         }
+        // Function that redirect to Administrator to Main View for them, in this case the Admin Dashboard
         public ActionResult LoggedInAdmin()
         {
             if (Session["UserID"] != null)
@@ -198,6 +204,7 @@ namespace SMGPA.Controllers
                 return RedirectToAction("Login");
             }
         }
+        // Function that closes current user's session
         public ActionResult LogOut()
         {
             if (Session["UserID"] != null)
@@ -212,11 +219,14 @@ namespace SMGPA.Controllers
             }
             return RedirectToAction("Login");
         }
-
+        // Function that return the View for resetting the Password of an Account
         public ActionResult ResetPassword()
         {
             return View();
         }
+        /* Function that post the e-mail placed in the input and
+         send a e-mail with an URL in order to reset
+         the password*/
         [HttpPost]
         public async Task<ActionResult> ResetPassword(User user)
         {
@@ -227,6 +237,9 @@ namespace SMGPA.Controllers
             ViewBag.Mensaje = "Hemos enviado un correo para que restablezcas tu contraseña";
             return View();
         }
+        /*Function triggered when user access to URL given
+         this return the View who let the user reset
+         his  password*/
         public ActionResult ResetPass(Guid? id)
         {
             User user = db.User.Find(id);
@@ -238,6 +251,9 @@ namespace SMGPA.Controllers
             }
             return View(user);
         }
+        /*Function that post the password from input
+        then encrypt it and update the record in db
+        */
         [HttpPost]
         public async Task<ActionResult> ResetPass(User usuario)
         {

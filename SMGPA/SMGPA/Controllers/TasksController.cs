@@ -19,8 +19,10 @@ namespace SMGPA.Controllers
 
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Tasks
-
+        /* GET: Tasks
+        Get The ACTIVES and IN_PROGRESS Tasks from db
+        that match de stored user's id in the Session var
+        */
         public ActionResult Tasks()
         {
             Guid idUser = (Guid)Session["UserID"];
@@ -64,6 +66,14 @@ namespace SMGPA.Controllers
             }
             return View(Tareas);
         }
+        /*GET: Tasks/Details/id
+        Return the View that has the full Task object
+        and depending in the Responsabillity of the user
+        is what View will return->
+        ---->_Details (CAN UPLOAD FILE && POST OBSERVATION)
+        ---->_DetailsValidate(ONLY CAN POST OBSERVATION)
+        ---->_DetailsUpload(ONLY CAN POST FILE)
+        */
         [HttpGet]
         public async Task<ActionResult> Details(Guid id)
         {
@@ -101,6 +111,11 @@ namespace SMGPA.Controllers
             }
             return View("_DetailsValidate", tarea);
         }
+        /*POST: Tasks/UploadFile/filedoc
+        Store requested file in the server
+        if document exists this function will rename it
+        following {X} number of doc, also notificate the
+        participants of the Task*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadFile(HttpPostedFileBase fileDoc)
@@ -185,10 +200,19 @@ namespace SMGPA.Controllers
             }
             return HttpNotFound();
         }
+        /*GET: Tasks/Download/file
+        Download the requested file*/
+
         public FileResult Download(string file)
         {
             return File("~/uploads/" + file, System.Net.Mime.MediaTypeNames.Application.Octet, file);
         }
+        /*GET: Tasks/AddObservation/id
+        Pops up a Modal that allows the user to post
+        an Observation of the task that containas a validation
+        status from whatever
+        */
+
         public async Task<ActionResult> AddObservation(Guid? id)
         {
             if(id == null)
@@ -203,6 +227,10 @@ namespace SMGPA.Controllers
             TempData["Task"] = task;
             return PartialView("_AddObservation");
         }
+        /*POST: Tasks/AddObservation/observation
+        Attach a Observation on the Task 
+        found
+        */
         [HttpPost]
         public async Task<ActionResult> AddObservation([Bind(Include ="idObservation,FechaComentario,Comentario,ValidacionEstatus")] Observation observation)
         {
@@ -354,6 +382,8 @@ namespace SMGPA.Controllers
             }
             return PartialView();
         }
+        /*Function who set the Notification status to Watched from a task
+        of the user */
         [HttpPost]
         public async Task<JsonResult> SetNotificationView(Guid? id)
         {

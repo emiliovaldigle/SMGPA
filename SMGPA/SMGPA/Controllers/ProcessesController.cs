@@ -14,13 +14,18 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Processes
+        /* GET: Processes
+       Return the View Index with Collection of
+       Processes*/
         public ActionResult Index()
         {
             return View(db.Process.ToList());
         }
 
-        // GET: Processes/Details/5
+        /* GET: Processes/Details/id    
+            Return View with full object Process
+            but his id
+           */
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -35,15 +40,17 @@ namespace SMGPA.Controllers
             return View(process);
         }
 
-        // GET: Processes/Create
+        /* GET: Processes/Create
+       Return the View Create who let the user        
+       create an Process */
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Processes/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Processes/Create
+         Post the process into the bd if
+         model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idProcess,Criterio,Descripcion")] Process process)
@@ -58,7 +65,9 @@ namespace SMGPA.Controllers
             return View(process);
         }
 
-        // GET: Processes/Edit/5
+        /* GET: Processes/Edit/id
+           Return the View with the Process to 
+           Update*/
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -73,9 +82,9 @@ namespace SMGPA.Controllers
             return View(process);
         }
 
-        // POST: Processes/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Processes/Edit/id
+           Update the Process with the new params
+          from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idProcess,Criterio,Descripcion")] Process process)
@@ -89,7 +98,9 @@ namespace SMGPA.Controllers
             return View(process);
         }
 
-        // GET: Processes/Delete/5
+        /* GET: Processes/Delete/id
+           Return the View who deletes physically 
+           the record with the given id    */
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -104,7 +115,9 @@ namespace SMGPA.Controllers
             return View(process);
         }
 
-        // POST: Processes/Delete/5
+        /* POST: Processes/DeleteConfirmed/id
+        Deletes physcally the Process with
+        the given id    */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -128,6 +141,9 @@ namespace SMGPA.Controllers
             }
             base.Dispose(disposing);
         }
+        /* GET: Processes/Operations/id
+        open a Modal with the Operations of
+        the Process*/
         public async Task<ActionResult> Operations(Guid? id)
         {
             if (id == null)
@@ -147,6 +163,9 @@ namespace SMGPA.Controllers
             }
             return PartialView("_Operations", process.Operations.ToList());
         }
+        /*GET: Process/AddOperation/id
+       Return Modal that allows to Create and Add an Operation
+       to Process from given id*/
         public async Task<ActionResult> AddOperation(Guid? id)
         {
             if(id == null)
@@ -163,6 +182,8 @@ namespace SMGPA.Controllers
             TempData["Proceso"] = process;
             return PartialView("_AddOperation");
         }
+        /*POST: Process/AddOperation/operation
+        Assign the Operation to the Process*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
@@ -189,6 +210,9 @@ namespace SMGPA.Controllers
             ViewBag.idPredecesora = new SelectList(proc.Operations.ToList(), "idOperation", "Nombre");
             return PartialView("_AddOperation");
         }
+        /*GET: Process/EditOperation/id
+       Return View that allows to Update a single record
+       from Operation obj*/
         [HttpGet]
         public ActionResult EditOperation(Guid? id)
         {
@@ -214,6 +238,9 @@ namespace SMGPA.Controllers
             return View("EditOperation", operation);
           
         }
+        /*POST: Process/EditOperation/operation
+        Update the operation with the new params given 
+        by reference from View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
@@ -242,6 +269,8 @@ namespace SMGPA.Controllers
             ViewBag.idPredecesora = new SelectList(db.Operation.ToList(), "idOperation", "Nombre");
             return View("EditOperation", operation);
         }
+        /*POST: Process/DeleteOperation/id
+        Delete the Operation from the Process*/
         [HttpPost]
         public async Task<ActionResult> DeleteOperation(Guid? id)
         {
@@ -261,6 +290,9 @@ namespace SMGPA.Controllers
             return Json(new { sucess = true });
            
         }
+        /*POST: Process/ConfirmDeleteOperation/id
+        Confirm the Delete of the Operation from the Process
+        this function deletes physically the record given*/
         [Authorizate(Disabled = true, Public = false)]
         [HttpPost]
         public async Task<ActionResult> ConfirmDeleteOperation()

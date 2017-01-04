@@ -17,13 +17,18 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Roles
+        /* GET: Roles
+        Return the View Index with Collection of
+        Roles*/
         public ActionResult Index()
         {
             return View(db.Role.ToList());
         }
 
-        // GET: Roles/Details/5
+        /* GET: Roles/Details/id    
+            Return View with full object Role
+            but his id
+           */
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -38,15 +43,17 @@ namespace SMGPA.Controllers
             return View(role);
         }
 
-        // GET: Roles/Create
+        /* GET: Roles/Create
+          Return the View Create who let the user        
+          create an Role */
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Roles/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Roles/Create
+         Post the role into the bd if
+         model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idRole,Nombre,Descripcion")] Role role)
@@ -62,7 +69,9 @@ namespace SMGPA.Controllers
             return View(role);
         }
 
-        // GET: Roles/Edit/5
+        /* GET: Roles/Edit/id
+           Return the View with the Role to 
+           Update*/
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -77,9 +86,9 @@ namespace SMGPA.Controllers
             return View(role);
         }
 
-        // POST: Roles/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Roles/Edit/id
+           Update the Role with the new params
+          from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idRole,Nombre,Descripcion")] Role role)
@@ -93,7 +102,9 @@ namespace SMGPA.Controllers
             return View(role);
         }
 
-        // GET: Roles/Delete/5
+        /* GET: Roles/Delete/id
+           Return the View who deletes physically 
+           the record with the given id    */
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -108,7 +119,9 @@ namespace SMGPA.Controllers
             return View(role);
         }
 
-        // POST: Roles/Delete/5
+        /* POST: Roles/DeleteConfirmed/id
+        Deletes physcally the Career with
+        the given id    */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -118,6 +131,9 @@ namespace SMGPA.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        /* GET: Roles/Permissions/id
+       Return the Partial View who opens a Modal 
+       with the Permissions from the given id of Role    */
         [HttpGet]
         public async Task<ActionResult> Permissions(Guid? id)
         {
@@ -136,6 +152,8 @@ namespace SMGPA.Controllers
             await LoadPermission(role.idRole);
             return PartialView("_Permissions", role.Permisos.ToList());
         }
+        /* GET: Roles/LoadPermissions/id
+       Fullfill the Dropdown with the Permissions avaliables  */
         public async Task<ActionResult> LoadPermission(Guid? idRole)
         {
             if(idRole  != null)
@@ -168,6 +186,9 @@ namespace SMGPA.Controllers
             }
             return Json(new { sucess = false });
         }
+        /* POST: Roles/AddPermission/id
+        Add the Permission to the Role stored
+        in param TempData["Role]"*/
         [HttpPost]
         public async Task<ActionResult> AddPermission(Guid? id)
         {
@@ -188,6 +209,9 @@ namespace SMGPA.Controllers
             return Json(new { sucess = false }, JsonRequestBehavior.AllowGet);
           
         }
+        /* POST: Roles/DeletePermission/id
+        Delete the Permission from the Role stored
+        in param TempData["Role]"*/
         [HttpPost]
         public async Task<ActionResult> DeletePermission(Guid? id)
         {

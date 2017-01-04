@@ -14,7 +14,10 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-        // GET: Entities
+         /* GET: Entities
+        Return the View Index with Collection of
+        Entities, also the user can filter and sort 
+        the results*/
         public ActionResult Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -48,7 +51,10 @@ namespace SMGPA.Controllers
             return View(Entities.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: Entities/Details/5
+        /* GET: Entities/Details/id    
+          Return View with full object Entity
+          but his id
+         */
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -63,15 +69,17 @@ namespace SMGPA.Controllers
             return View(entities);
         }
 
-        // GET: Entities/Create
+        /* GET: Entities/Create
+       Return the View Create who let the user        
+       create an Entity */
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Entities/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Entities/Create
+         Post the entity into the bd if
+         model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Entities entities)
@@ -86,7 +94,10 @@ namespace SMGPA.Controllers
 
             return View(entities);
         }
-        // GET: Entities/CreateFaculty
+        /* GET: Entities/CreateFaculty
+      Return the View CreateFaculty who let the user        
+      create a Faculty who inherits properties from
+      Model Entities*/
         public ActionResult CreateFaculty()
         {
             Faculty facultad = new Faculty();
@@ -97,9 +108,9 @@ namespace SMGPA.Controllers
             return View(facultad);
         }
 
-        // POST: Entities/CreateFaculty
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Entities/CreateFaculty
+       Post the Faculty given and
+       create the record in the db*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateFaculty([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Faculty faculty)
@@ -138,6 +149,10 @@ namespace SMGPA.Controllers
             ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
             return View(faculty);
         }
+
+        /* POST: Entities/AddCareer
+       Post the Career given and
+       associate it with the Faculty*/
         [HttpPost]
         public async Task<JsonResult> AddCareer(Guid id)
         {
@@ -152,7 +167,10 @@ namespace SMGPA.Controllers
             TempData["Facultad"] = facultad;
             return Json(new { sucess = true, nombre = carrera.Nombre, idcareer = carrera.idCareer }, JsonRequestBehavior.AllowGet);
         }
-        // GET: Entities/Edit/5
+
+        /* GET: Entities/Edit/id
+           Return the View with the Entity to 
+           Update*/
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -166,9 +184,9 @@ namespace SMGPA.Controllers
             }
             return View(entities);
         }
-        // POST: Entities/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Entities/Edit/id
+           Update the Entity with the new params
+          from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Entities entities)
@@ -181,6 +199,9 @@ namespace SMGPA.Controllers
             }
             return View(entities);
         }
+        /* GET: Entities/EditFaculty/id
+        Return the View with the Faculty to 
+        Update*/
         public ActionResult EditFaculty(Guid? id)
         {
             if (id == null)
@@ -198,9 +219,9 @@ namespace SMGPA.Controllers
             return View(Faculty);
         }
 
-        // POST: Entities/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
+        /* POST: Entities/EditFaculty/id
+        Update the Faculty with the new params
+        from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditFaculty([Bind(Include = "idEntities,Nombre,Descripcion,Activo")] Faculty faculty)
@@ -246,7 +267,10 @@ namespace SMGPA.Controllers
             ViewBag.idCareer = new SelectList(Carreras.Where(c => c.idFaculty == null), "idCareer", "Nombre");
             return View(faculty);
         }
-        // GET: Entities/Delete/5
+
+        /* GET: Entities/Delete/id
+           Return the View who deletes physically 
+           the record with the given id    */
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
@@ -260,8 +284,9 @@ namespace SMGPA.Controllers
             }
             return View(entities);
         }
-
-        // POST: Entities/Delete/5
+        /* POST: Entities/DeleteConfirmed/id
+        Deletes physcally the Entity with
+        the given id    */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
@@ -293,6 +318,9 @@ namespace SMGPA.Controllers
             }
             return RedirectToAction("Index");
         }
+        /* GET: Entities/Functionaries/id
+      open a Modal with the Functionaries of
+      the Entity or Faculty*/
         [HttpGet]
         public async Task<ActionResult> Functionaries(Guid? id)
         {
@@ -310,6 +338,8 @@ namespace SMGPA.Controllers
             }
             return PartialView("_Functionaries", entity.Involucrados.ToList());
         }
+        /* Function that get the records to Autocomplete
+        the RUT of the input in Functionaries Modal*/
         [Authorizate(Disabled = true, Public = false)]
         public JsonResult RutAutoComplete(string term)
         {
@@ -326,6 +356,8 @@ namespace SMGPA.Controllers
             }
             base.Dispose(disposing);
         }
+        /*Function that check if RUT match any
+         existing user in db*/
         [Authorizate(Disabled =true, Public = false)]
         [HttpGet]
         public JsonResult CheckUser(string rut)
@@ -342,6 +374,8 @@ namespace SMGPA.Controllers
             string carrera = functionary.idCareer == null ? "No figura": functionary.Carrera.Nombre;
             return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera , sucess = true }, JsonRequestBehavior.AllowGet);
         }
+        /*POST: Entities/AddFunctionary/rut
+        Assign the Functionary to the Entity*/
         [HttpPost]
         public async Task<ActionResult> AddFunctionary(string rut)
         {
@@ -364,6 +398,8 @@ namespace SMGPA.Controllers
             TempData["Entity"] = entity;
             return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
         }
+        /*POST: Entities/DeleteFunctionary/
+        Delete the Functionary from the Entity*/
         [HttpPost]
         public async Task<ActionResult> DeleteFunctionary(Guid? id)
         {
