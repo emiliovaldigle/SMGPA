@@ -3,48 +3,7 @@
     ViewBag.Title = "LoggedInAdmin";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-      google.charts.load('current', {packages: ['corechart', 'line']});
-google.charts.setOnLoadCallback(drawBackgroundColor);
 
-function drawBackgroundColor() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'COMPLETADAS');
-      data.addColumn('number', 'EN PROGRESO');
-      data.addColumn('number', 'CERRADAS CON OBS');
-      data.addColumn('number', 'ACTIVAS');
-      data.addRows([
-        [0, 0,70,5],   [1, 10,70,5],  [2, 23,70,5],  [3, 17,70,5],  [4, 18,70,5],  [5, 9,70,5]
-      ]);
-
-      var options = {
-        hAxis: {
-          title: 'Tiempo'
-        },
-        vAxis: {
-          title: 'Tareas'
-        },
-        backgroundColor: '#f1f8e9'
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
-    }
-</script>
 <h2>Inicio Administrador</h2>
 <p>Bienvenido al Sistema de Modelamiento y Gestión de procesos académicos</p>
 <p></p>
- <div class="row">
-     <div class="col-md-6">
-         <div id="resizable" style="height: 300px;border:1px solid gray;">
-             <div id="chartContainer1" style="height: 100%; width: 100%;"></div>
-         </div>
-     </div>
-     <div class="col-md-6">
-         <div id="chart_div">
-
-         </div>
-     </div>
-     
- </div>

@@ -5,12 +5,8 @@ using System.Data.SqlClient;
 using SMGPA.Models;
 using System;
 using SMGPA.Filters;
-using System.Security.Cryptography;
-using System.Text;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Data.Entity;
-
 namespace SMGPA.Controllers
 {
     /*Controller in charge of the managment of public Accounts of the System*/
@@ -192,6 +188,24 @@ namespace SMGPA.Controllers
                 return RedirectToAction("Login");
             }
         }
+        public ActionResult Dashboard()
+        {
+            if (Session["UserID"] != null)
+            {
+                List<Tasks> Tareas = db.Task.ToList();
+                ViewBag.TareasCompletadas = new double[] { 1, 23, 34, 7, 123, 6, 23 };
+                ViewBag.Completed = Tareas.Where(t => t.Estado.Equals(StatusEnum.COMPLETADA)).Count();
+                ViewBag.InProgress = Tareas.Where(t => t.Estado.Equals(StatusEnum.EN_PROGRESO)).Count();
+                ViewBag.Cerrada = Tareas.Where(t => t.Estado.Equals(StatusEnum.CERRADA_SIN_CONCLUIR)).Count();
+                ViewBag.Activa = Tareas.Where(t => t.Estado.Equals(StatusEnum.ACTIVA)).Count();
+                ViewBag.Funcionarios = db.Functionary.Count();
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
         // Function that redirect to Administrator to Main View for them, in this case the Admin Dashboard
         public ActionResult LoggedInAdmin()
         {
@@ -270,6 +284,11 @@ namespace SMGPA.Controllers
                 return View();
             }
 
-        } 
+        }
+        public ActionResult MyChart()
+        {
+            return null;
+        }
+
     }
 }

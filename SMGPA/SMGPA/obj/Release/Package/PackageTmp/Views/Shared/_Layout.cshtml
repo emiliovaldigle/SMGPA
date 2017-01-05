@@ -81,7 +81,7 @@
                         </button>
                         @if (Session["Admin"] != null)
                         {
-                           @Html.ActionLink("SMGPA", "LoggedInAdmin", "Account", new { area = "" }, new { @class = "navbar-brand", style = "color:white !important;" })
+                           @Html.ActionLink("SMGPA", "Dashboard", "Account", new { area = "" }, new { @class = "navbar-brand", style = "color:white !important;" })
                         }
                         else
                         {
@@ -94,7 +94,7 @@
                               @if (Session["Admin"] != null)
                               {
                             <li>
-                                <a href="@Url.Action("LoggedInAdmin", "Account")">
+                                <a href="@Url.Action("Dashboard", "Account")">
                                <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
                                 Dashboard 
                                 </a>

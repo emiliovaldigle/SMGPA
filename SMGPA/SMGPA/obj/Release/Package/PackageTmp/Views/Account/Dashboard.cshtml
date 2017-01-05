@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "LoggedInAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/Scripts/chart.js"></script>
+@using Chart.Mvc.ComplexChart;
+@using Chart.Mvc.SimpleChart;
+@using Chart.Mvc.Extensions;
+@{
+    var Chart = new BarChart();
+    var pieChart = new PieChart();
+    var lineChart = new LineChart();
+    lineChart.ComplexData.Labels.AddRange(new[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
+    lineChart.ComplexData.Datasets.AddRange(new List<ComplexDataset>
+                           {
+                              new ComplexDataset
+                                  {
+                                      Data = new List<double> { 11,3, 20, 49, 86, 27, 90,123,156,22 },
+                                      Label = "Total de Tareas",
+                                      FillColor = "rgba(220,220,220,0.2)",
+                                      StrokeColor = "rgba(220,220,220,1)",
+                                      PointColor = "rgba(220,220,220,1)",
+                                      PointStrokeColor = "#fff",
+                                      PointHighlightFill = "#fff",
+                                      PointHighlightStroke = "rgba(220,220,220,1)",
+                                  },
+                              new ComplexDataset
+                                  {
+                                      Data = new List<double> { 28, 48, 40, 19, 86, 27, 90 },
+                                      Label = "Tareas Completadas",
+                                      FillColor = "rgba(151,187,205,0.2)",
+                                      StrokeColor = "rgba(151,187,205,1)",
+                                      PointColor = "rgba(151,187,205,1)",
+                                      PointStrokeColor = "#fff",
+                                      PointHighlightFill = "#fff",
+                                      PointHighlightStroke = "rgba(151,187,205,1)",
+
+                                  }
+                          });
+    pieChart.Data.AddRange(new List<SimpleData>
+    {
+        new SimpleData
+        {
+            Label = "Tareas Activas",
+            Color = "rgba(49,215,188,1)",
+            Highlight = "",
+            Value = ViewBag.Activa
+        },
+        new SimpleData
+        {
+            Label = "Tareas En Progreso",
+            Color = "rgba(249,236,112,0.7)",
+            Highlight = "",
+            Value = ViewBag.InProgress
+        },
+        new SimpleData
+        {
+            Label = "Tareas Completadas",
+            Color = "rgba(110,141,67,0.7)",
+            Highlight = "rgba(151,187,205,0.2)",
+            Value = ViewBag.Completed
+        },
+        new SimpleData
+        {
+            Label = "Tareas Cerradas",
+            Color = "rgba(359,74,51,1)",
+            Highlight = "rgba(151,187,205,0.2)",
+            Value = ViewBag.Cerrada
+        }
+    });
+    List<double> Chart_1Data = new List<double>();
+    if (ViewBag.TareasCompletadas != null)
+    {
+        foreach (var item in ViewBag.TareasCompletadas)
+        {
+            Chart_1Data.Add(item);
+        }
+    }
+    Chart.ComplexData.Labels.AddRange(new[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre","Octubre","Noviembre","Diciembre" });
+    Chart.ComplexData.Datasets.AddRange(new List<ComplexDataset>
+                           {
+                              new ComplexDataset
+                                  {
+                                      Data = Chart_1Data,
+                                      Label = "Total de Tareas",
+                                      FillColor = "rgba(5,32,106,1)",
+                                      StrokeColor = "rgba(5,32,106,1)",
+                                      PointColor = "rgba(5,32,106,1)",
+                                      PointStrokeColor = "#fff",
+                                      PointHighlightFill = "#fff",
+                                      PointHighlightStroke = "rgba(220,220,220,1)",
+                                  },
+                              new ComplexDataset
+                                  {
+                                      Data = new List<double> { 28, 48, 40, 19, 86, 27, 90 },
+                                      Label = "Tareas Completadas",
+                                      FillColor = "rgba(151,187,205,0.2)",
+                                      StrokeColor = "rgba(151,187,205,1)",
+                                      PointColor = "rgba(151,187,205,1)",
+                                      PointStrokeColor = "#fff",
+                                      PointHighlightFill = "#fff",
+                                      PointHighlightStroke = "rgba(151,187,205,1)",
+
+                                  }
+                          });
+}
+
+<h2>Inicio Administrador</h2>
+<p>Bienvenido al Sistema de Modelamiento y Gestión de procesos académicos</p>
+<p></p>
+ <div class="row">
+     <div class="col-md-6">
+         <h2>Tareas Totales vs Completadas</h2>
+         <canvas id="myCanvas" width="400" height="400"></canvas>
+         @Html.CreateChart("myCanvas", Chart)
+     </div>
+     <div class="col-md-6">
+         <h2>Funcionarios registrados
+         <span class="big-badge">@ViewBag.Funcionarios</span>
+         </h2>
+     </div>
+    
+ </div>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Tareas por Estado</h2>
+        <canvas id="myCanvas_2" width="400" height="500"></canvas>
+        @Html.CreateChart("myCanvas_2", pieChart)
+    </div>
+    <div class="col-md-6">
+        <h2>Actividades Totales vs Completadas</h2>
+        <canvas id="myCanvas_3" width="450" height="450"></canvas>
+        @Html.CreateChart("myCanvas_3", lineChart);
+    </div>
+</div>

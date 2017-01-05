@@ -330,7 +330,7 @@ namespace SMGPA.Controllers
                             int dividendo2 = Tarea.ResponsableEntity.Involucrados.Count;
                             double division2 = (double)divisor2 / dividendo2;
                             double resultado2 = division2 * 100.0;
-                            if (resultado2 >= 50)
+                            if (resultado2 >= 50.0)
                             {
                                 EntidadResponsable = true;
                             }  

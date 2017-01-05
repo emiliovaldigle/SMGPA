@@ -6,7 +6,15 @@ body {
 *{
     font-family: 'Roboto', sans-serif!important;
 }
-
+.big-badge{
+    border: solid 4px black;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+}
 /* Set padding to keep content from hitting the edges */
 .body-content {
     padding-left: 15px;
