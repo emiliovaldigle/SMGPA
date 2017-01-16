@@ -4,11 +4,14 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Entities")">Entidades</a></li>
+    <li class="active">Detalles</li>
+</ol>
+<h2>Detalles</h2>
 
 <div>
-    <h4>Entities</h4>
+    <h4>Entidad</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>

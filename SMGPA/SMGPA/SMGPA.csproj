@@ -348,6 +348,10 @@
     <Compile Include="Migrations\201612270116372_UpdateTaskModelOperation.Designer.cs">
       <DependentUpon>201612270116372_UpdateTaskModelOperation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701150255389_updateOperation45.cs" />
+    <Compile Include="Migrations\201701150255389_updateOperation45.Designer.cs">
+      <DependentUpon>201701150255389_updateOperation45.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Faculty.cs" />
     <Compile Include="Models\Notificacion.cs" />
@@ -875,6 +879,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612270116372_UpdateTaskModelOperation.resx">
       <DependentUpon>201612270116372_UpdateTaskModelOperation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701150255389_updateOperation45.resx">
+      <DependentUpon>201701150255389_updateOperation45.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

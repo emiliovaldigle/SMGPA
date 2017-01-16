@@ -25,6 +25,7 @@ namespace SMGPA
             bundles.Add(new ScriptBundle("~/bundles/entities").Include("~/Scripts/entitiesfunctionary.js"));
             bundles.Add(new ScriptBundle("~/bundles/operations").Include("~/Scripts/operations.js"));
             bundles.Add(new ScriptBundle("~/bundles/faculty").Include("~/Scripts/faculty.js"));
+            bundles.Add(new ScriptBundle("~/bundles/config").Include("~/Scripts/configtask.js"));
             bundles.Add(new ScriptBundle("~/bundles/chart").Include("~/Scripts/chart.js"));
             bundles.Add(new ScriptBundle("~/bundles/notification").Include("~/Scripts/notification.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css").Include("~/Content/bootstrap.css").Include("~/Content/jquery-ui-timepicker-addon.css"));
@@ -32,7 +33,9 @@ namespace SMGPA
             bundles.Add(new StyleBundle("~/Content/register").Include("~/Content/register.css", "~/Content/bootstrap.css"));
             bundles.Add(new StyleBundle("~/public/bundles/scss").Include("~/Content/navbar-fixed-side.css", "~/Content/navbar-fixed-side.scss"));
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
+            "~/Content/themes/base/jquery-ui.css",
             "~/Content/themes/base/jquery.ui.core.css",
+            "~/Content/themes/base/spinner.css",
             "~/Content/themes/base/jquery.ui.resizable.css",
             "~/Content/themes/base/jquery.ui.selectable.css",
             "~/Content/themes/base/jquery.ui.accordion.css",
@@ -43,7 +46,6 @@ namespace SMGPA
             "~/Content/themes/base/jquery.ui.tabs.css",
             "~/Content/themes/base/jquery.ui.datepicker.css",
             "~/Content/themes/base/jquery.ui.progressbar.css",
-            "~/Content/themes/base/jquery.ui.theme.css",
              "~/Content/themes/base/jquery.ui.theme.css"));
             BundleTable.EnableOptimizations = false;
         }

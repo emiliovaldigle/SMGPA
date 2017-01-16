@@ -4,7 +4,10 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Roles")">Usuarios del sistema</a></li>
+    <li class="active">Crear Administrador</li>
+</ol>
 <h2>Registrar nuevo Usuario</h2>
 
 @using (Html.BeginForm()) 

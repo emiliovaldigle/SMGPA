@@ -4,7 +4,10 @@
     ViewBag.Title = "CreateFaculty";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Entities")">Entidades</a></li>
+    <li class="active">Crear Facultad</li>
+</ol>
 <h2>Crear Facultad</h2>
 
 @using (Html.BeginForm())

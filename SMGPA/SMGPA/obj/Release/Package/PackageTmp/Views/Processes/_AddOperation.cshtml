@@ -1,11 +1,10 @@
 ﻿@model SMGPA.Models.Operation
-
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Agregar Operación a @ViewBag.Proceso</h4>
 </div>
 
-
+@Scripts.Render("~/bundles/operations")
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -60,9 +59,20 @@
             </div>
             <div class="form-group">
                 @Html.Label("Iteraciones Permitidas", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.IteracionesPermitidas, new { htmlAttributes = new { @class = "form-control", id = "spinner", name = "value" } })
-                    @Html.ValidationMessageFor(model => model.IteracionesPermitidas, "", new { @class = "text-danger" })
+                <div class="col-md-5">
+                    <div id="slider">
+                        <div id="custom-handle" class="ui-slider-handle">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("% de Aceptación", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <div id="slider_2">
+                        <div id="custom-handle1" class="ui-slider-handle">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

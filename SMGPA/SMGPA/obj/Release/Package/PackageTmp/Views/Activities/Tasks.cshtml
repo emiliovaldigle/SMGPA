@@ -4,6 +4,10 @@
     ViewBag.Title = "Tasks";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Activities")">Actividades</a></li>
+    <li class="active">Tareas de @ViewBag.Actividad</li>
+</ol>
 <div id='myModal' class='modal fade in'>
     <div class="modal-dialog">
         <div class="modal-content">

@@ -3,6 +3,7 @@
     Layout = null;
 }
 @Scripts.Render("~/bundles/tasks")
+
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Configurar @ViewBag.Tarea</h4>
@@ -21,23 +22,41 @@
     @Html.AntiForgeryToken()
 <div class="modal-body">
     <div class="row">
+        @Html.HiddenFor(model => model.idFunctionary)
+        @Html.HiddenFor(model => model.idResponsable)
+        @Html.HiddenFor(model => model.idEntities)
                 @switch (Model.Operacion.Type)
                 {
                     case  OperationType.ENTIDAD:
                         <div class="form-group">
+
                             @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
                             <div class="col-md-6">
-                                @Html.DropDownList("idResponsable", null, htmlAttributes: new { @class = "form-control" })
+                                <input type="text" class="entidad form-control"/>
                                 @Html.ValidationMessageFor(model => model.idResponsable, "", new { @class = "text-danger" })
                             </div>
                         </div>
                         break;
                     case OperationType.FUNCIONARIO:
-                        <div class="form-group">
-                            @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
-                            <div class="col-md-6">
-                                @Html.DropDownList("idFunctionary", null, htmlAttributes: new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.idFunctionary, "", new { @class = "text-danger" })
+                        <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
+                            <label class="col-md-6">Ingresar Rut de Funcionario</label>
+                            <input type="text" id="rutuser" class="rutfunctionary col-md-4 form-control"/>
+                            <div class="row" style="margin-bottom: 10px !important">
+                                <br />
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label>Nombre:</label>
+                                        <label class="Nombre"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Apellido:</label>
+                                        <label class="Apellido"></label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>Carrera:</label>
+                                        <label class="Carrera"></label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         break;
@@ -62,7 +81,7 @@
                     <div class="form-group">
                         @Html.Label("Entidad Validadora", htmlAttributes: new { @class = "control-label col-md-6" })
                         <div class="col-md-6">
-                            @Html.DropDownList("idEntities", null, htmlAttributes: new { @class = "form-control" })
+                            <input type="text" class="validadora form-control" />
                             @Html.ValidationMessageFor(model => model.idEntities, "", new { @class = "text-danger" })
                         </div>
                     </div>

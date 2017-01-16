@@ -456,5 +456,52 @@ namespace SMGPA.Controllers
             }
             base.Dispose(disposing);
         }
+        [Authorizate(Disabled = true, Public = false)]
+        public JsonResult RutAutoComplete(string term)
+        {
+            List<string> Rut = new List<string>();
+            Rut = db.Functionary.Where(x => x.Rut.StartsWith(term)).Select(y => y.Rut).ToList();
+            return Json(Rut, JsonRequestBehavior.AllowGet);
+
+        }
+        [Authorizate(Disabled = true, Public = false)]
+        [HttpGet]
+        public JsonResult CheckUser(string rut)
+        {
+            if (rut == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Functionary functionary = db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
+            if (functionary == null)
+            {
+                return Json(new { sucess = false });
+            }
+            string carrera = functionary.idCareer == null ? "No figura" : functionary.Carrera.Nombre;
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
+        }
+        [Authorizate(Disabled = true, Public = false)]
+        public JsonResult EntityAutoComplete(string term)
+        {
+            List<string> Nombre = new List<string>();
+            Nombre = db.Entity.Where(x => x.Nombre.StartsWith(term)).Select(y => y.Nombre).ToList();
+            return Json(Nombre, JsonRequestBehavior.AllowGet);
+
+        }
+        [Authorizate(Disabled = true, Public = false)]
+        [HttpGet]
+        public JsonResult CheckEntity(string nombre)
+        {
+            if (nombre == null)
+            {
+                return Json(new { sucess = false });
+            }
+            Entities entidad = db.Entity.Where(e => e.Nombre.Equals(nombre)).FirstOrDefault();
+            if (entidad == null)
+            {
+                return Json(new { sucess = false });
+            }
+            return Json(new { identity = entidad.idEntities, sucess = true }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

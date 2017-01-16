@@ -4,7 +4,10 @@
     ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Roles")">Usuarios del sistema</a></li>
+    <li class="active">Eliminar Usuario</li>
+</ol>
 <h2>Eliminar Usuario</h2>
 
 <h3>¿Estás seguro que quieres eliminar esto?</h3>

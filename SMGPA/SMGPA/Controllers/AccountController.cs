@@ -40,67 +40,71 @@ namespace SMGPA.Controllers
         {
             using (SMGPAContext db = new SMGPAContext())
             {
-                try
+                if (user.MailInstitucional != null && user.Contrasena != null)
                 {
-                    ICollection<Administrator> Administrator = db.Administrator.ToList();
-                    ICollection<Functionary> Functionary = db.Functionary.ToList();
-
-                    foreach (Administrator a in Administrator)
+                    try
                     {
-                        if (a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
+                        ICollection<Administrator> Administrator = db.Administrator.ToList();
+                        ICollection<Functionary> Functionary = db.Functionary.ToList();
+
+                        foreach (Administrator a in Administrator)
                         {
-                            if (a.Activo)
+                            if (a.MailInstitucional.Equals(user.MailInstitucional) && a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                             {
-                                Session["Admin"] = a;
-                                Session["UserID"] = a.idUser;
-                                Session["Username"] = a.Nombre + " " + a.Apellido;
-                                return View("LoggedInAdmin");
+                                if (a.Activo)
+                                {
+                                    Session["Admin"] = a;
+                                    Session["UserID"] = a.idUser;
+                                    Session["Username"] = a.Nombre + " " + a.Apellido;
+                                    return View("LoggedInAdmin");
+                                }
+                                if (!a.Activo)
+                                {
+                                    ModelState.AddModelError("", "Usuario inactivo");
+                                    ViewBag.validation = "Usuario inactivo";
+                                    return View();
+                                }
                             }
-                            if (!a.Activo)
+                            if (!a.MailInstitucional.Equals(user.MailInstitucional) || !a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
                             {
-                                ModelState.AddModelError("", "Usuario inactivo");
-                                ViewBag.validation = "Usuario inactivo";
-                                return View();
+                                ModelState.AddModelError("", "Usuario o contraseña erróneos");
+                                ViewBag.validation = "Usuario o Contraseña incorrecta";
                             }
                         }
-                        if (!a.MailInstitucional.Equals(user.MailInstitucional) || !a.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
+                        foreach (Functionary f in Functionary)
                         {
-                            ModelState.AddModelError("", "Usuario o contraseña erróneos");
-                            ViewBag.validation = "Usuario o Contraseña incorrecta";
+                            if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
+                            {
+                                if (f.Activo)
+                                {
+                                    Session["UserID"] = f.idUser;
+                                    Session["Username"] = f.Nombre + " " + f.Apellido;
+                                    ViewBag.Notificaciones = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).ToList();
+                                    ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
+                                    return View("LoggedInFunctionary");
+                                }
+                                if (!f.Activo)
+                                {
+                                    ModelState.AddModelError("", "Usuario inactivo");
+                                    ViewBag.validation = "Usuario inactivo";
+                                    return View();
+                                }
+                            }
+                            if (!f.MailInstitucional.Equals(user.MailInstitucional) || !f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
+                            {
+                                ModelState.AddModelError("", "Usuario o contraseña erróneos");
+                                ViewBag.validation = "Usuario o Contraseña incorrecta";
+
+                            }
                         }
+
                     }
-                    foreach (Functionary f in Functionary)
+                    catch (SqlException ex) when (ex.Errors.Count > 0)
                     {
-                        if (f.MailInstitucional.Equals(user.MailInstitucional) && f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
-                        {
-                            if (f.Activo)
-                            {
-                                Session["UserID"] = f.idUser;
-                                Session["Username"] = f.Nombre + " " + f.Apellido;
-                                ViewBag.Notificaciones = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).ToList();
-                                ViewBag.Total = db.Notificacion.Where(n => n.idUser == f.idUser && !n.Vista).Count();
-                                return View("LoggedInFunctionary");
-                            }
-                            if (!f.Activo)
-                            {
-                                ModelState.AddModelError("", "Usuario inactivo");
-                                ViewBag.validation = "Usuario inactivo";
-                                return View();
-                            }
-                        }
-                        if (!f.MailInstitucional.Equals(user.MailInstitucional) || !f.Contrasena.Equals(mdencoder.EncodePasswordMd5(user.Contrasena)))
-                        {
-                            ModelState.AddModelError("", "Usuario o contraseña erróneos");
-                            ViewBag.validation = "Usuario o Contraseña incorrecta";
 
-                        }
                     }
-
                 }
-                catch (SqlException ex) when (ex.Errors.Count > 0)
-                {
-
-                }
+               
 
             }
             return View();

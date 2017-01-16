@@ -4,7 +4,10 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Activities")">Actividades</a></li>
+    <li class="active">Crear Actividad</li>
+</ol>
 <h2>Nueva Actividad</h2>
 
 @using (Html.BeginForm()) 

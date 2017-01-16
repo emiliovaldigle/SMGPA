@@ -83,9 +83,6 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <th>
-                                                @Html.DisplayName("Versión")
-                                            </th>
-                                            <th>
                                                 @Html.DisplayName("Nombre")
                                             </th>
                                             <th>
@@ -98,7 +95,6 @@
                                         @foreach (var item in Model.Documentos.ToList())
                                         {
                                             <tr>
-                                                <td>@version</td>
                                                 <td>@Html.DisplayFor(modelItem => item.Path)</td>
                                                 <td><a href="@Url.Action("Download", new { file = item.Path })">
                                                     <span class="glyphicon glyphicon-download"></span></a>

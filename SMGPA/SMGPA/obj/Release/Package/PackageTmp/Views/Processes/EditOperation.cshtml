@@ -4,7 +4,10 @@
     ViewBag.Title = "EditOperation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Processes")">Procesos académicos</a></li>
+    <li class="active">Editar @Model.Nombre</li>
+</ol>
 <h2>Editar</h2>
 
 @using (Html.BeginForm())
@@ -16,7 +19,8 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.idOperation)
-
+        @Html.HiddenFor(model => model.PorcentajeAceptacion)
+        @Html.HiddenFor(model => model.IteracionesPermitidas)
         <div class="form-group">
             @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -64,10 +68,23 @@
         </div>
         <div class="form-group">
             @Html.Label("Iteraciones Permitidas", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.IteracionesPermitidas, new { htmlAttributes = new { @class = "form-control", id = "spinner", name ="value"} })
-                @Html.ValidationMessageFor(model => model.IteracionesPermitidas, "", new { @class = "text-danger" })
+            <div class="col-md-3">
+                <div id="slider">
+                    <div id="custom-handle" class="ui-slider-handle">
+                    </div>
+                </div>
             </div>
+            <span class="badge">@Model.IteracionesPermitidas</span>
+        </div>
+        <div class="form-group">
+            @Html.Label("% de Aceptación", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                <div id="slider_2">
+                    <div id="custom-handle1" class="ui-slider-handle">
+                    </div>
+                </div>
+            </div>
+            <span class="badge">@Model.PorcentajeAceptacion</span>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -80,3 +97,8 @@
 <div>
     <a class="btn btn-default" href="@Url.Action("Index")">Volver</a>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modalform")
+    @Scripts.Render("~/bundles/operations")
+}

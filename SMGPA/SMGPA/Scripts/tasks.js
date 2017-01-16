@@ -24,5 +24,45 @@
     $('#myModal').on('hidden.bs.modal', function () {
         location.reload();
     })
-
+    $(".rutfunctionary").autocomplete({
+        source: '/SMGPA/Activities/RutAutoComplete',
+        appendTo: ".modal-body",
+    });
+    $('.ui-autocomplete').css('list-style-type', 'none');
+    $('.ui-autocomplete').css('text-decoration', 'none');
+    $(document).on("change", ".rutfunctionary", function (e) {
+        var Rut = $('.rutfunctionary').val();
+        $.get('/SMGPA/Activities/CheckUser/', { rut: Rut }, function (result) {
+            if (result.sucess) {
+                $('.Nombre').text(result.nombre);
+                $('.Apellido').text(result.apellido);
+                $('.Carrera').text(result.carrera);
+                $("#idFunctionary").val(result.iduser);
+            }
+        });
+    });
+    $(".entidad").autocomplete({
+        source: '/SMGPA/Activities/EntityAutoComplete',
+        appendTo: ".modal-body",
+    });
+    $(document).on("change", ".entidad", function (e) {
+        var Nombre = $('.entidad').val();
+        $.get('/SMGPA/Activities/CheckEntity/', { nombre: Nombre }, function (result) {
+            if (result.sucess) {
+                $('#idResponsable').val(result.identity);
+            }
+        });
+    });
+    $(".validadora").autocomplete({
+        source: '/SMGPA/Activities/EntityAutoComplete',
+        appendTo: ".modal-body",
+    });
+    $(document).on("change", ".validadora", function (e) {
+        var Nombre = $('.validadora').val();
+        $.get('/SMGPA/Activities/CheckEntity/', { nombre: Nombre }, function (result) {
+            if (result.sucess) {
+                $('#idEntities').val(result.identity);
+            }
+        });
+    });
 });

@@ -186,7 +186,7 @@ namespace SMGPA.Controllers
         Assign the Operation to the Process*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
+        public async Task<ActionResult> AddOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type ,idPredecesora, Validable, OperationClass, IteracionesPermitidas, PorcentajeAceptacion")] Operation operation)
         {
             Process proc = (Process)TempData["Proceso"];
             if(proc == null)
@@ -243,7 +243,7 @@ namespace SMGPA.Controllers
         by reference from View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass, IteracionesPermitidas")] Operation operation)
+        public ActionResult EditOperation([Bind(Include = "idOperation,Nombre,Descripcion,Type,idPredecesora, Validable, OperationClass, IteracionesPermitidas, PorcentajeAceptacion")] Operation operation)
         {
             if (ModelState.IsValid)
             {
@@ -261,6 +261,7 @@ namespace SMGPA.Controllers
                     operacion.Validable = operation.Validable;
                     operacion.Predecesora = operation.Predecesora;
                     operacion.IteracionesPermitidas = operation.IteracionesPermitidas;
+                    operacion.PorcentajeAceptacion = operation.PorcentajeAceptacion;
                     db.SaveChanges();
                     db.Dispose();
                     return RedirectToAction("Index");

@@ -4,7 +4,10 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Careers")">Carreras Universitarias</a></li>
+    <li class="active">Editar</li>
+</ol>
 <h2>Editar</h2>
 
 @using (Html.BeginForm())

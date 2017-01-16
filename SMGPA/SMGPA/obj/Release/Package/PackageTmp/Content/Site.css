@@ -37,3 +37,19 @@ textarea {
 h2{
     padding-bottom: 35px;
 }
+    #custom-handle {
+        width: 3em;
+        height: 1.6em;
+        top: 50%;
+        margin-top: -.8em;
+        text-align: center;
+        line-height: 1.6em;
+    }
+    #custom-handle1 {
+        width: 3em;
+        height: 1.6em;
+        top: 50%;
+        margin-top: -.8em;
+        text-align: center;
+        line-height: 1.6em;
+    }

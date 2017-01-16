@@ -1,5 +1,27 @@
 ﻿$(function () {
-    $("#spinner").spinner({});
+    var handle = $("#custom-handle");
+    var handle1 = $("#custom-handle1");
+    $("#slider").slider({
+        create: function () {
+            handle.text($(this).slider("value"));
+        },
+        slide: function (event, ui) {
+            var value = ui.value;
+            handle.text(ui.value);
+            $("#IteracionesPermitidas").val(value);
+        }
+    });
+    $("#slider_2").slider({
+        create: function () {
+            handle1.text($(this).slider("value"));
+        },
+        slide: function (event, ui) {
+            var value = ui.value;
+            handle1.text(ui.value);
+            $("#PorcentajeAceptacion").val(value);
+        }
+    });
+
     $(document).on("click", "#deleteOperation", function (e) {
         var $tr = $(this).closest('tr');
         var id = $(this).attr('value');
@@ -41,4 +63,5 @@
     $(document).on("click", ".editOperation", function (e) {
         $('#myModal').modal('hide');
     });
+       
 });

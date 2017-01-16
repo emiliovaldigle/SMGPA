@@ -32,7 +32,9 @@ namespace SMGPA.Models
         public OperationClass Clase {get; set;}
         [Required(ErrorMessage ="Debe indicar la cantidad de iteraciones permitidas para esta Operación")]
         public int IteracionesPermitidas { get; set; }
-	}
+        [Required(ErrorMessage = "Especificar parámetro es Requerida.")]
+        public int PorcentajeAceptacion { get; set; }
+    }
     public enum OperationType { ENTIDAD, FUNCIONARIO }
     public enum OperationClass { SUBIR_DOCUMENTO}
 }
