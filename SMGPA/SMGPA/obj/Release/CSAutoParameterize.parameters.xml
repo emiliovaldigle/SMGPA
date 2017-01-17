@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
-  <parameter name="SMGPAConnection-Web.config Connection String" description="SMGPAConnection Cadena de conexión que usa la aplicación en web.config para obtener acceso a la base de datos." defaultValue="Server=EMILIO-PC\POPE;Database=SMGPA_SCHEMA;User=sa;Password=123.pass;" tags="SqlConnectionString">
-    <parameterEntry kind="XmlFile" scope="C:\\Users\\Emilio\\Desktop\\UNAB\ S2\\Proyecto\ de\ Título\\SMGPA\\SMGPA\\SMGPA\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SMGPAConnection']/@connectionString" />
+  <parameter name="SMGPAConnection-Web.config Connection String" description="SMGPAConnection Cadena de conexión que usa la aplicación en web.config para obtener acceso a la base de datos." defaultValue="Server=EMILIO-PC\POPE;Database=SMGPA;User=sa;Password=123.pass;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Emilio\\Desktop\\UNAB\ S2\\Proyecto\ de\ Título\\SMGPA_CUSTOM\\SMGPA\\SMGPA\\SMGPA\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='SMGPAConnection']/@connectionString" />
   </parameter>
 </parameters>

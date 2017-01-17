@@ -4,6 +4,11 @@
     ViewBag.Title = "Tasks";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<script type="text/javascript">
+    $(function () {
+        $(document).tooltip();
+    });
+</script>
 <h2>Mis Tareas</h2>
 
 <table class="table table-bordered">
@@ -26,28 +31,28 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Operacion.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Operacion.Descripcion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.fechaInicio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.fechaFin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Estado)
-        </td>
-        <td>
-            @Html.ActionLink("Detalle", "Details", new { id = item.idTask }, new { @class = "btn btn-info btn-sm", data_modal = "" })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Operacion.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Operacion.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.ActionLink("Detalle", "Details", new { id = item.idTask }, new { @class = "btn btn-info btn-sm", data_modal = "" })
+            </td>
+        </tr>
+    }
 
 </table>
-

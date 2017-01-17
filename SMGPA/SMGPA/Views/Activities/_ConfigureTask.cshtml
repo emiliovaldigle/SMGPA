@@ -11,88 +11,88 @@
     {
         <div class="alert alert-success" role="alert">@ViewBag.Creada</div>
     }
-   @if (ViewBag.Errores != null)
-   {
-    <div class="alert alert-danger" role="alert">@ViewBag.Errores</div>
-   }
-    
+    @if (ViewBag.Errores != null)
+    {
+        <div class="alert alert-danger" role="alert">@ViewBag.Errores</div>
+    }
+
 </div>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-<div class="modal-body">
-    <div class="row">
-        @Html.HiddenFor(model => model.idFunctionary)
-        @Html.HiddenFor(model => model.idResponsable)
-        @Html.HiddenFor(model => model.idEntities)
-                @switch (Model.Operacion.Type)
-                {
-                    case  OperationType.ENTIDAD:
-                        <div class="form-group">
+    <div class="modal-body">
+        <div class="row">
+            @Html.HiddenFor(model => model.idFunctionary)
+            @Html.HiddenFor(model => model.idResponsable)
+            @Html.HiddenFor(model => model.idEntities)
+            @switch (Model.Operacion.Type)
+            {
+                case OperationType.ENTIDAD:
+                    <div class="form-group">
 
-                            @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
-                            <div class="col-md-6">
-                                <input type="text" class="entidad form-control"/>
-                                @Html.ValidationMessageFor(model => model.idResponsable, "", new { @class = "text-danger" })
-                            </div>
+                        @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-6" })
+                        <div class="col-md-6">
+                            <input type="text" class="entidad form-control" />
+                            @Html.ValidationMessageFor(model => model.idResponsable, "", new { @class = "text-danger" })
                         </div>
-                        break;
-                    case OperationType.FUNCIONARIO:
-                        <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
-                            <label class="col-md-6">Ingresar Rut de Funcionario</label>
-                            <input type="text" id="rutuser" class="rutfunctionary col-md-4 form-control"/>
-                            <div class="row" style="margin-bottom: 10px !important">
-                                <br />
-                                <div class="col-md-12">
-                                    <div class="col-md-4">
-                                        <label>Nombre:</label>
-                                        <label class="Nombre"></label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Apellido:</label>
-                                        <label class="Apellido"></label>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label>Carrera:</label>
-                                        <label class="Carrera"></label>
-                                    </div>
+                    </div>
+                    break;
+                case OperationType.FUNCIONARIO:
+                    <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
+                        <label class="col-md-6">Ingresar Rut de Funcionario</label>
+                        <input type="text" id="rutuser" class="rutfunctionary col-md-4 form-control" />
+                        <div class="row" style="margin-bottom: 10px !important">
+                            <br />
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label>Nombre:</label>
+                                    <label class="Nombre"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Apellido:</label>
+                                    <label class="Apellido"></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Carrera:</label>
+                                    <label class="Carrera"></label>
                                 </div>
                             </div>
                         </div>
-                        break;
-                }
-                
-                <div class="form-group">
-                    @Html.Label("Fecha de inicio", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
-                        @Html.EditorFor(model => model.fechaInicio, new { htmlAttributes = new { @class = "form-control", id = "datepicker1" } })
-                        @Html.ValidationMessageFor(model => model.fechaInicio, "", new { @class = "text-danger" })
                     </div>
-                </div>
-                <div class="form-group">
-                    @Html.Label("Fecha de fin", htmlAttributes: new { @class = "control-label col-md-6" })
-                    <div class="col-md-6">
-                        @Html.EditorFor(model => model.fechaFin, new { htmlAttributes = new { @class = "form-control", id = "datepicker2" } })
-                        @Html.ValidationMessageFor(model => model.fechaFin, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                @if (Model.Operacion.Validable)
-                {
-                    <div class="form-group">
-                        @Html.Label("Entidad Validadora", htmlAttributes: new { @class = "control-label col-md-6" })
-                        <div class="col-md-6">
-                            <input type="text" class="validadora form-control" />
-                            @Html.ValidationMessageFor(model => model.idEntities, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                }
-            
-      </div>
-</div>
+                    break;
+            }
 
-<div class="modal-footer">
-    <button class="btn" data-dismiss="modal">Cerrar</button>
-    <input type="submit" class="btn btn-default"  value="Guardar"/>
-   
-</div>
+            <div class="form-group">
+                @Html.Label("Fecha de inicio", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.fechaInicio, new { htmlAttributes = new { @class = "form-control", id = "datepicker1" } })
+                    @Html.ValidationMessageFor(model => model.fechaInicio, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Fecha de fin", htmlAttributes: new { @class = "control-label col-md-6" })
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.fechaFin, new { htmlAttributes = new { @class = "form-control", id = "datepicker2" } })
+                    @Html.ValidationMessageFor(model => model.fechaFin, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @if (Model.Operacion.Validable)
+                {
+                <div class="form-group">
+                    @Html.Label("Entidad Validadora", htmlAttributes: new { @class = "control-label col-md-6" })
+                    <div class="col-md-6">
+                        <input type="text" class="validadora form-control" />
+                        @Html.ValidationMessageFor(model => model.idEntities, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal">Cerrar</button>
+        <input type="submit" class="btn btn-default" value="Guardar" />
+
+    </div>
 }

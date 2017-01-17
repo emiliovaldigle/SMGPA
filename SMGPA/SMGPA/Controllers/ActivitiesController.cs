@@ -25,7 +25,7 @@ namespace SMGPA.Controllers
             int pageSize;
             int pageNumber;
             var activity = db.Activity.Include(a => a.Proceso);
-            if(proc_search != null || dateini != null || datend!=null||state != null)
+            if (proc_search != null || dateini != null || datend != null || state != null)
             {
                 page = 1;
             }
@@ -39,11 +39,11 @@ namespace SMGPA.Controllers
                 {
                     datend = cfilter2;
                 }
-                if(proc_search == null)
+                if (proc_search == null)
                 {
                     proc_search = cfilter3;
                 }
-                if(state == null)
+                if (state == null)
                 {
                     state = cfilter4;
                 }
@@ -62,11 +62,11 @@ namespace SMGPA.Controllers
                 DateTime myDateEnd;
                 if (DateTime.TryParse(dateini, out myDateStart) && DateTime.TryParse(datend, out myDateEnd))
                 {
-                   myDateStart = DateTime.ParseExact(dateini, "dd/MM/yyyy",
-                                  System.Globalization.CultureInfo.InvariantCulture);
-                   myDateEnd = DateTime.ParseExact(datend, "dd/MM/yyyy",
-                                              System.Globalization.CultureInfo.InvariantCulture);
-                   activity = activity.Where(a => a.start_date >= myDateStart && a.end_date <= myDateEnd);
+                    myDateStart = DateTime.ParseExact(dateini, "dd/MM/yyyy",
+                                   System.Globalization.CultureInfo.InvariantCulture);
+                    myDateEnd = DateTime.ParseExact(datend, "dd/MM/yyyy",
+                                               System.Globalization.CultureInfo.InvariantCulture);
+                    activity = activity.Where(a => a.start_date >= myDateStart && a.end_date <= myDateEnd);
                 }
                 else
                 {
@@ -113,6 +113,7 @@ namespace SMGPA.Controllers
         public ActionResult Create()
         {
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio");
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View();
         }
 
@@ -121,7 +122,7 @@ namespace SMGPA.Controllers
         model is Valid */
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idActivity,state,start_date,end_date,Nombre,idProcess")] Activity activity)
+        public ActionResult Create([Bind(Include = "idActivity,state,start_date,end_date,Nombre,idProcess, idCareer")] Activity activity)
         {
             if (ModelState.IsValid)
             {
@@ -135,6 +136,7 @@ namespace SMGPA.Controllers
             }
 
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio", activity.idProcess);
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View(activity);
         }
         /*Function that add the Tasks from the Operations existing
@@ -142,7 +144,7 @@ namespace SMGPA.Controllers
         */
         public static void GenerateTasks(Activity activity)
         {
-            using(SMGPAContext db = new SMGPAContext())
+            using (SMGPAContext db = new SMGPAContext())
             {
                 Process proceso = db.Process.Find(activity.idProcess);
                 List<Operation> operaciones = proceso.Operations.ToList();
@@ -153,11 +155,11 @@ namespace SMGPA.Controllers
                     tarea.idTask = Guid.NewGuid();
                     tarea.Operacion = o;
                     tarea.Actividad = actividad;
-                    if(o.idPredecesora != null)
+                    if (o.idPredecesora != null)
                     {
                         Operation predecesora = db.Operation.Find(o.idPredecesora);
                         List<Tasks> tareas = actividad.Tareas.ToList();
-                        foreach(Tasks ta in tareas)
+                        foreach (Tasks ta in tareas)
                         {
                             Tasks aux = db.Task.Find(ta.idTask);
                             if (aux.Operacion.idOperation == predecesora.idOperation)
@@ -169,7 +171,7 @@ namespace SMGPA.Controllers
                     actividad.Tareas.Add(tarea);
                     db.SaveChanges();
                 }
-            }   
+            }
         }
 
         /* GET: Activities/Edit/id
@@ -187,6 +189,7 @@ namespace SMGPA.Controllers
                 return HttpNotFound();
             }
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio", activity.idProcess);
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View(activity);
         }
 
@@ -195,17 +198,19 @@ namespace SMGPA.Controllers
         from the View*/
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idActivity,state,start_date,end_date,Nombre")] Activity activity)
+        public ActionResult Edit([Bind(Include = "idActivity,state,start_date,end_date,Nombre, idCareer")] Activity activity)
         {
             if (ModelState.IsValid)
             {
                 Activity actividad = db.Activity.Single(a => a.idActivity == activity.idActivity);
                 actividad.Nombre = activity.Nombre;
+                actividad.Carrera = activity.Carrera;
                 db.SaveChanges();
                 db.Dispose();
                 return RedirectToAction("Index");
             }
             ViewBag.idProcess = new SelectList(db.Process, "idProcess", "Criterio", activity.idProcess);
+            ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre");
             return View(activity);
         }
 
@@ -238,19 +243,19 @@ namespace SMGPA.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Activity activity = db.Activity.Find(id);
-            if(activity == null)
+            if (activity == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            foreach(Tasks t in activity.Tareas.ToList())
+            foreach (Tasks t in activity.Tareas.ToList())
             {
-                List<Observation> obs = db.Observation.Where(o=> o.Tarea.idTask == t.idTask).ToList();
-                foreach(Observation ob in obs)
+                List<Observation> obs = db.Observation.Where(o => o.Tarea.idTask == t.idTask).ToList();
+                foreach (Observation ob in obs)
                 {
                     db.Observation.Remove(ob);
                 }
                 List<Document> docs = db.Document.Where(d => d.idTask == t.idTask).ToList();
-                foreach(Document doc in docs)
+                foreach (Document doc in docs)
                 {
                     db.Document.Remove(doc);
                 }
@@ -266,12 +271,12 @@ namespace SMGPA.Controllers
         [HttpGet]
         public ActionResult Tasks(Guid? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity actividad =  db.Activity.Find(id);
-            if(actividad == null)
+            Activity actividad = db.Activity.Find(id);
+            if (actividad == null)
             {
                 return PartialView("Tasks");
             }
@@ -285,22 +290,22 @@ namespace SMGPA.Controllers
         [HttpGet]
         public async Task<ActionResult> DetailsTask(Guid? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Tasks tarea = await db.Task.FindAsync(id);
-            if(tarea == null)
+            if (tarea == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if(tarea.Documentos.Count > 0)
+            if (tarea.Documentos.Count > 0)
             {
                 ViewBag.Documento = "Documentos";
             }
             ViewBag.Tarea = tarea.Operacion.Nombre;
             return PartialView("_DetailsTask", tarea);
-            
+
         }
         /*Return the View that let the user set temporallity and
         assign responsables to the Task
@@ -317,8 +322,8 @@ namespace SMGPA.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Activity activity = (Activity) TempData["Activity"];
-            Activity actividad = db.Activity.Find(activity.idActivity);       
+            Activity activity = (Activity)TempData["Activity"];
+            Activity actividad = db.Activity.Find(activity.idActivity);
             TempData["Activity"] = actividad;
             ViewBag.Tarea = tarea.Operacion.Nombre;
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
@@ -343,7 +348,7 @@ namespace SMGPA.Controllers
             Tasks Tarea = (Tasks)TempData["Task"];
             if (ModelState.IsValid)
             {
-                Tasks tarea = await db.Task.SingleAsync(t=> t.idTask.Equals(Tarea.idTask));
+                Tasks tarea = await db.Task.SingleAsync(t => t.idTask.Equals(Tarea.idTask));
                 if (tarea == null)
                 {
                     return HttpNotFound();
@@ -354,7 +359,7 @@ namespace SMGPA.Controllers
                     case OperationType.ENTIDAD:
                         if (task.idResponsable != null)
                         {
-                           tarea.ResponsableEntity = await db.Entity.FindAsync(task.idResponsable);
+                            tarea.ResponsableEntity = await db.Entity.FindAsync(task.idResponsable);
                         }
                         else
                         {
@@ -367,12 +372,13 @@ namespace SMGPA.Controllers
                             TempData["Activity"] = db.Activity.Find(activity.idActivity);
                             return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
                         }
-                           break;
+                        break;
                     case OperationType.FUNCIONARIO:
-                        if(task.idFunctionary != null)
+                        if (task.idFunctionary != null)
                         {
-                           tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
-                        }else
+                            tarea.Responsable = await db.Functionary.FindAsync(task.idFunctionary);
+                        }
+                        else
                         {
                             TempData["Task"] = tarea;
                             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
@@ -386,7 +392,7 @@ namespace SMGPA.Controllers
                 }
                 if (operacion.Validable)
                 {
-                    if(task.idEntities != null)
+                    if (task.idEntities != null)
                     {
                         tarea.Participantes = await db.Entity.FindAsync(task.idEntities);
                     }
@@ -404,23 +410,23 @@ namespace SMGPA.Controllers
                 }
                 tarea.fechaInicio = task.fechaInicio;
                 tarea.fechaFin = task.fechaFin;
-                tarea.Estado = StatusEnum.INACTIVA;    
-                if(tarea.fechaInicio != null && tarea.fechaFin != null && tarea.fechaInicio > DateTime.Now
+                tarea.Estado = StatusEnum.INACTIVA;
+                if (tarea.fechaInicio != null && tarea.fechaFin != null && tarea.fechaInicio > DateTime.Now
                     && tarea.fechaFin > tarea.fechaInicio)
                 {
-                    foreach(Tasks t in actividad.Tareas)
+                    foreach (Tasks t in actividad.Tareas)
                     {
-                            if(t.fechaInicio < lowerdate || lowerdate == null)
-                            {
-                                lowerdate = t.fechaInicio;     
-                            }
-                            if (t.fechaFin > higherdate || higherdate == null)
-                            {
-                                higherdate = t.fechaFin;
-                            }
-                        
+                        if (t.fechaInicio < lowerdate || lowerdate == null)
+                        {
+                            lowerdate = t.fechaInicio;
+                        }
+                        if (t.fechaFin > higherdate || higherdate == null)
+                        {
+                            higherdate = t.fechaFin;
+                        }
+
                     }
-                    actividad.start_date = ((DateTime) lowerdate).Date;
+                    actividad.start_date = ((DateTime)lowerdate).Date;
                     actividad.end_date = ((DateTime)higherdate).Date;
                     await db.SaveChangesAsync();
                     TempData["Task"] = tarea;
@@ -428,16 +434,16 @@ namespace SMGPA.Controllers
                     ViewBag.Errores = null;
                     ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
                     ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
-                    ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");     
-                    return PartialView("_ConfigureTask",tarea);
-                }            
+                    ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
+                    return PartialView("_ConfigureTask", tarea);
+                }
             }
             TempData["Task"] = await db.Task.FindAsync(Tarea.idTask);
             ViewBag.idResponsable = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.idFunctionary = new SelectList(db.Functionary.ToList(), "idUser", "Nombre");
             ViewBag.idEntities = new SelectList(db.Entity.ToList(), "idEntities", "Nombre");
             ViewBag.Creada = null;
-            ViewBag.Errores = "Tarea con Errores, considerar que Fecha de Inicio debe ser mayor al tiempo actual"; 
+            ViewBag.Errores = "Tarea con Errores, considerar que Fecha de Inicio debe ser mayor al tiempo actual";
             TempData["Activity"] = db.Activity.Find(activity.idActivity);
             return PartialView("_ConfigureTask", await db.Task.FindAsync(Tarea.idTask));
 
@@ -446,7 +452,7 @@ namespace SMGPA.Controllers
         [Authorizate(Disabled = true, Public = false)]
         public FileResult Download(string file)
         {
-            return File("~/uploads/"+file, System.Net.Mime.MediaTypeNames.Application.Octet, file);
+            return File("~/uploads/" + file, System.Net.Mime.MediaTypeNames.Application.Octet, file);
         }
         protected override void Dispose(bool disposing)
         {

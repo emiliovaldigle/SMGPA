@@ -352,8 +352,13 @@
     <Compile Include="Migrations\201701150255389_updateOperation45.Designer.cs">
       <DependentUpon>201701150255389_updateOperation45.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701171637484_functionaryentitiesupdate.cs" />
+    <Compile Include="Migrations\201701171637484_functionaryentitiesupdate.Designer.cs">
+      <DependentUpon>201701171637484_functionaryentitiesupdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\Faculty.cs" />
+    <Compile Include="Models\FunctionaryEntity.cs" />
     <Compile Include="Models\Notificacion.cs" />
     <Compile Include="Utilities\MD5Encoder.cs" />
     <Compile Include="Migrations\201610272148317_initial.cs" />
@@ -882,6 +887,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701150255389_updateOperation45.resx">
       <DependentUpon>201701150255389_updateOperation45.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701171637484_functionaryentitiesupdate.resx">
+      <DependentUpon>201701171637484_functionaryentitiesupdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

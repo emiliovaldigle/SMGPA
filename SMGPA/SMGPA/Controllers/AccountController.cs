@@ -104,7 +104,7 @@ namespace SMGPA.Controllers
 
                     }
                 }
-               
+
 
             }
             return View();
@@ -147,11 +147,14 @@ namespace SMGPA.Controllers
                 functionary.Activo = true; ;
                 functionary.idUser = Guid.NewGuid();
                 db.Functionary.Add(functionary);
-                Career c = db.Career.Find(functionary.idCareer);
-                if (c.idFaculty != null)
+                if (functionary.idCareer != null)
                 {
-                    Faculty faculty = db.Faculty.Find(c.idFaculty);
-                    faculty.Involucrados.Add(functionary);
+                    Career c = db.Career.Find(functionary.idCareer);
+                    if (c.idFaculty != null)
+                    {
+                        Faculty faculty = db.Faculty.Find(c.idFaculty);
+                        faculty.Involucrados.Add(functionary);
+                    }
                 }
                 db.SaveChanges();
                 return RedirectToAction("Login");
@@ -159,7 +162,7 @@ namespace SMGPA.Controllers
 
             ViewBag.idCareer = new SelectList(db.Career, "idCareer", "Nombre", functionary.idCareer);
             return View(functionary);
-        } 
+        }
         // Function that build the Menu for the logged Administrator
         public PartialViewResult BuildMenu()
         {
@@ -192,16 +195,64 @@ namespace SMGPA.Controllers
                 return RedirectToAction("Login");
             }
         }
+        [Authorizate(Disabled = true, Public = false)]
         public ActionResult Dashboard()
         {
             if (Session["UserID"] != null)
             {
+                //Barra de Actividades por Carrera
+
+                //Calcula cantidad de Total de Actividades por Carrera
+                var Actividades = db.Activity.GroupBy(a => a.Carrera.Nombre)
+                                           .Select(g => new { Nombre = g.Key, Count = g.Count() });
+                var ActividadesCompletadas = db.Activity
+                                     .Where(a => a.state.Equals(States.Completada))
+                                     .GroupBy(a => a.Carrera.Nombre)
+                                     .Select(g => new { Nombre = g.Key, Count = g.Count() });
+                List<string> NombreCarreras = new List<string>();
+                List<double> TotalCarreras = new List<double>();
+                List<double> CompletadasCarreras = new List<double>();
+                var Carreras = db.Career.ToList();
+                if (Actividades.Count() > 0)
+                {
+                    foreach (var a in Actividades.ToList())
+                    {
+                        NombreCarreras.Add(a.Nombre);
+                        TotalCarreras.Add(a.Count);
+                    }
+                }
+                if (CompletadasCarreras.Count > 0)
+                {
+                    foreach (var a in ActividadesCompletadas.ToList())
+                    {
+                        CompletadasCarreras.Add(a.Count);
+
+                    }
+                    ViewBag.CompletadasCarreras = CompletadasCarreras;
+                }
+                else
+                {
+                    List<double> TotalCarreras_B = new List<double>();
+                    foreach (var a in Actividades.ToList())
+                    {
+                        TotalCarreras_B.Add(0);
+                    }
+                    ViewBag.CompletadasCarreras = TotalCarreras_B;
+                }
+
+
+                ViewBag.Carreras = NombreCarreras;
+                ViewBag.TotalCarreras = TotalCarreras;
+                //Evolutivo de Tareas
                 List<Tasks> Tareas = db.Task.ToList();
                 ViewBag.TareasCompletadas = new double[] { 1, 23, 34, 7, 123, 6, 23 };
+                //Evolutivo de Tareas
+                //Gráfico de Torta
                 ViewBag.Completed = Tareas.Where(t => t.Estado.Equals(StatusEnum.COMPLETADA)).Count();
                 ViewBag.InProgress = Tareas.Where(t => t.Estado.Equals(StatusEnum.EN_PROGRESO)).Count();
                 ViewBag.Cerrada = Tareas.Where(t => t.Estado.Equals(StatusEnum.CERRADA_SIN_CONCLUIR)).Count();
                 ViewBag.Activa = Tareas.Where(t => t.Estado.Equals(StatusEnum.ACTIVA)).Count();
+                //Gráfico de Torta
                 ViewBag.Funcionarios = db.Functionary.Count();
                 return View();
             }

@@ -1,119 +1,119 @@
 ﻿@model SMGPA.Models.Tasks
-@{ 
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
     <h2>Tarea @ViewBag.Tarea</h2>
-        <div class="container">
-            <div class="col-md-12">
-                <div class="form-group pull-right">
-                    <div class="btn-info btn-sm">
-                        <label>@Html.DisplayFor(model => model.Estado)</label>
-                    </div>
-                </div>
+    <div class="container">
+        <div class="col-md-12">
+            <div class="form-group pull-right">
+                <a class="btn-info btn-sm" title="INACTIVA: TAREA QUE NO HA SIDO CONFIGURADA                                                           ACTIVA: TAREA FUE CONFIGURADA Y ESTA DISPONIBLE                                                 EN_PROGRESO: TAREA SE ENCUENTRA EN DESARROLLO                                  CERRADA_SIN_CONCLUIR: NO CUMPLIÓ QUORUM DEFINIDO EN EL PLAZO INDICADO">
+                    <label>@Html.DisplayFor(model => model.Estado)</label>
+                </a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="col-md-6">
-                    @switch (Model.Operacion.Type)
-                    {
-                        case OperationType.ENTIDAD:
-                            <div class="form-group">
-                                <label>@Html.DisplayName("Responsable")</label>
-                                <div class="well well-sm">
-                                    <label>@Html.DisplayFor(model => model.ResponsableEntity.Nombre)</label>
-                                </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-6">
+                @switch (Model.Operacion.Type)
+                {
+                    case OperationType.ENTIDAD:
+                        <div class="form-group">
+                            <label>@Html.DisplayName("Responsable")</label>
+                            <div class="well well-sm">
+                                <label>@Html.DisplayFor(model => model.ResponsableEntity.Nombre)</label>
                             </div>
-                            break;
-                        case OperationType.FUNCIONARIO:
-                            <div class="form-group">
-                                <label>@Html.DisplayName("Responsable")</label>
-                                <div class="well well-sm">
-                                    <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
-                                </div>
-                            </div>
-                            break;
-                    }
-                    <div class="form-group">
-                        <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion):</label>
-                        <div class="well well-sm">
-                            <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
                         </div>
-                   </div>
+                        break;
+                    case OperationType.FUNCIONARIO:
+                        <div class="form-group">
+                            <label>@Html.DisplayName("Responsable")</label>
+                            <div class="well well-sm">
+                                <label>@Html.DisplayFor(model => model.Responsable.Nombre)@Html.DisplayFor(model => model.Responsable.Apellido)</label>
+                            </div>
+                        </div>
+                        break;
+                }
+                <div class="form-group">
+                    <label>@Html.DisplayNameFor(model => model.Operacion.Descripcion):</label>
+                    <div class="well well-sm">
+                        <label>@Html.DisplayFor(model => model.Operacion.Descripcion)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayName("Fecha de inicio"):</label>
+                    <div class="well well-sm">
+                        <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>@Html.DisplayName("Fecha de fin"):</label>
+                    <div class="well well-sm">
+                        <label>@Html.DisplayFor(model => model.fechaFin) </label>
+                    </div>
+                </div>
+                @if (Model.Operacion.Validable)
+                {
                     <div class="form-group">
-                        <label>@Html.DisplayName("Fecha de inicio"):</label>
+                        <label>@Html.DisplayName("Entidad Validadora")</label>
                         <div class="well well-sm">
-                            <label>@Html.DisplayFor(model => model.fechaInicio)</label>
+                            <label>@Html.DisplayFor(model => model.Participantes.Nombre)</label>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>@Html.DisplayName("Fecha de fin"):</label>
-                        <div class="well well-sm">
-                            <label>@Html.DisplayFor(model => model.fechaFin) </label>
-                        </div>
-                   </div>
-                    @if (Model.Operacion.Validable)
+                }
+            </div>
+            <div class="col-md-6">
+                @if (Model.Estado == StatusEnum.ACTIVA || Model.Estado == StatusEnum.EN_PROGRESO)
+                {
+                    using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data", idTask = Model.idTask }))
                     {
-                        <div class="form-group">
-                            <label>@Html.DisplayName("Entidad Validadora")</label>
-                            <div class="well well-sm">
-                                <label>@Html.DisplayFor(model => model.Participantes.Nombre)</label>
-                            </div>
-                        </div>
+                        @Html.AntiForgeryToken()
+                        <input type="file" name="fileDoc" />
+                        <input type="submit" value="Subir" id="uploadDocument" />
                     }
-                </div>
-                <div class="col-md-6">
-            @if (Model.Estado == StatusEnum.ACTIVA || Model.Estado == StatusEnum.EN_PROGRESO)
-            {
-                   using (Html.BeginForm("UploadFile", "Tasks", FormMethod.Post, new { enctype = "multipart/form-data", idTask = Model.idTask }))
-                   {
-                    @Html.AntiForgeryToken()
-                    <input type="file" name="fileDoc"/>
-                    <input type="submit" value="Subir" id="uploadDocument" />
-                   }
-            }
-                    @if (ViewBag.Documento != null)
-                    {
-                        <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Documentos</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <table class="table table-bordered">
+                }
+                @if (ViewBag.Documento != null)
+                {
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Documentos</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayName("Versión")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Nombre")
+                                        </th>
+                                        <th>
+
+                                        </th>
+                                    </tr>
+                                    @{
+                                        int version = 1;
+                                    }
+                                    @foreach (var item in Model.Documentos.ToList())
+                                    {
                                         <tr>
-                                            <th>
-                                                @Html.DisplayName("Versión")
-                                            </th>
-                                            <th>
-                                                @Html.DisplayName("Nombre")
-                                            </th>
-                                            <th>
-
-                                            </th>
+                                            <td>@version</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Path)</td>
+                                            <td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>
                                         </tr>
-                                        @{
-                                            int version = 1;
-                                        }
-                                        @foreach (var item in Model.Documentos.ToList())
-                                        {
-                                            <tr>
-                                                <td>@version</td>
-                                                <td>@Html.DisplayFor(modelItem => item.Path)</td>
-                                                <td>@Html.ActionLink("Descargar", "Download", new { file = item.Path })</td>
-                                            </tr>
-                                            version++;
-                                        }
-                                    </table>
-                                </div>
+                                        version++;
+                                    }
+                                </table>
                             </div>
                         </div>
+                    </div>
 
-                    }
-               </div>
-            </div>   
+                                        }
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -133,7 +133,7 @@
                             </div>
                         </div>
                         <div class="col-md-9">
-                           @Html.DisplayFor(modelItem => item.Funcionario.Nombre, new { @style = "padding-right:5px !important;" }) @Html.DisplayFor(modelItem => item.Funcionario.Apellido) Dice:
+                            @Html.DisplayFor(modelItem => item.Funcionario.Nombre, new { @style = "padding-right:5px !important;" }) @Html.DisplayFor(modelItem => item.Funcionario.Apellido) Dice:
                             <div class="well well-lg">
                                 @Html.DisplayFor(modelItem => item.Comentario)
                             </div>

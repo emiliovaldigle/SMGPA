@@ -25,7 +25,7 @@ namespace SMGPA.Models
         public virtual DbSet<Observation> Observation { get; set; }
         public virtual DbSet<Document> Document { get; set; }
         public virtual DbSet<Notificacion> Notificacion { get; set; }
-
+        public virtual DbSet<FunctionaryEntity> FuncionarioEntidad { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

@@ -13,6 +13,7 @@ namespace SMGPA.Models
         public Entities()
         {
             Involucrados = new HashSet<Functionary>();
+            FuncionarioEntidad = new HashSet<FunctionaryEntity>();
             Activo = true;
         }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,6 +26,6 @@ namespace SMGPA.Models
         public string Descripcion { get; set; }
         public bool Activo { get; set; }
         public virtual ICollection<Functionary> Involucrados { get; set; }
-        
+        public ICollection<FunctionaryEntity> FuncionarioEntidad { get; set; }
     }
 }

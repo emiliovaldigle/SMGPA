@@ -14,8 +14,9 @@ using System.IO;
 namespace SMGPA.Controllers
 {
     [Authorizate(Disabled = true, Public = false)]
-    public class TasksController : Controller { 
-    
+    public class TasksController : Controller
+    {
+
 
         private SMGPAContext db = new SMGPAContext();
 
@@ -57,7 +58,7 @@ namespace SMGPA.Controllers
                 {
                     foreach (Functionary f in db.Entity.Find(t.idEntities).Involucrados)
                     {
-                        if (f.idUser.Equals(idUser)&& !Tareas.Contains(t))
+                        if (f.idUser.Equals(idUser) && !Tareas.Contains(t))
                         {
                             Tareas.Add(t);
                         }
@@ -97,11 +98,14 @@ namespace SMGPA.Controllers
             if (tarea.idFunctionary == (Guid)Session["UserID"])
             {
                 return View("_DetailsUpload", tarea);
-                
+
             }
-            if(tarea.idResponsable != null)
+            Guid userId = (Guid)Session["UserID"];
+            if (tarea.idResponsable != null)
             {
-                foreach(Functionary f in db.Entity.Find(tarea.idResponsable).Involucrados)
+                FunctionaryEntity fen = await db.FuncionarioEntidad.FindAsync(userId, tarea.idResponsable);
+                ViewBag.Responsabilidad = fen.Cargo;
+                foreach (Functionary f in db.Entity.Find(tarea.idResponsable).Involucrados)
                 {
                     if (f.idUser.Equals((Guid)Session["UserID"]))
                     {
@@ -109,6 +113,8 @@ namespace SMGPA.Controllers
                     }
                 }
             }
+            FunctionaryEntity fn = await db.FuncionarioEntidad.FindAsync(userId, tarea.idEntities);
+            ViewBag.Responsabilidad = fn.Cargo;
             return View("_DetailsValidate", tarea);
         }
         /*POST: Tasks/UploadFile/filedoc
@@ -127,7 +133,7 @@ namespace SMGPA.Controllers
             if (ModelState.IsValid)
             {
                 Guid id = (Guid)TempData["Tarea"];
-                Tasks task = db.Task.Single(t => t.idTask == id);         
+                Tasks task = db.Task.Single(t => t.idTask == id);
                 if (Request.Files.Count > 0)
                 {
                     HttpPostedFileBase file = Request.Files[0];
@@ -140,7 +146,7 @@ namespace SMGPA.Controllers
                         string extension = Path.GetExtension(fileName);
                         string path = Path.GetDirectoryName(fileName);
                         string newFullPath = fileName;
-                        string absolutePath = HttpContext.Server.MapPath(pathToSave+'/'+newFullPath);
+                        string absolutePath = HttpContext.Server.MapPath(pathToSave + '/' + newFullPath);
                         bool exists = System.IO.File.Exists(absolutePath);
                         while (System.IO.File.Exists(absolutePath))
                         {
@@ -154,31 +160,16 @@ namespace SMGPA.Controllers
                         Document documento = new Document { idDocument = Guid.NewGuid(), Path = newFullPath, idTask = task.idTask, Fecha = DateTime.Today };
                         task.Documentos.Add(documento);
                         task.Estado = StatusEnum.EN_PROGRESO;
-                    }               
+                    }
                     string link = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("Details", "Tasks", new { id = task.idTask });
                     Notification notificator = new Notification();
                     Functionary user = await db.Functionary.FindAsync((Guid)Session["UserID"]);
-                    if (!task.idResponsable.Equals(task.idEntities))
+                    Operation Operacion = db.Operation.Find(task.idOperation);
+                    if (Operacion.Validable)
                     {
-                        Operation Operacion = db.Operation.Find(task.idOperation);
-                        if (Operacion.Validable)
+                        foreach (Functionary f in task.Participantes.Involucrados)
                         {
-                            foreach (Functionary f in task.Participantes.Involucrados)
-                            {
-                                Notificacion n = new Notificacion();
-                                n.idNotification = Guid.NewGuid();
-                                n.Fecha = DateTime.Now;
-                                n.Funcionario = f;
-                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + task.Operacion.Nombre;
-                                n.UrlAction = link;
-                                n.Vista = false;
-                                f.Notificaciones.Add(n);
-                                await notificator.NotificateParticipants(user, db.Functionary.Find(f.idUser), task, link);
-                            }
-                        }
-                        if (Operacion.Type.Equals(OperationType.ENTIDAD))
-                        {
-                            foreach (Functionary f in task.ResponsableEntity.Involucrados)
+                            if (f.idUser != user.idUser)
                             {
                                 Notificacion n = new Notificacion();
                                 n.idNotification = Guid.NewGuid();
@@ -192,7 +183,29 @@ namespace SMGPA.Controllers
                             }
                         }
                     }
-                    
+                    if (Operacion.Type.Equals(OperationType.ENTIDAD))
+                    {
+                        foreach (Functionary f in task.ResponsableEntity.Involucrados)
+                        {
+                            if (f.idUser != user.idUser)
+                            {
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha subido un Documento en la Tarea: " + task.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
+                                await notificator.NotificateParticipants(user, db.Functionary.Find(f.idUser), task, link);
+                            }
+                        }
+                    }
+                    if (Operacion.Type.Equals(OperationType.FUNCIONARIO))
+                    {
+                        task.Estado = StatusEnum.COMPLETADA;
+                    }
+
                     db.SaveChanges();
                     Tasks updatedTask = db.Task.Find(task.idTask);
                     return Redirect(Request.UrlReferrer.ToString());
@@ -215,12 +228,12 @@ namespace SMGPA.Controllers
 
         public async Task<ActionResult> AddObservation(Guid? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return HttpNotFound();
             }
             Tasks task = await db.Task.FindAsync(id);
-            if(task == null)
+            if (task == null)
             {
                 return HttpNotFound();
             }
@@ -232,7 +245,7 @@ namespace SMGPA.Controllers
         found
         */
         [HttpPost]
-        public async Task<ActionResult> AddObservation([Bind(Include ="idObservation,FechaComentario,Comentario,ValidacionEstatus")] Observation observation)
+        public async Task<ActionResult> AddObservation([Bind(Include = "idObservation,FechaComentario,Comentario,ValidacionEstatus")] Observation observation)
         {
             Tasks Task = (Tasks)TempData["Task"];
             Tasks Tarea = await db.Task.FindAsync(Task.idTask);
@@ -283,7 +296,7 @@ namespace SMGPA.Controllers
                             double division1 = (double)divisor1 / dividendo1;
                             double resultado1 = division1 * 100.0;
                             //verificamos que al menos el 50% de los involucrados haya comentado
-                            if (resultado1 >= 50)
+                            if (resultado1 >= Tarea.Operacion.PorcentajeAceptacion)
                             {
                                 EntidadParticipo = true;
                             }
@@ -303,13 +316,13 @@ namespace SMGPA.Controllers
                             int dividendo2 = Tarea.ResponsableEntity.Involucrados.Count + Tarea.Participantes.Involucrados.Count;
                             double division2 = (double)divisor2 / dividendo2;
                             double resultado2 = division2 * 100.0;
-                            if (resultado2 >= 50)
+                            if (resultado2 >= Tarea.Operacion.PorcentajeAceptacion)
                             {
                                 EntidadResponsable = true;
                             }
                             if (EntidadParticipo && EntidadResponsable)
                             {
-                               Tarea.Estado = StatusEnum.COMPLETADA;
+                                Tarea.Estado = StatusEnum.COMPLETADA;
                             }
                         }
                         else
@@ -330,47 +343,44 @@ namespace SMGPA.Controllers
                             int dividendo2 = Tarea.ResponsableEntity.Involucrados.Count;
                             double division2 = (double)divisor2 / dividendo2;
                             double resultado2 = division2 * 100.0;
-                            if (resultado2 >= 50.0)
+                            if (resultado2 >= Tarea.Operacion.PorcentajeAceptacion)
                             {
                                 EntidadResponsable = true;
-                            }  
+                            }
+                            if (EntidadResponsable)
+                            {
+                                Tarea.Estado = StatusEnum.COMPLETADA;
+                            }
                         }
-                                  
+
                         break;
                     case OperationType.FUNCIONARIO:
-                        bool EntidadValidadora = false;
+                        bool Entidad = false;
                         if (Tarea.Operacion.Validable)
                         {
                             foreach (Functionary f in Tarea.Participantes.Involucrados)
                             {
-                                    await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
-                                    Notificacion n = new Notificacion();
-                                    n.idNotification = Guid.NewGuid();
-                                    n.Fecha = DateTime.Now;
-                                    n.Funcionario = f;
-                                    n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
-                                    n.UrlAction = link;
-                                    n.Vista = false;
-                                    f.Notificaciones.Add(n);
+                                await notificator.NotificateAll(user, db.Functionary.Find(f.idUser), Tarea, link, 3);
+                                Notificacion n = new Notificacion();
+                                n.idNotification = Guid.NewGuid();
+                                n.Fecha = DateTime.Now;
+                                n.Funcionario = f;
+                                n.Cuerpo = "El Funcionario " + user.Nombre + " " + user.Apellido + " ha comentado la Tarea: " + Tarea.Operacion.Nombre;
+                                n.UrlAction = link;
+                                n.Vista = false;
+                                f.Notificaciones.Add(n);
                             }
                             int divisor1 = idsUsuario.Count;
                             int dividendo1 = Tarea.Participantes.Involucrados.Count;
                             double division1 = (double)divisor1 / dividendo1;
                             double resultado1 = division1 * 100.0;
                             //verificamos que al menos el 50% de los involucrados haya comentado
-                            if (resultado1 >= 50)
+                            if (resultado1 >= Tarea.Operacion.PorcentajeAceptacion)
                             {
-                                EntidadParticipo = true;
+                                Entidad = true;
                             }
                             //verificamos que al menos el 50% de los involucrados haya comentado
-                            if (EntidadValidadora)
-                            {
-                                Tarea.Estado = StatusEnum.COMPLETADA;
-                            }
-                        }
-                        else
-                        {
-                            if(Tarea.Documentos.Count > 0)
+                            if (Entidad)
                             {
                                 Tarea.Estado = StatusEnum.COMPLETADA;
                             }

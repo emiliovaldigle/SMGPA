@@ -14,10 +14,10 @@ namespace SMGPA.Controllers
     {
         private SMGPAContext db = new SMGPAContext();
 
-         /* GET: Entities
-        Return the View Index with Collection of
-        Entities, also the user can filter and sort 
-        the results*/
+        /* GET: Entities
+       Return the View Index with Collection of
+       Entities, also the user can filter and sort 
+       the results*/
         public ActionResult Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -245,7 +245,7 @@ namespace SMGPA.Controllers
                     foreach (Career c in Careers)
                     {
                         if (c.idFaculty == null)
-                        {          
+                        {
                             Career car = db.Career.Find(c.idCareer);
                             car.idFaculty = TempFaculty.idEntities;
                             List<Functionary> funcionarios = db.Functionary.Where(f => f.idCareer == c.idCareer).ToList();
@@ -256,7 +256,7 @@ namespace SMGPA.Controllers
                                     faculty.Involucrados.Add(f);
                                 }
                             }
-                            
+
                         }
                     }
                 }
@@ -291,6 +291,10 @@ namespace SMGPA.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
+            List<Tasks> Tareas = db.Task.ToList();
+            if(Tareas.Where(t=> t.idEntities.Equals(id)|| t.idResponsable.Equals(id)).Count() > 0) {
+                return RedirectToAction("Index");
+            }
             Entities entidad = db.Entity.Find(id);
             var type = entidad.GetType().UnderlyingSystemType.Name.ToString();
             if (type.Contains("Faculty"))
@@ -304,7 +308,8 @@ namespace SMGPA.Controllers
                     }
                 }
                 int index = db.Task.ToList().FindIndex(t => t.idEntities.Equals(facultad.idEntities));
-                if(index > 0){
+                if (index > 0)
+                {
                     return RedirectToAction("Index");
                 }
                 db.Faculty.Remove(facultad);
@@ -324,19 +329,25 @@ namespace SMGPA.Controllers
         [HttpGet]
         public async Task<ActionResult> Functionaries(Guid? id)
         {
-            List<Functionary> involucrados = new List<Functionary>();
-            if(id == null)
+            List<FunctionaryEntity> involucrados = new List<FunctionaryEntity>();
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Entities entity = await db.Entity.FindAsync(id);
             TempData["Entity"] = entity;
             ViewBag.Entidad = entity.Nombre;
-            if (entity.Involucrados == null)
+            ICollection<FunctionaryEntity> entidadfuncionario = db.FuncionarioEntidad.Where(e => e.idEntities.Equals(entity.idEntities)).ToList();
+            foreach (FunctionaryEntity fe in entidadfuncionario)
             {
-                return PartialView();
+                Functionary f = db.Functionary.Find(fe.idUser);
+                FunctionaryEntity fn = new FunctionaryEntity();
+                fn.Funcionario = f;
+                fn.Entidad = fe.Entidad;
+                fn.Cargo = fe.Cargo;
+                involucrados.Add(fn);
             }
-            return PartialView("_Functionaries", entity.Involucrados.ToList());
+            return PartialView("_Functionaries", involucrados);
         }
         /* Function that get the records to Autocomplete
         the RUT of the input in Functionaries Modal*/
@@ -358,7 +369,7 @@ namespace SMGPA.Controllers
         }
         /*Function that check if RUT match any
          existing user in db*/
-        [Authorizate(Disabled =true, Public = false)]
+        [Authorizate(Disabled = true, Public = false)]
         [HttpGet]
         public JsonResult CheckUser(string rut)
         {
@@ -366,34 +377,38 @@ namespace SMGPA.Controllers
             {
                 return Json(new { sucess = false });
             }
-            Functionary functionary =  db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
-            if(functionary == null)
+            Functionary functionary = db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
+            if (functionary == null)
             {
                 return Json(new { sucess = false });
             }
-            string carrera = functionary.idCareer == null ? "No figura": functionary.Carrera.Nombre;
-            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera , sucess = true }, JsonRequestBehavior.AllowGet);
+            string carrera = functionary.idCareer == null ? "No figura" : functionary.Carrera.Nombre;
+            return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
         }
         /*POST: Entities/AddFunctionary/rut
         Assign the Functionary to the Entity*/
         [HttpPost]
-        public async Task<ActionResult> AddFunctionary(string rut)
+        public async Task<JsonResult> AddFunctionary(string rut, string cargo)
         {
             Entities entidad = (Entities)TempData["Entity"];
             Entities entity = await db.Entity.FindAsync(entidad.idEntities);
-            if(entity == null)
+            if (entity == null)
             {
                 return Json(new { sucess = false, reload = true }, JsonRequestBehavior.AllowGet);
             }
             Functionary functionary = db.Functionary.Where(f => f.Rut.Equals(rut)).FirstOrDefault();
             Functionary funcionario = entity.Involucrados.Where(fu => fu.Rut.Equals(rut)).FirstOrDefault();
-            if(functionary == null || funcionario != null)
+            if (functionary == null || funcionario != null)
             {
                 TempData["Entity"] = entity;
-                return Json(new { sucess = false}, JsonRequestBehavior.AllowGet );
+                return Json(new { sucess = false }, JsonRequestBehavior.AllowGet);
             }
             string carrera = functionary.idCareer == null ? " " : functionary.Carrera.Nombre;
+            FunctionaryEntity fe = new FunctionaryEntity { idEntities = entity.idEntities, idUser = functionary.idUser, Cargo = cargo };
+            entity.FuncionarioEntidad.Add(fe);
             entity.Involucrados.Add(functionary);
+            functionary.Entidades.Add(entity);
+            functionary.FuncionarioEntidad.Add(fe);
             await db.SaveChangesAsync();
             TempData["Entity"] = entity;
             return Json(new { iduser = functionary.idUser, nombre = functionary.Nombre, apellido = functionary.Apellido, carrera = carrera, sucess = true }, JsonRequestBehavior.AllowGet);
@@ -401,7 +416,7 @@ namespace SMGPA.Controllers
         /*POST: Entities/DeleteFunctionary/
         Delete the Functionary from the Entity*/
         [HttpPost]
-        public async Task<ActionResult> DeleteFunctionary(Guid? id)
+        public async Task<JsonResult> DeleteFunctionary(Guid? id)
         {
             if (id == null)
             {
@@ -409,12 +424,14 @@ namespace SMGPA.Controllers
             }
             Entities entidad = (Entities)TempData["Entity"];
             Entities entity = await db.Entity.FindAsync(entidad.idEntities);
-            if(entity == null)
+            if (entity == null)
             {
                 return Json(new { sucess = false, JsonRequestBehavior.AllowGet });
             }
             Functionary functionary = await db.Functionary.FindAsync(id);
+            FunctionaryEntity funcionarioentidad = await db.FuncionarioEntidad.FindAsync(functionary.idUser, entity.idEntities);
             bool result = (entity.Involucrados.Remove(functionary)) ? true : false;
+            db.FuncionarioEntidad.Remove(funcionarioentidad);
             string carrera = functionary.idCareer == null ? "No figura" : functionary.Carrera.Nombre;
             await db.SaveChangesAsync();
             TempData["Entity"] = entity;
@@ -422,4 +439,4 @@ namespace SMGPA.Controllers
         }
     }
 }
-   
+

@@ -11,7 +11,7 @@ namespace SMGPA
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-            "~/Scripts/jquery-ui-{version}.js").Include( 
+            "~/Scripts/jquery-ui-{version}.js").Include(
             "~/Scripts/jquery-ui-timepicker-addon.js").Include(
             "~/Scripts/jquery.canvasjs.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
@@ -36,6 +36,7 @@ namespace SMGPA
             "~/Content/themes/base/jquery-ui.css",
             "~/Content/themes/base/jquery.ui.core.css",
             "~/Content/themes/base/spinner.css",
+            "~/Content/themes/base/tooltip.css",
             "~/Content/themes/base/jquery.ui.resizable.css",
             "~/Content/themes/base/jquery.ui.selectable.css",
             "~/Content/themes/base/jquery.ui.accordion.css",
@@ -51,4 +52,3 @@ namespace SMGPA
         }
     }
 }
-    

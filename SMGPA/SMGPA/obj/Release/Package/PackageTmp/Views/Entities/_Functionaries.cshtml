@@ -1,81 +1,107 @@
-﻿@model IEnumerable<SMGPA.Models.Functionary>
-@{ 
+﻿@model IEnumerable<SMGPA.Models.FunctionaryEntity>
+@{
     Layout = null;
 }
-@Scripts.Render("~/bundles/entities")
+<script type="text/javascript">
+    $(function () {
+        $(".rutfunctionary").autocomplete({
+            source: '../Entities/RutAutoComplete',
+            appendTo: ".modal-body",
+        });
+        $(document).on("change", ".rutfunctionary", function (e) {
+            var Rut = $('.rutfunctionary').val();
+            $.get('../Entities/CheckUser/', { rut: Rut }, function (result) {
+                if (result.sucess) {
+                    $('.Nombre').text(result.nombre);
+                    $('.Apellido').text(result.apellido);
+                    $('.Carrera').text(result.carrera);
+                }
+            });
+        })
+        $('.ui-autocomplete').css('list-style-type', 'none');
+        $('.ui-autocomplete').css('text-decoration', 'none');
+    });
+</script>
 <div class="modal-header">
     <div id="alertwarning" class="alert alert-warning" role="alert" hidden="hidden">Funcionario no Encontrado o no disponible</div>
     <div id="alertsucess" class="alert alert-success" role="alert" hidden="hidden">Funcionario Agregado</div>
     <div id="alertdelete" class="alert alert-danger" role="alert" hidden="hidden">Funcionario Eliminado</div>
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title" id="myModalLabel">Involucrados de @ViewBag.Entidad</h4>
-</div> 
+</div>
 <br />
- <div class="modal-body" style="overflow: auto;">
-     <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
-         <label class="col-md-6">Ingresar Rut de Funcionario</label>
-         <input type="text" id="rutuser" class="rutfunctionary col-md-4"/>
-         <a class="btn btn-info btn-xs" id ="checkUser"><span class="glyphicon glyphicon-search"></span></a>
-         <div class="row" style="margin-bottom: 10px !important">
-             <br/>
-             <div class="col-md-12">
-                 <div class="col-md-4">
-                     <label>Nombre:</label>
-                     <label class="Nombre"></label>
-                 </div>
-                 <div class="col-md-4">
-                     <label>Apellido:</label>
-                     <label class="Apellido"></label>
-                 </div>
-                 <div class="col-md-4">
-                     <label>Carrera:</label>
-                     <label class="Carrera"></label>
-                 </div>   
-             </div>
-                 <p class="idUser" hidden="hidden"></p>
-         </div>
-         <a class="btn btn-default" id="addFunctionary">Agregar Funcionario</a>
+<div class="modal-body" style="overflow: auto;">
+    <div class="Formrut col-md-12" style="margin-bottom: 10px !important;">
+        <div class="row" style="margin-bottom: 10px !important">
+            <br />
+            <label class="col-md-6">Rut de Funcionario</label>
+            <input type="text" id="rutuser" class="rutfunctionary form-control" />
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <label>Nombre:</label>
+                    <label class="Nombre"></label>
+                </div>
+                <div class="col-md-4">
+                    <label>Apellido:</label>
+                    <label class="Apellido"></label>
+                </div>
+                <div class="col-md-4">
+                    <label>Carrera:</label>
+                    <label class="Carrera"></label>
+                </div>
+            </div>
+            <label class="col-md-6">Cargo de Funcionario</label>
+            <input type="text" class="cargo form-control" />
+        </div>
+        <a class="btn btn-default" id="addFunctionary">Agregar Funcionario</a>
     </div>
     <table class="table" id="tableFunctionary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Rut)
+                @Html.DisplayNameFor(model => model.Funcionario.Rut)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.Funcionario.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Apellido)
+                @Html.DisplayNameFor(model => model.Funcionario.Apellido)
             </th>
             <th>
                 @Html.DisplayName("Carrera")
             </th>
+            <th>
+                @Html.DisplayName("Cargo")
+            </th>
             <th></th>
         </tr>
-         @foreach(var item in Model)
+        @foreach (var item in Model)
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rut)
+                    @Html.DisplayFor(modelItem => item.Funcionario.Rut)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    @Html.DisplayFor(modelItem => item.Funcionario.Nombre)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Apellido)
+                    @Html.DisplayFor(modelItem => item.Funcionario.Apellido)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Carrera.Nombre)
+                    @Html.DisplayFor(modelItem => item.Funcionario.Carrera.Nombre)
                 </td>
                 <td>
-                    <a id="deleteFunctionary" url="/Entities/DeleteFunctionary/" value="@item.idUser">
+                    @Html.DisplayFor(modelItem => item.Cargo)
+                </td>
+                <td>
+                    <a id="deleteFunctionary" url="/Entities/DeleteFunctionary/" value="@item.Funcionario.idUser">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </a> 
+                    </a>
                 </td>
             </tr>
         }
+
     </table>
-    </div>
+</div>
 <div class="modal-footer">
     <button class="btn" data-dismiss="modal">Cerrar</button>
 </div>

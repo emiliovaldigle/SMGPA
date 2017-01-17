@@ -10,10 +10,10 @@
 </ol>
 <h2>Nueva Actividad</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Actividad Académica</h4>
         <hr />
@@ -23,9 +23,9 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                @if(ViewBag.Existe != null)
+                @if (ViewBag.Existe != null)
                 {
-                <p>@ViewBag.Existe</p>
+                    <p>@ViewBag.Existe</p>
                 }
             </div>
         </div>
@@ -36,7 +36,13 @@
                 @Html.ValidationMessageFor(model => model.idProcess, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.idCareer, "Carrera", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("idCareer", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.idProcess, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Guardar" class="btn btn-default" />

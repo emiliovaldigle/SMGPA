@@ -67,8 +67,12 @@
                                 <div class="form-group">
                                     @Html.Label("Número telefónico", new { @class = "control-label col-md-4" })
                                     <div class="col-md-6">
-                                        @Html.EditorFor(model => model.NumeroTelefono, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.NumeroTelefono, "", new { @class = "text-danger" })
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1">+569</span>
+                                            <input type="text" class="form-control" placeholder="12345678" aria-describedby="basic-addon1" name="NumeroTelefono">
+                                            @*@Html.EditorFor(model => model.NumeroTelefono, new { htmlAttributes = new { @class = "form-control" } })*@
+                                            @Html.ValidationMessageFor(model => model.NumeroTelefono, "", new { @class = "text-danger" })
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">

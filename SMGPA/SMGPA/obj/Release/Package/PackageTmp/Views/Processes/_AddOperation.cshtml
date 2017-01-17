@@ -8,6 +8,8 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.PorcentajeAceptacion)
+    @Html.HiddenFor(model => model.IteracionesPermitidas)
     <div class="modal-body">
         <div class="form-horizontal">
             <hr />
@@ -26,10 +28,10 @@
                     @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
                 </div>
-            </div> 
+            </div>
             <div class="form-group">
                 @Html.Label("Responsable", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10"> 
+                <div class="col-md-10">
                     @Html.EnumDropDownListFor(model => model.Type, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
                 </div>
@@ -40,7 +42,7 @@
                     @Html.EnumDropDownListFor(model => model.Clase, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Clase, "", new { @class = "text-danger" })
                 </div>
-            </div> 
+            </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Validable, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -53,7 +55,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.idPredecesora, "Predecesora", htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.DropDownList("idPredecesora", null,"--Seleccionar", htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownList("idPredecesora", null, "--Seleccionar", htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.idPredecesora, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -79,6 +81,6 @@
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal">Cancelar</button>
-        <input id ="newOperation" type="submit" value="Guardar" class="btn btn-default" />
+        <input id="newOperation" type="submit" value="Guardar" class="btn btn-default" />
     </div>
 }

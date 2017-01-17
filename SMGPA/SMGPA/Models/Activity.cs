@@ -27,8 +27,9 @@ namespace SMGPA.Models
         [ForeignKey("idProcess")]
         public virtual Process Proceso { get; set; }
         public virtual ICollection<Tasks> Tareas { get; set; }
-
-        
+        public Guid idCareer { get; set; }
+        [ForeignKey("idCareer")]
+        public virtual Career Carrera { get; set; }
     }
     public enum States 
         {Activa, Inactiva, Completada};
