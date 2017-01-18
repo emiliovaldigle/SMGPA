@@ -203,10 +203,11 @@ namespace SMGPA.Controllers
                 //Barra de Actividades por Carrera
 
                 //Calcula cantidad de Total de Actividades por Carrera
-                var Actividades = db.Activity.GroupBy(a => a.Carrera.Nombre)
+                List<Activity> DBActividades = db.Activity.ToList();
+                var Actividades = DBActividades.GroupBy(a => a.Carrera.Nombre)
                                            .Select(g => new { Nombre = g.Key, Count = g.Count() });
-                var ActividadesCompletadas = db.Activity
-                                     .Where(a => a.state.Equals(States.Completada))
+                List<Activity> Completadas = DBActividades.Where(a => a.state.Equals(States.Completada)).ToList();
+                var ActividadesCompletadas = Completadas
                                      .GroupBy(a => a.Carrera.Nombre)
                                      .Select(g => new { Nombre = g.Key, Count = g.Count() });
                 List<string> NombreCarreras = new List<string>();
@@ -221,7 +222,7 @@ namespace SMGPA.Controllers
                         TotalCarreras.Add(a.Count);
                     }
                 }
-                if (CompletadasCarreras.Count > 0)
+                if (ActividadesCompletadas.Count() > 0)
                 {
                     foreach (var a in ActividadesCompletadas.ToList())
                     {
@@ -243,11 +244,38 @@ namespace SMGPA.Controllers
 
                 ViewBag.Carreras = NombreCarreras;
                 ViewBag.TotalCarreras = TotalCarreras;
-                //Evolutivo de Tareas
-                List<Tasks> Tareas = db.Task.ToList();
-                ViewBag.TareasCompletadas = new double[] { 1, 23, 34, 7, 123, 6, 23 };
+                List<double> ValoresCompletadas = new List<double>();
+                List<double> ValoresTotales = new List<double>();
+                //Evolutivo de Actividades
+                var CompletadasPorMes = Completadas
+                                   .GroupBy(x => new
+                                   {
+                                       month = x.start_date.GetValueOrDefault().Month,
+                                       year = x.start_date.GetValueOrDefault().Year,
+                    
+                                  })
+                                   .Select(g => new { Nombre = g.Key, Count = g.Count() });
+                foreach(var a in CompletadasPorMes)
+                {
+                    ValoresCompletadas.Add(a.Count);
+                }
+                var TotalesporMes = DBActividades
+                                 .GroupBy(x => new
+                                 {
+                                     month = x.start_date.GetValueOrDefault().Month,
+                                     year = x.start_date.GetValueOrDefault().Year,
+
+                                 })
+                                 .Select(g => new { Nombre = g.Key, Count = g.Count() });
+                foreach (var a in TotalesporMes)
+                {
+                    ValoresTotales.Add(a.Count);
+                }
+                ViewBag.ActividadPorMes = ValoresTotales;
+                ViewBag.ActividadCompletadaPorMes = ValoresCompletadas;
                 //Evolutivo de Tareas
                 //Gráfico de Torta
+                List<Tasks> Tareas = db.Task.ToList();
                 ViewBag.Completed = Tareas.Where(t => t.Estado.Equals(StatusEnum.COMPLETADA)).Count();
                 ViewBag.InProgress = Tareas.Where(t => t.Estado.Equals(StatusEnum.EN_PROGRESO)).Count();
                 ViewBag.Cerrada = Tareas.Where(t => t.Estado.Equals(StatusEnum.CERRADA_SIN_CONCLUIR)).Count();

@@ -11,12 +11,28 @@
     var Chart = new BarChart();
     var pieChart = new PieChart();
     var lineChart = new LineChart();
+    List<double> LineChart_Data = new List<double>();
+    List<double> LineChart_Data2 = new List<double>();
+    if (ViewBag.TotalCarreras != null)
+    {
+        foreach (var item in ViewBag.ActividadPorMes)
+        {
+            LineChart_Data.Add(item);
+        }
+    }
+    if (ViewBag.CompletadasCarreras != null)
+    {
+        foreach (var item in ViewBag.ActividadCompletadaPorMes)
+        {
+            LineChart_Data2.Add(item);
+        }
+    }
     lineChart.ComplexData.Labels.AddRange(new[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
     lineChart.ComplexData.Datasets.AddRange(new List<ComplexDataset>
                            {
                               new ComplexDataset
                                   {
-                                      Data = new List<double> { 11,3, 20, 49, 86, 27, 90,123,156,22 },
+                                      Data = LineChart_Data,
                                       Label = "Total de Tareas",
                                       FillColor = "rgba(220,220,220,0.2)",
                                       StrokeColor = "rgba(220,220,220,1)",
@@ -27,7 +43,7 @@
                                   },
                               new ComplexDataset
                                   {
-                                      Data = new List<double> { 28, 48, 40, 19, 86, 27, 90 },
+                                      Data = LineChart_Data2,
                                       Label = "Tareas Completadas",
                                       FillColor = "rgba(151,187,205,0.2)",
                                       StrokeColor = "rgba(151,187,205,1)",
@@ -119,7 +135,7 @@
 <p></p>
 <div class="row">
     <div class="col-md-12">
-        <h6>Actividades totales y completadas por Carrera</h6>
+        <h4>Actividades totales y completadas por Carrera</h4>
         <canvas id="myCanvas" width="660" height="660"></canvas>
     </div>
     <div class="row">
@@ -137,22 +153,34 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Actividades Totales vs Completadas</h2>
+            <h4>Actividades Totales vs Completadas</h4>
             <canvas id="myCanvas_3" width="660" height="660"></canvas>
             @Html.CreateChart("myCanvas_3", lineChart);
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <p style="background-color:rgba(5,32,106,1); width:25px; height:25px">
+                </p>
+                Totales
+            </div>
+            <div class="col-md-1">
+                <p style="background-color:rgba(151,187,205,1); width:25px; height:25px">
+                </p>
+                Completadas
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <h2>Tareas por Estado</h2>
-            <canvas id="myCanvas_2" width="200" height="200"></canvas>
+            <h4>Tareas por Estado</h4>
+            <canvas id="myCanvas_2" width="250" height="250"></canvas>
             @Html.CreateChart("myCanvas_2", pieChart)
         </div>
         <div class="col-md-6">
-            <h2>
+            <h4>
                 Funcionarios registrados
                 <span class="big-badge">@ViewBag.Funcionarios</span>
-            </h2>
+            </h4>
         </div>
     </div>
 </div>
